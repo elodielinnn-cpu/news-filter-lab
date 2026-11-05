@@ -1,0 +1,28 @@
+{
+  "sources": {
+    "Apple": "https://www.apple.com/newsroom/rss-feed.rss",
+    "ServeTheHome": "https://www.servethehome.com/feed/",
+    "Electrek": "https://electrek.co/feed/",
+    "9to5Mac": "https://9to5mac.com/feed/"
+  },
+  "business": {
+    "消费电子": [
+      "iphone|macbook|ipad|airpods|smartphone|手机|智能手表|smartwatch",
+      "connector|speaker|microphone|actuator|haptic|hinge|display module|charging module|system.in.package|smt|fatp|assembly|组装|麦克风|马达|转轴|充电模组|封装|oled display|xdr display|tandem oled|battery cell|thermal design|camera actuator"
+    ],
+    "通信与数据中心": [
+      "server rack|data cent(er|re)|server platform|base station|服务器|机柜|基站",
+      "liquid cool|cold plate|power shelf|power delivery|busbar|interconnect|optical transceiver|cpo|cdu|rack power|互连|液冷|散热|供电|光模块|天线|滤波器"
+    ],
+    "汽车": [
+      "vehicle|automotive|ev platform|汽车|车型|整车",
+      "wiring harness|connector|zonal architecture|power distribution|cockpit|steer.by.wire|brake.by.wire|radar|线束|连接器|区域架构|座舱|雷达|线控"
+    ]
+  },
+  "customer": "apple|samsung|dell|nvidia|ford|tesla|toyota|苹果|三星|戴尔|英伟达|福特|特斯拉|丰田",
+  "competitor": "foxconn|pegatron|quanta|amphenol|aptiv|molex|goertek|鸿海|富士康|和硕|广达|安费诺|安波福|莫仕|歌尔",
+  "event": "adopt|switch|upgrad|integrat|introduc|replac|deploy|redesign|mass production|ramp|采用|切换|升级|集成|导入|替换|量产|now features|equipped with|from.{1,45}to|unveils?|features? (?:a |an |the )?new",
+  "commercial": "shipments?|production volume|production capacity|manufacturing site|sourcing|supplier allocation|purchase order|market share|acquisition|出货|产量|产能|产地|采购|订单|份额|并购",
+  "change": "rais|cut|increas|decreas|expand|shift|mov|chang|win|award|forecast|acquir|上调|下调|增加|减少|扩产|转移|调整|获得|预测|收购",
+  "exclude_title": "^(?:luxshare|luxvisions|立讯|立景|立铠)|\\b(?:deal of the day|hands.on|buying guide|review|rumou?r|reportedly|leak(?:s|ed)?)\\b|促销|导购|开箱|传闻|爆料|疑似|关税|汇率|\\b(?:discount|coupon|best deals?|black friday|save \\$)\\b|优惠|折扣|^(?:developers bring|livestream\\b|macos\\b)|screensaver"
+}
