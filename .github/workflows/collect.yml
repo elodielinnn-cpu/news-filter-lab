@@ -1,0 +1,24 @@
+name: Collect and filter news
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 8 * * *'
+      timezone: Asia/Shanghai
+permissions:
+  contents: write
+concurrency:
+  group: news-results
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 collect.py
+      - name: Save results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results
+          git commit -m 'Update news results'
+          git push
