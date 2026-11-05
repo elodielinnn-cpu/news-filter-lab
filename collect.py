@@ -51,6 +51,23 @@ def classify(source, title, description):
         return "排除", "", "标题命中排除规则", title
     for sentence in [title, *re.split(r"(?<=[.!?。！？])\s*|[\r\n]+", description)]:
         for category, (context, product) in rules["business"].items():
+            if context is None:
+                if any(matches(scope, title + " " + sentence)
+                       for scope, _ in rules["business"].values() if scope):
+                    continue
+                part = matches(product, sentence)
+                if (part and not matches(rules["consumer_unrelated_title"], title)
+                        and (matches(rules["consumer_context"], sentence)
+                             or (matches(rules["consumer_context"], title)
+                                 and not matches(rules["consumer_unrelated_title"], sentence)))):
+                    nearby = sentence[max(0, part.start() - 65):part.end() + 65]
+                    if matches(rules["consumer_event"], nearby):
+                        return "入选", category, "专业硬件或工艺与具体动作同句匹配", sentence
+                    if (matches(rules["customer"] + "|" + rules["competitor"], source + " " + sentence)
+                            and matches(rules["commercial"], sentence)
+                            and matches(rules["change"], sentence)):
+                        return "入选", category, "专业硬件或工艺涉及经营变化", sentence
+                continue
             if matches(context, sentence) and matches(product, sentence) and matches(rules["event"], sentence):
                 return "入选", category, "应用场景、硬件与变化同句匹配", sentence
             if not (matches(rules["commercial"], sentence) and matches(rules["change"], sentence)):
@@ -66,8 +83,12 @@ def enrich(item):
     decision = classify(source, title, description)
     if decision[0] == "入选" or decision[2] == "标题命中排除规则":
         return item, decision
-    if not any(matches(context, title + " " + description)
-               for context, _ in rules["business"].values()):
+    candidate = title + " " + description
+    consumer_product = rules["business"]["消费电子"][1]
+    if (source not in rules["consumer_sources"]
+            and not matches(consumer_product, candidate)
+            and not any(matches(context, candidate)
+                        for context, _ in rules["business"].values() if context)):
         return item, decision
     try:
         request = Request(url, headers={"User-Agent": "Mozilla/5.0"})
