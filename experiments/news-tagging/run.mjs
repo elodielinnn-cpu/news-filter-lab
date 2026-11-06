@@ -113,6 +113,8 @@ export function summarize(report, taxonomy) {
   const successful = report.results.filter(item => item.status === 'completed');
   const failureCoverage = {};
   for (const article of report.results) for (const failure of article.failures) failureCoverage[failure.error] = (failureCoverage[failure.error] || 0) + 1;
+  const proposalWarningCoverage = {};
+  for (const article of report.results) for (const warning of article.proposal_warnings || []) proposalWarningCoverage[warning] = (proposalWarningCoverage[warning] || 0) + 1;
   const proposals = new Map();
   for (const article of successful) {
     for (const proposal of article.proposed_tags) {
@@ -129,6 +131,7 @@ export function summarize(report, taxonomy) {
     failed: report.results.filter(item => item.status === 'failed').length,
     noEvidence: report.results.filter(item => item.status === 'no_evidence').length,
     failureCoverage: Object.fromEntries(Object.entries(failureCoverage).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))),
+    proposalWarningCoverage: Object.fromEntries(Object.entries(proposalWarningCoverage).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))),
     eventCoverage: count(successful, item => item.events.map(event => event.type)),
     contentCoverage: count(successful, item => item.content_types),
     unusedEventTypes: Object.keys(taxonomy.event_types).filter(type => !successful.some(article => article.events.some(event => event.type === type))),
@@ -195,6 +198,9 @@ async function main() {
     '## 未完成原因', '',
     ...Object.entries(report.summary.failureCoverage).map(([reason, count]) => `- ${reason}: ${count} 段`),
     ...(Object.keys(report.summary.failureCoverage).length ? [] : ['无。']), '',
+    '## 已舍弃的候选新标签', '',
+    ...Object.entries(report.summary.proposalWarningCoverage).map(([reason, count]) => `- ${reason}: ${count} 个`),
+    ...(Object.keys(report.summary.proposalWarningCoverage).length ? [] : ['无。']), '',
     '## 事件标签覆盖', '', '| 标签 | 完整处理文章数 |', '| --- | --- |'
   ];
   for (const [type, count] of Object.entries(report.summary.eventCoverage)) lines.push(`| ${taxonomy.event_types[type]} | ${count} |`);

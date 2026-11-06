@@ -84,14 +84,23 @@ export function validateOutput(value, chunk, taxonomy) {
     if (!event || !Object.hasOwn(taxonomy.event_types, event.type) || !Object.hasOwn(taxonomy.statuses, event.status) || typeof event.subject !== 'string' || !event.subject.trim()) throw new Error('Invalid event classification');
     return { type: event.type, status: event.status, subject: event.subject, evidence_id: event.evidence_id, change_quote: evidence(event.evidence_id), chunk: chunk.index };
   });
-  const proposals = value.proposed_tags.map(proposal => {
-    if (!proposal || !['event', 'content'].includes(proposal.dimension) || typeof proposal.tag !== 'string' || typeof proposal.description !== 'string' || !proposal.description.trim()) throw new Error('Invalid tag proposal');
-    const tag = normalizeTag(proposal.tag);
-    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(tag)) throw new Error('Proposal must use a lowercase English slug');
-    return { dimension: proposal.dimension, tag, description: proposal.description, evidence_id: proposal.evidence_id, evidence_quote: evidence(proposal.evidence_id), chunk: chunk.index };
-  });
+  const proposalWarnings = Array.isArray(value.proposal_warnings) ? value.proposal_warnings.filter(item => typeof item === 'string') : [];
+  const proposals = [];
+  for (const proposal of value.proposed_tags) {
+    try {
+      if (!proposal || !['event', 'content'].includes(proposal.dimension) || typeof proposal.tag !== 'string' || typeof proposal.description !== 'string' || !proposal.description.trim()) throw new Error('Invalid tag proposal');
+      const tag = normalizeTag(proposal.tag);
+      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(tag)) throw new Error('Proposal must use a lowercase English slug');
+      const existing = proposal.dimension === 'event' ? taxonomy.event_types : taxonomy.content_types;
+      if (Object.hasOwn(existing, tag)) throw new Error('Proposal duplicates an existing tag');
+      proposals.push({ dimension: proposal.dimension, tag, description: proposal.description, evidence_id: proposal.evidence_id, evidence_quote: evidence(proposal.evidence_id), chunk: chunk.index });
+    } catch (error) {
+      // A candidate new tag is optional; invalid candidates must not discard verified core events.
+      proposalWarnings.push(String(error.message).slice(0, 100));
+    }
+  }
   const rawTags = [...new Set(value.raw_tags.flatMap(tag => { const extracted = extractAtTags(tag); return extracted.length ? extracted : [tag]; }).map(normalizeTag).filter(Boolean))];
-  return { domains, content_types: contentTypes, events, raw_tags: rawTags, proposed_tags: proposals };
+  return { domains, content_types: contentTypes, events, raw_tags: rawTags, proposed_tags: proposals, proposal_warnings: proposalWarnings };
 }
 
 export function mergeOutputs(outputs) {
@@ -108,6 +117,7 @@ export function mergeOutputs(outputs) {
   return {
     domains: unique(outputs.flatMap(output => output.domains)),
     content_types: unique(outputs.flatMap(output => output.content_types)),
-    events: [...events.values()], raw_tags: unique(outputs.flatMap(output => output.raw_tags)), proposed_tags: [...proposals.values()]
+    events: [...events.values()], raw_tags: unique(outputs.flatMap(output => output.raw_tags)), proposed_tags: [...proposals.values()],
+    proposal_warnings: outputs.flatMap(output => output.proposal_warnings || [])
   };
 }
