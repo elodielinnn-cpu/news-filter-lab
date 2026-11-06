@@ -16,22 +16,23 @@
 
 工作流为 `.github/workflows/news-tagging-shadow.yml`。推送到 `codex/news-tagging-shadow` 分支且涉及试验文件时触发首次试跑，并保留 `workflow_dispatch` 入口。GitHub 手动工作流的可用性取决于工作流是否已出现在默认分支，首次独立分支试跑使用该分支的推送触发。
 
-使用标准 Ubuntu 运行器，模型为 Qwen2.5-1.5B-Instruct 的 Q4_K_M 量化版本，推理引擎为 llama.cpp b6000。版本、URL 和 SHA-256 校验值位于 `runtime.json`，下载后验证。模型文件约 1.12 GB，使用运行器 CPU 和临时磁盘。私有仓库的运行用量计入账户的 GitHub Actions 配额。输出制品保留 3 天，缓存只保存成功的文本响应。
+使用标准 Ubuntu 运行器，当前模型为 Qwen2.5-7B-Instruct 的 Q4_K_M 量化版本，推理引擎为 llama.cpp b6000。版本、两个分片文件的 URL 和 SHA-256 校验值位于 `runtime.json`，下载后逐个验证。模型文件合计约 4.7 GB，只存在于一次性的云端运行器中；不会下载 1.5B 模型，也不会占用用户电脑空间。公开仓库的标准 GitHub Actions 运行器目前免费。输出制品保留 3 天，缓存只保存成功的文本响应，并使用 7B 专属缓存前缀以隔离旧模型结果。
 
-运行入口只访问运行器内部 `127.0.0.1:8080` 的模型。模型下载、健康检查和逐块推理失败均显示具体状态，并逐段打印进度。每次推理最多 180 秒，推理总预算为 90 分钟，作业总上限为 120 分钟。预算耗尽后保留已经验证的结果及缓存，后续试跑可继续处理。
+运行入口只访问运行器内部 `127.0.0.1:8080` 的模型。模型下载、健康检查和逐块推理失败均显示具体状态，并逐段打印进度。每次推理最多 600 秒，推理总预算为 300 分钟，作业总上限为 360 分钟。预算耗尽后保留已经验证的结果及缓存，后续试跑可继续处理。
 
-工作流使用 `contents: read`，结果通过 Actions 制品提供下载。文件包括 `tags.csv`、`comparison.csv`、`results.json`、`report.md`、`tag-discovery.json`、输入清单、运行状态和推理日志。页面发布与人工核验可继续使用既有流程。
+工作流使用 `contents: read`，结果通过 Actions 制品提供下载。文件包括 `tags.csv`、`comparison.csv`、`results.json`、`report.md`、`tag-discovery.json`、`model-comparison.csv`、`model-comparison.md`、输入清单、运行状态和推理日志。页面发布与人工核验可继续使用既有流程。
 
 ## 本地检查
 
 ```sh
 node experiments/news-tagging/test.mjs
+node experiments/news-tagging/test-model-comparison.mjs
 node experiments/news-tagging/run.mjs --prepare
 ```
 
 `--prepare` 仅输出 `outputs/news-tagging/manifest.json`，状态为 `prepared_for_inference`。`run-state.json` 记录当前运行状态，作业摘要通过运行时间与配置标识核对本次报告。本机配置对应模型服务器后，可以运行不带 `--prepare` 的入口。输出目录可通过 `NEWS_TAGGING_OUTPUT` 指定，输入冻结批次可通过 `NEWS_TAGGING_INPUT` 指定。
 
-首轮真实模型试跑处理了 48 篇、124 段，耗时 81.3 分钟，仅 41 段校验通过、10 篇完整。主要失败为模型编造或改写原文引句；已校验通过的结果仍出现汽车新闻错配数据中心产品等语义误判。因此旧结果不可用于自动筛选或知识库扩增。当前改版的真实模型准确率和速度仍需下一次云端试跑验证。
+1.5B 模型的最近一次基线来自 GitHub Actions 运行 `42169329227`：48 篇、124 段，119 段校验通过，43 篇完整，耗时约 34.4 分钟。原始 `results.json` 保存在 `baselines/qwen2.5-1.5b-run-42169329227.json`，SHA-256 为 `a1afd78a7f9eb31660a37a23cdd4b4b9924b656216429ed39d4a2ba81c0e0111`。这保留了逐篇事件、证据和处理状态，供 7B 在相同 48 篇上的对照。两模型的标签差异不等于准确率提升，仍需按原文核查误判和漏判。旧模型输出不会参与 7B 推理或覆盖当前结果。
 
 ## 如何决定扩增标签
 

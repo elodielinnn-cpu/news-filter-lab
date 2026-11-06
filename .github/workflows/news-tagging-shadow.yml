@@ -23,7 +23,7 @@ concurrency:
 jobs:
   tag-frozen-news:
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
+    timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -35,6 +35,7 @@ jobs:
           node experiments/news-screening/test.mjs
           node experiments/news-tagging/test.mjs
           node experiments/news-tagging/test-compare.mjs
+          node experiments/news-tagging/test-model-comparison.mjs
           node experiments/news-tagging/run.mjs --prepare
 
       - name: Restore successful semantic response cache
@@ -43,11 +44,11 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: outputs/news-tagging/cache
-          key: news-tagging-v1-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: news-tagging-v1-
+          key: news-tagging-7b-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: news-tagging-7b-v1-
 
       - name: Download and verify pinned runtime
-        timeout-minutes: 12
+        timeout-minutes: 35
         run: |
           set -euo pipefail
           printf '读取运行配置\n' > outputs/news-tagging/diagnostics.txt
@@ -56,16 +57,20 @@ jobs:
           mkdir -p "$RUNNER_TEMP/news-tagger-engine"
           engine_url=$(node -p "require('./experiments/news-tagging/runtime.json').engine_url")
           engine_sha=$(node -p "require('./experiments/news-tagging/runtime.json').engine_sha256")
-          model_url=$(node -p "require('./experiments/news-tagging/runtime.json').model_url")
-          model_sha=$(node -p "require('./experiments/news-tagging/runtime.json').model_sha256")
           printf '下载推理引擎\n' >> outputs/news-tagging/diagnostics.txt
           curl --fail --show-error --location --retry 2 --connect-timeout 30 --max-time 180 "$engine_url" -o "$RUNNER_TEMP/news-engine.zip"
           printf '%s  %s\n' "$engine_sha" "$RUNNER_TEMP/news-engine.zip" | sha256sum -c -
           printf '推理引擎校验通过\n' >> outputs/news-tagging/diagnostics.txt
           unzip -q "$RUNNER_TEMP/news-engine.zip" -d "$RUNNER_TEMP/news-tagger-engine"
+          rm -f "$RUNNER_TEMP/news-engine.zip"
           printf '下载模型文件\n' >> outputs/news-tagging/diagnostics.txt
-          curl --fail --show-error --location --retry 2 --connect-timeout 30 --max-time 600 "$model_url" -o "$RUNNER_TEMP/news-tagger.gguf"
-          printf '%s  %s\n' "$model_sha" "$RUNNER_TEMP/news-tagger.gguf" | sha256sum -c -
+          mkdir -p "$RUNNER_TEMP/news-tagger-model"
+          node -e 'for (const file of require("./experiments/news-tagging/runtime.json").model_files) console.log([file.url, file.name, file.sha256].join("|"))' |
+          while IFS='|' read -r model_url model_name model_sha; do
+            model_path="$RUNNER_TEMP/news-tagger-model/$model_name"
+            curl --fail --show-error --location --retry 2 --connect-timeout 30 --max-time 1800 "$model_url" -o "$model_path"
+            printf '%s  %s\n' "$model_sha" "$model_path" | sha256sum -c -
+          done
           printf '模型文件校验通过\n' >> outputs/news-tagging/diagnostics.txt
 
       - name: Start CPU inference server and tag the frozen batch
@@ -84,7 +89,7 @@ jobs:
           printf '启动推理服务程序\n' >> outputs/news-tagging/diagnostics.txt
           : > outputs/news-tagging/engine.log
           LD_LIBRARY_PATH="$library_directory:${LD_LIBRARY_PATH:-}" "$server" \
-            --model "$RUNNER_TEMP/news-tagger.gguf" --alias "$NEWS_MODEL" \
+            --model "$RUNNER_TEMP/news-tagger-model/qwen2.5-7b-instruct-q4_k_m-00001-of-00002.gguf" --alias "$NEWS_MODEL" \
             --host 127.0.0.1 --port 8080 --ctx-size 8192 \
             --threads 4 --threads-batch 4 --parallel 1 --n-gpu-layers 0 \
             --batch-size 512 --ubatch-size 128 > outputs/news-tagging/engine.log 2>&1 &
@@ -119,7 +124,11 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: outputs/news-tagging/cache
-          key: news-tagging-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          key: news-tagging-7b-v1-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Compare 7B with saved 1.5B results
+        if: always() && hashFiles('outputs/news-tagging/results.json') != ''
+        run: node experiments/news-tagging/compare-models.mjs
 
       - name: Attach tagging report
         if: always()
@@ -133,7 +142,8 @@ jobs:
           const text = current && fs.existsSync(directory + 'report.md')
             ? fs.readFileSync(directory + 'report.md', 'utf8')
             : '语义打标尚未完成，请检查模型下载、启动和推理日志。';
-          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, text + '\n');
+          const modelComparison = fs.existsSync(directory + 'model-comparison.md') ? fs.readFileSync(directory + 'model-comparison.md', 'utf8') : '';
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, text + '\n' + modelComparison);
           JS
 
       - name: Upload trial output
