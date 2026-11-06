@@ -72,10 +72,17 @@ jobs:
         env:
           NEWS_TAGGING_ENDPOINT: http://127.0.0.1:8080
         run: |
-          server=$(rg --files "$RUNNER_TEMP/news-tagger-engine" | rg '/llama-server$' | head -n 1)
-          test -n "$server"
+          set -euo pipefail
+          printf '定位推理服务程序\n' >> outputs/news-tagging/diagnostics.txt
+          server="$RUNNER_TEMP/news-tagger-engine/build/bin/llama-server"
+          if [ ! -f "$server" ]; then
+            printf '推理服务程序不存在：%s\n' "$server" | tee -a outputs/news-tagging/diagnostics.txt
+            exit 1
+          fi
           chmod +x "$server"
           library_directory=$(dirname "$server")
+          printf '启动推理服务程序\n' >> outputs/news-tagging/diagnostics.txt
+          : > outputs/news-tagging/engine.log
           LD_LIBRARY_PATH="$library_directory:${LD_LIBRARY_PATH:-}" "$server" \
             --model "$RUNNER_TEMP/news-tagger.gguf" --alias "$NEWS_MODEL" \
             --host 127.0.0.1 --port 8080 --ctx-size 8192 \
@@ -89,10 +96,18 @@ jobs:
               ready=true
               break
             fi
-            kill -0 "$model_server_pid"
+            if ! kill -0 "$model_server_pid" 2>/dev/null; then
+              printf '推理服务程序提前退出，详见 engine.log\n' | tee -a outputs/news-tagging/diagnostics.txt
+              cat outputs/news-tagging/engine.log
+              exit 1
+            fi
             sleep 2
           done
-          test "$ready" = true
+          if [ "$ready" != true ]; then
+            printf '推理服务程序启动超时，详见 engine.log\n' | tee -a outputs/news-tagging/diagnostics.txt
+            cat outputs/news-tagging/engine.log
+            exit 1
+          fi
           printf '模型启动完成，开始推理\n' >> outputs/news-tagging/diagnostics.txt
           node experiments/news-tagging/run.mjs
           printf '推理完成\n' >> outputs/news-tagging/diagnostics.txt
