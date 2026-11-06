@@ -34,6 +34,7 @@ jobs:
         run: |
           node experiments/news-screening/test.mjs
           node experiments/news-tagging/test.mjs
+          node experiments/news-tagging/test-compare.mjs
           node experiments/news-tagging/run.mjs --prepare
 
       - name: Restore successful semantic response cache
@@ -48,6 +49,8 @@ jobs:
       - name: Download and verify pinned runtime
         timeout-minutes: 12
         run: |
+          set -euo pipefail
+          printf '读取运行配置\n' > outputs/news-tagging/diagnostics.txt
           model_name=$(node -p "require('./experiments/news-tagging/runtime.json').model")
           printf 'NEWS_MODEL=%s\n' "$model_name" >> "$GITHUB_ENV"
           mkdir -p "$RUNNER_TEMP/news-tagger-engine"
@@ -55,11 +58,15 @@ jobs:
           engine_sha=$(node -p "require('./experiments/news-tagging/runtime.json').engine_sha256")
           model_url=$(node -p "require('./experiments/news-tagging/runtime.json').model_url")
           model_sha=$(node -p "require('./experiments/news-tagging/runtime.json').model_sha256")
-          curl --fail --location --retry 2 --connect-timeout 30 --max-time 180 "$engine_url" -o "$RUNNER_TEMP/news-engine.zip"
+          printf '下载推理引擎\n' >> outputs/news-tagging/diagnostics.txt
+          curl --fail --show-error --location --retry 2 --connect-timeout 30 --max-time 180 "$engine_url" -o "$RUNNER_TEMP/news-engine.zip"
           printf '%s  %s\n' "$engine_sha" "$RUNNER_TEMP/news-engine.zip" | sha256sum -c -
+          printf '推理引擎校验通过\n' >> outputs/news-tagging/diagnostics.txt
           unzip -q "$RUNNER_TEMP/news-engine.zip" -d "$RUNNER_TEMP/news-tagger-engine"
-          curl --fail --location --retry 2 --connect-timeout 30 --max-time 600 "$model_url" -o "$RUNNER_TEMP/news-tagger.gguf"
+          printf '下载模型文件\n' >> outputs/news-tagging/diagnostics.txt
+          curl --fail --show-error --location --retry 2 --connect-timeout 30 --max-time 600 "$model_url" -o "$RUNNER_TEMP/news-tagger.gguf"
           printf '%s  %s\n' "$model_sha" "$RUNNER_TEMP/news-tagger.gguf" | sha256sum -c -
+          printf '模型文件校验通过\n' >> outputs/news-tagging/diagnostics.txt
 
       - name: Start CPU inference server and tag the frozen batch
         env:
@@ -86,7 +93,9 @@ jobs:
             sleep 2
           done
           test "$ready" = true
+          printf '模型启动完成，开始推理\n' >> outputs/news-tagging/diagnostics.txt
           node experiments/news-tagging/run.mjs
+          printf '推理完成\n' >> outputs/news-tagging/diagnostics.txt
 
       - name: Save validated response cache
         timeout-minutes: 2

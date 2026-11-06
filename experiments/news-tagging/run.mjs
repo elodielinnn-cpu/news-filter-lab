@@ -5,6 +5,7 @@ import { loadBusinessProfile } from '../news-filter-v3/business-profile.mjs';
 import { activeProducts, isConsumerStory } from '../news-screening/scope.mjs';
 import { articleId, encodeCsv } from '../news-screening/audit.mjs';
 import { chunkText, digest, mergeOutputs, outputSchema, validateOutput } from './adapter.mjs';
+import { compareDecisions, comparisonCsv } from './compare.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 export async function prepareManifest(input, taxonomy, runtime, prompt, profile) {
@@ -159,6 +160,8 @@ async function main() {
     }
   });
   report.summary = summarize(report, taxonomy);
+  report.comparison = compareDecisions(report);
+  await fs.writeFile(path.join(outputDirectory, 'comparison.csv'), comparisonCsv(report.comparison));
   await fs.writeFile(path.join(outputDirectory, 'results.json'), JSON.stringify(report, null, 2) + '\n');
   const productNames = Object.fromEntries(manifest.products.map(product => [product.productId, product.productName]));
   const label = (values, dictionary) => values.map(value => dictionary[value] || value).join('、');
@@ -178,7 +181,7 @@ async function main() {
   for (const [type, count] of Object.entries(report.summary.eventCoverage)) lines.push(`| ${taxonomy.event_types[type]} | ${count} |`);
   lines.push('', '## 内容类型覆盖', '', '| 类型 | 完整处理文章数 |', '| --- | --- |');
   for (const [type, count] of Object.entries(report.summary.contentCoverage)) lines.push(`| ${taxonomy.content_types[type]} | ${count} |`);
-  lines.push('', '## 候选新标签', '');
+  lines.push('', '## 与既有筛选结果的分歧', '', `完整文章中有 ${report.comparison.filter(item => item.discrepancy).length} 篇分歧，需要人工复核；有 ${report.comparison.filter(item => item.productProposals.length).length} 篇提出产品知识库补充候选。详情见 comparison.csv。`, '', '## 候选新标签', '');
   for (const proposal of report.summary.proposedTags) {
     lines.push(`- ${proposal.dimension}/${proposal.tag}，涉及 ${proposal.articleIds.length} 篇。${proposal.descriptions.join('；')}`);
     for (const example of proposal.examples.slice(0, 2)) lines.push(`  - ${example.title}。依据为 ${example.quote}`);
