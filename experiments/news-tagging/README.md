@@ -20,7 +20,7 @@
 
 运行入口只访问运行器内部 `127.0.0.1:8080` 的模型。模型下载、健康检查和逐块推理失败均显示具体状态，并逐段打印进度。每次推理最多 600 秒，推理总预算为 300 分钟，作业总上限为 360 分钟。预算耗尽后保留已经验证的结果及缓存，后续试跑可继续处理。
 
-工作流使用 `contents: read`，结果通过 Actions 制品提供下载。文件包括 `tags.csv`、`comparison.csv`、`results.json`、`report.md`、`tag-discovery.json`、`model-comparison.csv`、`model-comparison.md`、输入清单、运行状态和推理日志。页面发布与人工核验可继续使用既有流程。
+工作流使用 `contents: read`，结果通过 Actions 制品提供下载。文件包括 `tags.csv`、`comparison.csv`、`results.json`、`report.md`、`tag-discovery.json`、`model-comparison.json`、`model-comparison.csv`、`model-comparison.md`、输入清单、运行状态和推理日志。对照 JSON 保留两模型逐篇的事件标签、证据原句和处理状态，便于程序读取；两次都完整处理的文章才统计标签增减。页面发布与人工核验可继续使用既有流程。
 
 ## 本地检查
 

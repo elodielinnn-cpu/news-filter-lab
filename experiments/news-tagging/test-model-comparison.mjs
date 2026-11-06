@@ -13,6 +13,7 @@ assert.equal(sameTags.changedEventTags, 0);
 assert.equal(sameTags.baselineCompleted, 43);
 assert.equal(sameTags.currentCompleted, 43);
 assert.equal(sameTags.comparableArticles, 43);
+assert.deepEqual(sameTags.rows[0].oldEventDetails[0].change_quote, baseline.results[0].events[0].change_quote);
 
 current.results[0].events = [{ type: 'quality-recall' }];
 const changed = compareModels(baseline, current);
