@@ -1,0 +1,15 @@
+{
+  "engine": "llama.cpp-b6000",
+  "engine_url": "https://github.com/ggml-org/llama.cpp/releases/download/b6000/llama-b6000-bin-ubuntu-x64.zip",
+  "engine_sha256": "66244356dd242ae3a2510929ec4a840db65a3f9e7ad712918dbf02a266badfa5",
+  "model": "Qwen2.5-1.5B-Instruct-Q4_K_M",
+  "model_revision": "a615a81362316d7b9f5a7a9c4313adfdf9b54588",
+  "model_url": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/a615a81362316d7b9f5a7a9c4313adfdf9b54588/qwen2.5-1.5b-instruct-q4_k_m.gguf",
+  "model_sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+  "max_chunk_characters": 2500,
+  "overlap_characters": 240,
+  "context_tokens": 8192,
+  "max_output_tokens": 1800,
+  "request_timeout_ms": 180000,
+  "run_budget_ms": 5400000
+}

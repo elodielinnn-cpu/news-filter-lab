@@ -1,0 +1,123 @@
+name: Industrial news semantic tagging trial
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - codex/news-tagging-shadow
+    paths:
+      - .github/workflows/news-tagging-shadow.yml
+      - experiments/news-tagging/**
+      - experiments/news-screening/**
+      - experiments/news-filter-v3/business-profile.mjs
+      - config/luxshare-business-profile.json
+      - outputs/news-screening/audit/4c92e2cb37ce/baseline.json
+
+permissions:
+  contents: read
+
+concurrency:
+  group: news-tagging-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  tag-frozen-news:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate adapter and prepare frozen batch
+        run: |
+          node experiments/news-screening/test.mjs
+          node experiments/news-tagging/test.mjs
+          node experiments/news-tagging/run.mjs --prepare
+
+      - name: Restore successful semantic response cache
+        timeout-minutes: 2
+        continue-on-error: true
+        uses: actions/cache/restore@v4
+        with:
+          path: outputs/news-tagging/cache
+          key: news-tagging-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: news-tagging-v1-
+
+      - name: Download and verify pinned runtime
+        timeout-minutes: 12
+        run: |
+          model_name=$(node -p "require('./experiments/news-tagging/runtime.json').model")
+          printf 'NEWS_MODEL=%s\n' "$model_name" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/news-tagger-engine"
+          engine_url=$(node -p "require('./experiments/news-tagging/runtime.json').engine_url")
+          engine_sha=$(node -p "require('./experiments/news-tagging/runtime.json').engine_sha256")
+          model_url=$(node -p "require('./experiments/news-tagging/runtime.json').model_url")
+          model_sha=$(node -p "require('./experiments/news-tagging/runtime.json').model_sha256")
+          curl --fail --location --retry 2 --connect-timeout 30 --max-time 180 "$engine_url" -o "$RUNNER_TEMP/news-engine.zip"
+          printf '%s  %s\n' "$engine_sha" "$RUNNER_TEMP/news-engine.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/news-engine.zip" -d "$RUNNER_TEMP/news-tagger-engine"
+          curl --fail --location --retry 2 --connect-timeout 30 --max-time 600 "$model_url" -o "$RUNNER_TEMP/news-tagger.gguf"
+          printf '%s  %s\n' "$model_sha" "$RUNNER_TEMP/news-tagger.gguf" | sha256sum -c -
+
+      - name: Start CPU inference server and tag the frozen batch
+        env:
+          NEWS_TAGGING_ENDPOINT: http://127.0.0.1:8080
+        run: |
+          server=$(rg --files "$RUNNER_TEMP/news-tagger-engine" | rg '/llama-server$' | head -n 1)
+          test -n "$server"
+          chmod +x "$server"
+          library_directory=$(dirname "$server")
+          LD_LIBRARY_PATH="$library_directory:${LD_LIBRARY_PATH:-}" "$server" \
+            --model "$RUNNER_TEMP/news-tagger.gguf" --alias "$NEWS_MODEL" \
+            --host 127.0.0.1 --port 8080 --ctx-size 8192 \
+            --threads 4 --threads-batch 4 --parallel 1 --n-gpu-layers 0 \
+            --batch-size 512 --ubatch-size 128 > outputs/news-tagging/engine.log 2>&1 &
+          model_server_pid=$!
+          trap 'kill "$model_server_pid" 2>/dev/null || true' EXIT
+          ready=false
+          for attempt in $(seq 1 120); do
+            if curl --fail --silent http://127.0.0.1:8080/health > /dev/null; then
+              ready=true
+              break
+            fi
+            kill -0 "$model_server_pid"
+            sleep 2
+          done
+          test "$ready" = true
+          node experiments/news-tagging/run.mjs
+
+      - name: Save validated response cache
+        timeout-minutes: 2
+        if: always() && hashFiles('outputs/news-tagging/cache/*.json') != ''
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: outputs/news-tagging/cache
+          key: news-tagging-v1-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Attach tagging report
+        if: always()
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          const directory = 'outputs/news-tagging/';
+          const state = fs.existsSync(directory + 'run-state.json') ? JSON.parse(fs.readFileSync(directory + 'run-state.json', 'utf8')) : {};
+          const report = fs.existsSync(directory + 'results.json') ? JSON.parse(fs.readFileSync(directory + 'results.json', 'utf8')) : {};
+          const current = state.finishedAt && state.finishedAt === report.generatedAt && state.contextHash === report.contextHash;
+          const text = current && fs.existsSync(directory + 'report.md')
+            ? fs.readFileSync(directory + 'report.md', 'utf8')
+            : '语义打标尚未完成，请检查模型下载、启动和推理日志。';
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, text + '\n');
+          JS
+
+      - name: Upload trial output
+        timeout-minutes: 3
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: industrial-news-semantic-tags-${{ github.run_id }}
+          path: outputs/news-tagging/
+          retention-days: 3
+          if-no-files-found: warn
