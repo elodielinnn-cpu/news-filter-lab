@@ -4,25 +4,27 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { loadBusinessProfile } from '../news-filter-v3/business-profile.mjs';
 import { activeProducts, isConsumerStory } from '../news-screening/scope.mjs';
 import { articleId, encodeCsv } from '../news-screening/audit.mjs';
-import { chunkText, digest, mergeOutputs, outputSchema, validateOutput } from './adapter.mjs';
+import { chunkText, digest, evidenceSpans, mergeOutputs, outputSchema, validateOutput } from './adapter.mjs';
 import { compareDecisions, comparisonCsv } from './compare.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 export async function prepareManifest(input, taxonomy, runtime, prompt, profile) {
   if (!input || !Array.isArray(input.articles)) throw new Error('Input must contain an articles array');
   const products = activeProducts(profile).map(({ productId, productName, relationshipLevel }) => ({ productId, productName, relationshipLevel }));
-  const schema = outputSchema(taxonomy, products);
+  const schema = outputSchema(taxonomy);
   const contextHash = digest({ taxonomy, runtime, prompt, products, schema });
   const articles = input.articles.filter(article => !isConsumerStory(article)).map(article => ({
     id: articleId(article), title: article.title, url: article.url, sourceId: article.sourceId,
     publishedAt: article.publishedAt || null,
     originalDecision: article.decision?.result || '未判断', evidenceSource: article.evidenceSource || 'saved-snapshot',
+    originalBusiness: article.decision?.business || '', originalAffectedObject: article.decision?.affectedObject || '',
+    originalEvidence: article.decision?.evidence || '', originalReason: article.decision?.reason || '',
     chunks: chunkText(Array.isArray(article.bodyEvidence) ? article.bodyEvidence : [], runtime.max_chunk_characters, runtime.overlap_characters)
   }));
   return { mode: 'semantic-shadow', taxonomyVersion: taxonomy.version, model: runtime.model, modelRevision: runtime.model_revision, contextHash, schema, products, articles };
 }
 
-export async function requestTags({ endpoint, model, prompt, taxonomy, products, schema, article, chunk, runtime, fetchImpl = fetch }) {
+export async function requestTags({ endpoint, model, prompt, taxonomy, schema, article, chunk, runtime, fetchImpl = fetch }) {
   const response = await fetchImpl(`${endpoint}/v1/chat/completions`, {
     method: 'POST', headers: { 'content-type': 'application/json' }, signal: AbortSignal.timeout(runtime.request_timeout_ms),
     body: JSON.stringify({
@@ -30,7 +32,7 @@ export async function requestTags({ endpoint, model, prompt, taxonomy, products,
       response_format: { type: 'json_object', schema },
       messages: [
         { role: 'system', content: prompt },
-        { role: 'user', content: JSON.stringify({ taxonomy, products, title: article.title, url: article.url, published_at: article.publishedAt || null, evidence_source: article.evidenceSource, chunk: chunk.index, text: chunk.text }) }
+        { role: 'user', content: JSON.stringify({ taxonomy: { domains: taxonomy.domains, content_types: taxonomy.content_types, event_types: taxonomy.event_types, statuses: taxonomy.statuses }, title: article.title, published_at: article.publishedAt || null, evidence_spans: evidenceSpans(chunk.text) }) }
       ]
     })
   });
@@ -40,15 +42,18 @@ export async function requestTags({ endpoint, model, prompt, taxonomy, products,
   if (payload.model && payload.model !== model) throw new Error('model_identity_mismatch');
   if (choice?.finish_reason !== 'stop') throw new Error('incomplete_model_output');
   const raw = JSON.parse(choice.message.content);
-  return { output: validateOutput(raw, chunk, taxonomy, products), usage: payload.usage || null, actualModel: payload.model || model };
+  return { output: validateOutput(raw, chunk, taxonomy), usage: payload.usage || null, actualModel: payload.model || model };
 }
 
-export async function tagManifest({ manifest, runtime, taxonomy, infer, loadCache = async () => null, saveCache = async () => {}, now = Date.now }) {
+export async function tagManifest({ manifest, runtime, taxonomy, infer, loadCache = async () => null, saveCache = async () => {}, now = Date.now, onProgress = () => {} }) {
   const startedAt = now();
   const results = [];
   let requests = 0;
   let cacheHits = 0;
   let totalTokens = 0;
+  let processedChunks = 0;
+  const totalChunks = manifest.articles.reduce((total, article) => total + article.chunks.length, 0);
+  const progress = (article, outcome) => onProgress({ processedChunks: ++processedChunks, totalChunks, articleId: article.id, outcome });
   for (const article of manifest.articles) {
     const outputs = [];
     const failures = [];
@@ -62,31 +67,39 @@ export async function tagManifest({ manifest, runtime, taxonomy, infer, loadCach
       if (cached) {
         try {
           if (cached.actualModel && cached.actualModel !== manifest.model) throw new Error('cached_model_identity_mismatch');
-          outputs.push(validateOutput(cached.output, chunk, taxonomy, manifest.products));
+          outputs.push(validateOutput(cached.output, chunk, taxonomy));
           completed += 1;
           cacheHits += 1;
+          progress(article, 'cached');
           continue;
         } catch { cacheWarnings.push({ chunk: chunk.index, error: 'invalid_cache_entry' }); }
       }
       try {
         if (now() - startedAt >= runtime.run_budget_ms) {
           failures.push({ chunk: chunk.index, error: 'run_budget_exhausted' });
+          progress(article, 'run_budget_exhausted');
           continue;
         }
         requests += 1;
         const response = await infer(article, chunk);
-        const validated = validateOutput(response.output, chunk, taxonomy, manifest.products);
+        const validated = validateOutput(response.output, chunk, taxonomy);
         outputs.push(validated);
         totalTokens += response.usage?.total_tokens || 0;
         completed += 1;
         try { await saveCache(key, { ...response, output: validated }); }
         catch { cacheWarnings.push({ chunk: chunk.index, error: 'cache_write_failed' }); }
+        progress(article, 'completed');
       } catch (error) {
-        failures.push({ chunk: chunk.index, error: error.name === 'TimeoutError' || error.name === 'AbortError' ? 'model_timeout' : String(error.message).slice(0, 180) });
+        const reason = error.name === 'TimeoutError' || error.name === 'AbortError' ? 'model_timeout' : String(error.message).slice(0, 180);
+        failures.push({ chunk: chunk.index, error: reason });
+        progress(article, reason);
       }
     }
     const status = !article.chunks.length ? 'no_evidence' : completed === article.chunks.length ? 'completed' : completed ? 'partial' : 'failed';
-    results.push({ id: article.id, title: article.title, url: article.url, sourceId: article.sourceId, originalDecision: article.originalDecision, evidenceSource: article.evidenceSource, status, completedChunks: completed, totalChunks: article.chunks.length, ...mergeOutputs(outputs), failures, cacheWarnings });
+    results.push({ id: article.id, title: article.title, url: article.url, sourceId: article.sourceId, originalDecision: article.originalDecision,
+      originalBusiness: article.originalBusiness, originalAffectedObject: article.originalAffectedObject,
+      originalEvidence: article.originalEvidence, originalReason: article.originalReason,
+      evidenceSource: article.evidenceSource, status, completedChunks: completed, totalChunks: article.chunks.length, ...mergeOutputs(outputs), failures, cacheWarnings });
   }
   return { mode: 'semantic-shadow', generatedAt: new Date().toISOString(), model: manifest.model, modelRevision: manifest.modelRevision, taxonomyVersion: taxonomy.version, contextHash: manifest.contextHash, requests, cacheHits, validatedResponseTokens: totalTokens, elapsedMs: now() - startedAt, results };
 }
@@ -98,6 +111,8 @@ export function summarize(report, taxonomy) {
     return Object.fromEntries([...frequencies].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])));
   };
   const successful = report.results.filter(item => item.status === 'completed');
+  const failureCoverage = {};
+  for (const article of report.results) for (const failure of article.failures) failureCoverage[failure.error] = (failureCoverage[failure.error] || 0) + 1;
   const proposals = new Map();
   for (const article of successful) {
     for (const proposal of article.proposed_tags) {
@@ -113,6 +128,7 @@ export function summarize(report, taxonomy) {
     completed: successful.length, partial: report.results.filter(item => item.status === 'partial').length,
     failed: report.results.filter(item => item.status === 'failed').length,
     noEvidence: report.results.filter(item => item.status === 'no_evidence').length,
+    failureCoverage: Object.fromEntries(Object.entries(failureCoverage).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))),
     eventCoverage: count(successful, item => item.events.map(event => event.type)),
     contentCoverage: count(successful, item => item.content_types),
     unusedEventTypes: Object.keys(taxonomy.event_types).filter(type => !successful.some(article => article.events.some(event => event.type === type))),
@@ -147,7 +163,8 @@ async function main() {
   await fs.mkdir(cacheDirectory, { recursive: true });
   const report = await tagManifest({
     manifest, runtime, taxonomy,
-    infer: (article, chunk) => requestTags({ endpoint, model: runtime.model, prompt, taxonomy, products: manifest.products, schema: manifest.schema, article, chunk, runtime }),
+    onProgress: progress => console.log(JSON.stringify({ status: 'tagging', ...progress })),
+    infer: (article, chunk) => requestTags({ endpoint, model: runtime.model, prompt, taxonomy, schema: manifest.schema, article, chunk, runtime }),
     loadCache: async key => {
       try { return JSON.parse(await fs.readFile(path.join(cacheDirectory, `${key}.json`), 'utf8')); }
       catch (error) { if (error.code === 'ENOENT' || error instanceof SyntaxError) return null; throw error; }
@@ -163,31 +180,33 @@ async function main() {
   report.comparison = compareDecisions(report);
   await fs.writeFile(path.join(outputDirectory, 'comparison.csv'), comparisonCsv(report.comparison));
   await fs.writeFile(path.join(outputDirectory, 'results.json'), JSON.stringify(report, null, 2) + '\n');
-  const productNames = Object.fromEntries(manifest.products.map(product => [product.productId, product.productName]));
   const label = (values, dictionary) => values.map(value => dictionary[value] || value).join('、');
   const rows = report.results.map(article => [article.title, article.sourceId, article.originalDecision, article.status, `${article.completedChunks}/${article.totalChunks}`, article.evidenceSource,
     label(article.domains, taxonomy.domains), label(article.content_types, taxonomy.content_types), label([...new Set(article.events.map(event => event.type))], taxonomy.event_types),
-    article.events.map(event => event.subject).join('\n'), article.events.map(event => event.product_ids.map(id => productNames[id]).join('、')).join('\n'),
-    article.events.map(event => taxonomy.statuses[event.status]).join('\n'), article.events.map(event => taxonomy.relations[event.relation]).join('\n'),
-    article.events.map(event => event.change_quote).join('\n'), article.events.map(event => event.impact_quote).filter(Boolean).join('\n'), article.proposed_tags.map(tag => `${tag.dimension}/${tag.tag}: ${tag.description}`).join('\n'), article.url]);
-  await fs.writeFile(path.join(outputDirectory, 'tags.csv'), encodeCsv([['标题', '来源', '现有结果', '处理状态', '完成分块', '证据来源', '业务标签', '内容类型', '事件标签', '变化对象', '产品标签', '事实状态', '关系类型', '事件原句', '影响原句', '候选新标签', '链接'], ...rows]));
+    article.events.map(event => event.subject).join('\n'),
+    article.events.map(event => taxonomy.statuses[event.status]).join('\n'),
+    article.events.map(event => event.change_quote).join('\n'), article.proposed_tags.map(tag => `${tag.dimension}/${tag.tag}: ${tag.description}`).join('\n'), article.url]);
+  await fs.writeFile(path.join(outputDirectory, 'tags.csv'), encodeCsv([['标题', '来源', '现有结果', '处理状态', '完成分块', '证据来源', '业务标签', '内容类型', '事件标签', '变化对象', '事实状态', '事件原句', '候选新标签', '链接'], ...rows]));
   await fs.writeFile(path.join(outputDirectory, 'tag-discovery.json'), JSON.stringify(report.summary, null, 2) + '\n');
   const lines = [
     '# 语义标签试跑结果', '',
     `模型为 ${report.model}。处理完整 ${report.summary.completed} 篇，部分完成 ${report.summary.partial} 篇，失败 ${report.summary.failed} 篇，缺少证据 ${report.summary.noEvidence} 篇。`, '',
     `本次调用 ${report.requests} 次，缓存命中 ${report.cacheHits} 次，耗时 ${(report.elapsedMs / 60000).toFixed(1)} 分钟。`, '',
+    '## 未完成原因', '',
+    ...Object.entries(report.summary.failureCoverage).map(([reason, count]) => `- ${reason}: ${count} 段`),
+    ...(Object.keys(report.summary.failureCoverage).length ? [] : ['无。']), '',
     '## 事件标签覆盖', '', '| 标签 | 完整处理文章数 |', '| --- | --- |'
   ];
   for (const [type, count] of Object.entries(report.summary.eventCoverage)) lines.push(`| ${taxonomy.event_types[type]} | ${count} |`);
   lines.push('', '## 内容类型覆盖', '', '| 类型 | 完整处理文章数 |', '| --- | --- |');
   for (const [type, count] of Object.entries(report.summary.contentCoverage)) lines.push(`| ${taxonomy.content_types[type]} | ${count} |`);
-  lines.push('', '## 与既有筛选结果的分歧', '', `完整文章中有 ${report.comparison.filter(item => item.discrepancy).length} 篇分歧，需要人工复核；有 ${report.comparison.filter(item => item.productProposals.length).length} 篇提出产品知识库补充候选。详情见 comparison.csv。`, '', '## 候选新标签', '');
+  lines.push('', '## 与既有筛选结果交叉核对', '', `完整文章中有 ${report.comparison.filter(item => item.discrepancy).length} 篇事件信号与原筛选结果不一致，需要人工核查产品关联。模型不判定立讯产品关系，也不自动修改知识库。详情见 comparison.csv。`, '', '## 候选新标签', '');
   for (const proposal of report.summary.proposedTags) {
     lines.push(`- ${proposal.dimension}/${proposal.tag}，涉及 ${proposal.articleIds.length} 篇。${proposal.descriptions.join('；')}`);
     for (const example of proposal.examples.slice(0, 2)) lines.push(`  - ${example.title}。依据为 ${example.quote}`);
   }
   if (!report.summary.proposedTags.length) lines.push('完整处理记录中没有得到可核对的新标签建议。');
-  lines.push('', '## 本批未覆盖的既有事件标签', '', report.summary.unusedEventTypes.map(type => taxonomy.event_types[type]).join('、'), '', '候选标签需要结合例句和人工审阅确认。事件标签和关系均为模型输出，原文引用已做存在性校验，语义正确性仍需核对。', '');
+  lines.push('', '## 本批未覆盖的既有事件标签', '', report.summary.unusedEventTypes.map(type => taxonomy.event_types[type]).join('、'), '', '候选标签需要结合例句和人工审阅确认。原文句子由程序按模型选出的编号提取；事件分类和对应关系仍需人工审阅。', '');
   await fs.writeFile(path.join(outputDirectory, 'report.md'), lines.join('\n'));
   const status = report.summary.completed === report.results.length ? 'completed' : report.summary.completed || report.summary.partial ? 'partial' : 'failed';
   await fs.writeFile(path.join(outputDirectory, 'run-state.json'), JSON.stringify({ status, contextHash: manifest.contextHash, finishedAt: report.generatedAt, articles: manifest.articles.length }, null, 2) + '\n');

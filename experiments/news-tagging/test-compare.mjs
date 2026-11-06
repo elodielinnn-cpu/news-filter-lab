@@ -3,20 +3,24 @@ import { compareDecisions, comparisonCsv } from './compare.mjs';
 
 const supported = {
   id: 'one', title: 'Supplier switch', url: 'https://example.com/one',
-  originalDecision: '排除', status: 'completed', domains: ['automotive'],
+  originalDecision: '排除', originalBusiness: '汽车', originalAffectedObject: '', originalEvidence: '', originalReason: '产品未匹配',
+  status: 'completed', domains: ['automotive'],
   content_types: ['industry-news'],
-  events: [{ status: 'occurred', relation: 'direct', change_quote: 'Supplier switched', impact_quote: '' }],
-  proposed_tags: [{ dimension: 'product', description: '车载连接器', evidence_quote: 'connector' }]
+  events: [{ status: 'occurred', change_quote: 'Supplier switched' }],
+  proposed_tags: []
 };
 const unfinished = { ...supported, id: 'two', status: 'partial' };
 const speculative = { ...supported, id: 'three', events: [{ ...supported.events[0], status: 'rumor' }], proposed_tags: [] };
-const rows = compareDecisions({ results: [supported, unfinished, speculative] });
-assert.equal(rows[0].tagDecision, '待人工核对');
+const unsupportedSelection = { ...supported, id: 'four', originalDecision: '入选', events: [] };
+const rows = compareDecisions({ results: [supported, unfinished, speculative, unsupportedSelection] });
+assert.equal(rows[0].tagDecision, '发现实质事件，产品关系待核对');
 assert.equal(rows[0].discrepancy, true);
-assert.equal(rows[0].productProposals.length, 1);
+assert.match(rows[0].reviewReason, /知识库/);
 assert.equal(rows[1].tagDecision, '证据或推理未完成');
 assert.equal(rows[1].discrepancy, false);
-assert.equal(rows[1].productProposals.length, 0);
-assert.equal(rows[2].tagDecision, '未发现可入选证据');
+assert.equal(rows[2].tagDecision, '未发现实质事件');
+assert.equal(rows[3].discrepancy, true);
+assert.match(rows[3].reviewReason, /原规则入选/);
 assert.match(comparisonCsv(rows), /Supplier switched/);
+assert.match(comparisonCsv(rows), /产品未匹配/);
 console.log('Comparison review cases passed');

@@ -30,68 +30,65 @@ export function chunkText(paragraphs, maxCharacters, overlapCharacters) {
   return chunks;
 }
 
-export function outputSchema(taxonomy, products) {
+export function evidenceSpans(text) {
+  return [...new Intl.Segmenter(undefined, { granularity: 'sentence' }).segment(text)]
+    .map(({ segment }) => segment.trim())
+    .filter(Boolean)
+    .map((sentence, id) => ({ id, text: sentence }));
+}
+
+export function outputSchema(taxonomy) {
   const string = { type: 'string' };
   const list = (items, maximum = 4) => ({ type: 'array', maxItems: maximum, items });
-  const productList = list({ type: 'string', enum: products.map(product => product.productId) });
+  const evidenceId = { type: 'integer', minimum: 0 };
   return {
     type: 'object', additionalProperties: false,
     required: ['domains', 'content_types', 'events', 'raw_tags', 'proposed_tags'],
     properties: {
       domains: list({ type: 'string', enum: Object.keys(taxonomy.domains) }, 3),
       content_types: list({ type: 'string', enum: Object.keys(taxonomy.content_types) }),
-      raw_tags: list(string, 20),
+      raw_tags: list(string, 6),
       events: list({
         type: 'object', additionalProperties: false,
-        required: ['type', 'status', 'subject', 'product_ids', 'change_quote', 'relation', 'impact_quote', 'impact_product_ids'],
+        required: ['type', 'status', 'subject', 'evidence_id'],
         properties: {
           type: { type: 'string', enum: Object.keys(taxonomy.event_types) },
           status: { type: 'string', enum: Object.keys(taxonomy.statuses) }, subject: string,
-          product_ids: productList, change_quote: string,
-          relation: { type: 'string', enum: Object.keys(taxonomy.relations) },
-          impact_quote: string, impact_product_ids: productList
+          evidence_id: evidenceId
         }
       }),
       proposed_tags: list({
         type: 'object', additionalProperties: false,
-        required: ['dimension', 'tag', 'description', 'evidence_quote'],
-        properties: { dimension: { type: 'string', enum: ['event', 'content', 'product'] }, tag: string, description: string, evidence_quote: string }
-      }, 3)
+        required: ['dimension', 'tag', 'description', 'evidence_id'],
+        properties: { dimension: { type: 'string', enum: ['event', 'content'] }, tag: string, description: string, evidence_id: evidenceId }
+      }, 1)
     }
   };
 }
 
-export function validateOutput(value, chunk, taxonomy, products) {
+export function validateOutput(value, chunk, taxonomy) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Expected JSON object');
-  const productIds = new Set(products.map(product => product.productId));
-  const directIds = new Set(products.filter(product => product.relationshipLevel === 'direct').map(product => product.productId));
+  const spans = evidenceSpans(chunk.text);
+  const evidence = id => {
+    if (!Number.isInteger(id) || !spans[id]) throw new Error('Evidence ID absent from supplied chunk');
+    return spans[id].text;
+  };
   const requireList = (items, allowed, name, maximum) => {
     if (!Array.isArray(items) || items.length > maximum || items.some(item => typeof item !== 'string' || !allowed.has(item))) throw new Error(`Invalid ${name}`);
     return [...new Set(items)];
   };
-  const quote = (text, required) => {
-    if (typeof text !== 'string' || required && !normalizedText(text) || text && !normalizedText(chunk.text).includes(normalizedText(text))) throw new Error('Evidence quote absent from supplied chunk');
-  };
   const domains = requireList(value.domains, new Set(Object.keys(taxonomy.domains)), 'domains', 3);
   const contentTypes = requireList(value.content_types, new Set(Object.keys(taxonomy.content_types)), 'content types', 4);
-  if (!Array.isArray(value.events) || value.events.length > 4 || !Array.isArray(value.raw_tags) || value.raw_tags.length > 20 || value.raw_tags.some(tag => typeof tag !== 'string') || !Array.isArray(value.proposed_tags) || value.proposed_tags.length > 3) throw new Error('Invalid event/tag arrays');
+  if (!Array.isArray(value.events) || value.events.length > 4 || !Array.isArray(value.raw_tags) || value.raw_tags.length > 6 || value.raw_tags.some(tag => typeof tag !== 'string') || !Array.isArray(value.proposed_tags) || value.proposed_tags.length > 1) throw new Error('Invalid event/tag arrays');
   const events = value.events.map(event => {
-    if (!event || !Object.hasOwn(taxonomy.event_types, event.type) || !Object.hasOwn(taxonomy.statuses, event.status) || !Object.hasOwn(taxonomy.relations, event.relation) || typeof event.subject !== 'string' || !event.subject.trim()) throw new Error('Invalid event classification');
-    quote(event.change_quote, true);
-    quote(event.impact_quote, event.relation === 'explicit-indirect');
-    const subjects = requireList(event.product_ids, productIds, 'event products', 4);
-    const targets = requireList(event.impact_product_ids, productIds, 'impact products', 4);
-    if (event.relation === 'direct' && !subjects.some(id => directIds.has(id))) throw new Error('Direct relationship lacks a direct-scope product');
-    if (event.relation === 'explicit-indirect' && (!targets.length || targets.some(id => !directIds.has(id)))) throw new Error('Indirect relationship lacks direct-scope target products');
-    if (event.relation === 'unclear' && (event.impact_quote || targets.length)) throw new Error('Unclear relationship cannot assert a supported impact');
-    return { type: event.type, status: event.status, subject: event.subject, product_ids: subjects, change_quote: event.change_quote, relation: event.relation, impact_quote: event.impact_quote, impact_product_ids: targets, chunk: chunk.index };
+    if (!event || !Object.hasOwn(taxonomy.event_types, event.type) || !Object.hasOwn(taxonomy.statuses, event.status) || typeof event.subject !== 'string' || !event.subject.trim()) throw new Error('Invalid event classification');
+    return { type: event.type, status: event.status, subject: event.subject, evidence_id: event.evidence_id, change_quote: evidence(event.evidence_id), chunk: chunk.index };
   });
   const proposals = value.proposed_tags.map(proposal => {
-    if (!proposal || !['event', 'content', 'product'].includes(proposal.dimension) || typeof proposal.tag !== 'string' || typeof proposal.description !== 'string' || !proposal.description.trim()) throw new Error('Invalid tag proposal');
+    if (!proposal || !['event', 'content'].includes(proposal.dimension) || typeof proposal.tag !== 'string' || typeof proposal.description !== 'string' || !proposal.description.trim()) throw new Error('Invalid tag proposal');
     const tag = normalizeTag(proposal.tag);
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(tag)) throw new Error('Proposal must use a lowercase English slug');
-    quote(proposal.evidence_quote, true);
-    return { dimension: proposal.dimension, tag, description: proposal.description, evidence_quote: proposal.evidence_quote, chunk: chunk.index };
+    return { dimension: proposal.dimension, tag, description: proposal.description, evidence_id: proposal.evidence_id, evidence_quote: evidence(proposal.evidence_id), chunk: chunk.index };
   });
   const rawTags = [...new Set(value.raw_tags.flatMap(tag => { const extracted = extractAtTags(tag); return extracted.length ? extracted : [tag]; }).map(normalizeTag).filter(Boolean))];
   return { domains, content_types: contentTypes, events, raw_tags: rawTags, proposed_tags: proposals };

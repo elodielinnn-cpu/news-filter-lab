@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
-import { extractAtTags, normalizeTag, chunkText, validateOutput, digest } from './adapter.mjs';
+import { extractAtTags, normalizeTag, chunkText, evidenceSpans, validateOutput, digest } from './adapter.mjs';
 import { prepareManifest, requestTags, tagManifest, summarize } from './run.mjs';
 import { loadBusinessProfile } from '../news-filter-v3/business-profile.mjs';
 
@@ -14,18 +14,23 @@ const manifest = await prepareManifest({ articles: [fixture] }, taxonomy, runtim
 const chunk = manifest.articles[0].chunks[0];
 const raw = {
   domains: ['datacom-telecom'], content_types: ['industry-news'], raw_tags: ['@Cooling', '@server_cooling'], proposed_tags: [],
-  events: [{ type: 'technology-update', status: 'occurred', subject: 'server cold plate', product_ids: ['cold_plate'], change_quote: text, relation: 'direct', impact_quote: '', impact_product_ids: [] }]
+  events: [{ type: 'technology-update', status: 'occurred', subject: 'server cold plate', evidence_id: 0 }]
 };
-const valid = validateOutput(raw, chunk, taxonomy, manifest.products);
+const valid = validateOutput(raw, chunk, taxonomy);
 assert.deepEqual(extractAtTags('@GPU @gpu @冷板 @server-cooling'), ['gpu', '冷板', 'server-cooling']);
 assert.equal(normalizeTag('@Server_Cooling'), 'server-cooling');
-assert.deepEqual(validateOutput(valid, chunk, taxonomy, manifest.products), valid);
-assert.throws(() => validateOutput({ ...raw, content_types: ['invented'] }, chunk, taxonomy, manifest.products), /Invalid/);
-assert.throws(() => validateOutput({ ...raw, events: [{ ...raw.events[0], product_ids: ['consumer_structure'] }] }, chunk, taxonomy, manifest.products), /products/);
-assert.throws(() => validateOutput({ ...raw, events: [{ ...raw.events[0], product_ids: ['gpu_chip'] }] }, chunk, taxonomy, manifest.products), /direct-scope/);
-assert.throws(() => validateOutput({ ...raw, events: [{ ...raw.events[0], change_quote: 'Invented original quote.' }] }, chunk, taxonomy, manifest.products), /Evidence/);
-assert.throws(() => validateOutput({ ...raw, events: [{ ...raw.events[0], relation: 'explicit-indirect' }] }, chunk, taxonomy, manifest.products), /Evidence/);
-const proposed = validateOutput({ ...raw, proposed_tags: [{ dimension: 'event', tag: 'Thermal_Optimization', description: '散热优化', evidence_quote: text }] }, chunk, taxonomy, manifest.products);
+assert.equal(evidenceSpans(text)[0].text, text);
+assert.equal(valid.events[0].change_quote, text);
+const twoSentences = { ...chunk, text: 'BYD launched a new electric SUV. Sales remain uncertain.' };
+assert.deepEqual(evidenceSpans(twoSentences.text).map(span => span.id), [0, 1]);
+assert.equal(validateOutput({ ...raw, events: [{ ...raw.events[0], evidence_id: 1 }] }, twoSentences, taxonomy).events[0].change_quote, 'Sales remain uncertain.');
+assert.ok(!JSON.stringify(manifest.schema).includes('product_ids'));
+assert.ok(!Object.hasOwn(validateOutput({ ...raw, events: [{ ...raw.events[0], product_ids: ['cold_plate'], relation: 'direct' }] }, chunk, taxonomy).events[0], 'product_ids'));
+assert.deepEqual(validateOutput(valid, chunk, taxonomy), valid);
+assert.throws(() => validateOutput({ ...raw, content_types: ['invented'] }, chunk, taxonomy), /Invalid/);
+assert.throws(() => validateOutput({ ...raw, events: [{ ...raw.events[0], evidence_id: 99 }] }, chunk, taxonomy), /Evidence ID/);
+assert.throws(() => validateOutput({ ...raw, proposed_tags: [{ dimension: 'product', tag: 'cold-plate', description: '冷板', evidence_id: 0 }] }, chunk, taxonomy), /Invalid tag proposal/);
+const proposed = validateOutput({ ...raw, proposed_tags: [{ dimension: 'event', tag: 'Thermal_Optimization', description: '散热优化', evidence_id: 0 }] }, chunk, taxonomy);
 assert.equal(proposed.proposed_tags[0].tag, 'thermal-optimization');
 assert.equal(taxonomy.event_types['thermal-optimization'], undefined);
 
@@ -42,10 +47,12 @@ assert.ok(unicodeChunks.every(item => !/[\uD800-\uDBFF]$/u.test(item.text) && !/
 assert.ok(chunkText(['word '.repeat(45), 'word '.repeat(45)], 100, 99).length < 500);
 
 const cache = new Map();
+const progress = [];
 const infer = async () => ({ output: proposed, actualModel: runtime.model, usage: { total_tokens: 100 } });
-const report = await tagManifest({ manifest, runtime, taxonomy, prompt, infer, loadCache: async key => cache.get(key), saveCache: async (key, value) => cache.set(key, value) });
+const report = await tagManifest({ manifest, runtime, taxonomy, prompt, infer, loadCache: async key => cache.get(key), saveCache: async (key, value) => cache.set(key, value), onProgress: item => progress.push(item) });
 assert.equal(report.results[0].status, 'completed');
 assert.equal(report.requests, 1);
+assert.deepEqual(progress.map(item => [item.processedChunks, item.totalChunks, item.outcome]), [[1, 1, 'completed']]);
 assert.equal(summarize(report, taxonomy).proposedTags[0].articleIds.length, 1);
 const cached = await tagManifest({ manifest, runtime, taxonomy, prompt, infer: async () => { throw new Error('should not call'); }, loadCache: async key => cache.get(key) });
 assert.equal(cached.cacheHits, 1);
@@ -62,6 +69,7 @@ const failed = await tagManifest({ manifest, runtime, taxonomy, prompt, infer: a
 assert.equal(failed.results[0].status, 'failed');
 assert.equal(failed.requests, 1);
 assert.equal(failed.results[0].events.length, 0);
+assert.equal(summarize(failed, taxonomy).failureCoverage.model_http_500, 1);
 
 const twoChunkManifest = { ...manifest, articles: [{ ...manifest.articles[0], chunks: [chunk, { ...chunk, index: 1 }] }] };
 let calls = 0;
@@ -76,14 +84,15 @@ const consumer = await prepareManifest({ articles: [{ ...fixture, title: 'New iP
 assert.equal(consumer.articles.length, 0);
 
 let sent;
-const args = { endpoint: 'http://127.0.0.1:8080', model: runtime.model, prompt, taxonomy, products: manifest.products, schema: manifest.schema, article: fixture, chunk, runtime };
+const args = { endpoint: 'http://127.0.0.1:8080', model: runtime.model, prompt, taxonomy, schema: manifest.schema, article: fixture, chunk, runtime };
 const response = await requestTags({ ...args, fetchImpl: async (url, request) => {
   sent = JSON.parse(request.body);
   return { ok: true, json: async () => ({ model: runtime.model, choices: [{ finish_reason: 'stop', message: { content: JSON.stringify(raw) } }], usage: { total_tokens: 100 } }) };
 } });
-assert.equal(response.output.events[0].product_ids[0], 'cold_plate');
+assert.equal(response.output.events[0].change_quote, text);
 assert.equal(sent.response_format.type, 'json_object');
 assert.ok(sent.messages[1].content.includes(text));
+assert.ok(!sent.messages[1].content.includes('cold_plate'));
 await assert.rejects(() => requestTags({ ...args, fetchImpl: async () => ({ ok: true, json: async () => ({ choices: [{ finish_reason: 'length', message: { content: '{}' } }] }) }) }), /incomplete/);
 await assert.rejects(() => requestTags({ ...args, fetchImpl: async () => ({ ok: false, status: 429 }) }), /429/);
 
