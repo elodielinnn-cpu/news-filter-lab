@@ -1,0 +1,781 @@
+{
+  "source": "Hardware_Radar_48_Article_Audit.xlsx, 逐篇复核 + 原始打标; user supplied 2026-11-09",
+  "note": "Human judgments are a review benchmark, not source-verified ground truth or automatic production decisions.",
+  "articles": [
+    {
+      "number": 1,
+      "title": "高通获 Starlink Mobile 地面 5G 项目",
+      "source_url": "https://www.servethehome.com/qualcomm-dragonwing-nabs-a-big-spacex-starlink-mobile-nationwide-us-5g-network-win/",
+      "evidence_summary": "SpaceX 选定高通 QRU100/QDU100，双方披露多年协议覆盖数万基站，计划 2027 年启动。",
+      "event_stage": "已签商业协议｜待部署",
+      "expected_event_types": [
+        "order-contract"
+      ],
+      "business_chain": "通信基站",
+      "relevance": "高",
+      "priority": "高",
+      "recommended_destination": "首页",
+      "business_reason": "64T64R Massive MIMO、基站射频单元和天线是明确产品链，未披露立讯供货。",
+      "review_reason": "协议支持 order-contract。已选型、未来开工均不能写成已部署。既有芯片规格是背景。"
+    },
+    {
+      "number": 2,
+      "title": "AMD 第三季业绩与 Helios 客户运行",
+      "source_url": "https://www.servethehome.com/amd-q3-2026-earnings-data-center-growth/",
+      "evidence_summary": "AMD 数据中心季度营收约 85.46 亿美元，同比增长 97%。公司同时披露多个具名客户在 Helios 上运行工作负载。",
+      "event_stage": "已披露财报｜客户运行",
+      "expected_event_types": [
+        "financial-results",
+        "deployment-adoption"
+      ],
+      "business_chain": "数据中心整机与机柜",
+      "relevance": "中",
+      "priority": "高",
+      "recommended_destination": "首页",
+      "business_reason": "数据中心增量和具名整柜使用提供需求证据。收入还包含 CPU/GPU，无法折算成立讯订单。",
+      "review_reason": "财报为主，具名工作负载是独立部署证据。展望随财报记录，技术标签不能代替业绩。"
+    },
+    {
+      "number": 3,
+      "title": "Marvell 签约拟收购 Lumentum",
+      "source_url": "https://www.servethehome.com/marvell-to-acquire-lumentum-115-billion-optical-ai-connectivity/",
+      "evidence_summary": "签署约 1,150 亿美元全股票收购协议，待审批与交割。拟整合激光、光交换、光电互连和定制硅能力。",
+      "event_stage": "已签并购协议｜未交割",
+      "expected_event_types": [
+        "merger-acquisition"
+      ],
+      "business_chain": "数据中心光互连",
+      "relevance": "高",
+      "priority": "高",
+      "recommended_destination": "首页",
+      "business_reason": "激光器、OCS 和光电协同设计可能重塑光模块与互连竞争链。未披露采购或供应商切换。",
+      "review_reason": "并购签约有独立标签。协同、产品组合与未来产能不得写成已经合作发布或扩产。"
+    },
+    {
+      "number": 4,
+      "title": "高通完成 HBC 初步验证",
+      "source_url": "https://www.servethehome.com/qualcomm-validates-hbc-stacked-memory-ahead-of-2027-dragonfly-ai250-sampling/",
+      "evidence_summary": "用靠近 DRAM 的底层计算裸片实现近存计算，完成初步验证。Dragonfly AI250 计划 2027 年送样。",
+      "event_stage": "研发验证｜送样在计划中",
+      "expected_event_types": [
+        "research-prototype"
+      ],
+      "business_chain": "上游内存与封装",
+      "relevance": "中",
+      "priority": "中",
+      "recommended_destination": "观察",
+      "business_reason": "讨论带宽、成本和能效，尚无整机接口、供电、散热或系统集成变化证据。HBC 不直接映射立讯 SiP。",
+      "review_reason": "具体技术增量发生在内存结构，初验已有里程碑。计划送样不能当产品发布，也不满足整机架构事件门槛。"
+    },
+    {
+      "number": 5,
+      "title": "ASRock Rack 展示 Rubin 液冷整柜",
+      "source_url": "https://www.servethehome.com/liquid-cooled-nvidia-servers-at-the-asrock-rack-ocp-2026-booth/",
+      "evidence_summary": "在 OCP 展示 NVL72 整柜及 HGX 服务器。整柜有 5,000A 母排和 Manifold，HGX 托盘调整 GPU 方向以适配高密度液冷。",
+      "event_stage": "展会实物｜披露系统设计",
+      "expected_event_types": [
+        "architecture-change"
+      ],
+      "business_chain": "数据中心机柜、电源与液冷",
+      "relevance": "高",
+      "priority": "中",
+      "recommended_destination": "首页",
+      "business_reason": "托盘布局与冷却需求有明确因果，机柜母排、Manifold、冷板和集成都对应直接业务。",
+      "review_reason": "用托盘前后设计变化支持 architecture-change。展出不能单独证明发布、量产、客户部署或缺货。"
+    },
+    {
+      "number": 6,
+      "title": "NVIDIA 锁定 Rubin 出货规格",
+      "source_url": "https://www.servethehome.com/nvidia-updates-rubin-gpu-specs-as-first-production-hardware-arrives/",
+      "evidence_summary": "出货版 HBM4 带宽 22→19.2 TB/s，NVLink 3.6→3.0 TB/s，单 GPU scale-out 400→450 GB/s。报道同时证实平台进入早期出货爬坡。",
+      "event_stage": "出货规格定版｜早期爬坡",
+      "expected_event_types": [
+        "technology-update",
+        "production-ramp"
+      ],
+      "business_chain": "数据中心整机与高速互连",
+      "relevance": "高",
+      "priority": "中",
+      "recommended_destination": "首页",
+      "business_reason": "修改落实到 NVL72 平台及互连带宽，涉及整柜设计评估。早期出货与 #17 云上可用是关联节点。",
+      "review_reason": "用出货规格变化和实际爬坡分别举证。保留文章关于 HBM 降速原因的不确定性。"
+    },
+    {
+      "number": 7,
+      "title": "Supermicro 与 SambaNova 合推异构推理系统",
+      "source_url": "https://www.storagereview.com/news/supermicro-sambanova-sn50-rdu-inference-racks-10000-chips",
+      "evidence_summary": "系统列入 Supermicro DCBBS，GPU 处理 prefill、RDU 处理 decode。1 万颗是规划量，无采购承诺和发货日期。",
+      "event_stage": "已公布合作｜新方案进目录",
+      "expected_event_types": [
+        "architecture-change",
+        "partnership",
+        "product-launch"
+      ],
+      "business_chain": "数据中心推理整机与机柜",
+      "relevance": "高",
+      "priority": "中",
+      "recommended_destination": "首页",
+      "business_reason": "拆分两类芯片的任务改变整机集成、配网和功耗评估。联合系统具体互连与功耗仍待披露。",
+      "review_reason": "目录及可订购渠道支持联合方案推出。1 万颗规划不能转成采购、扩产或已部署。"
+    },
+    {
+      "number": 8,
+      "title": "Broadcom 推出 VMware 产品与服务",
+      "source_url": "https://www.storagereview.com/news/broadcom-vcf-portfolio-update-vsphere-express-live-recovery",
+      "evidence_summary": "推出 128 核 vSphere Express 及 Live Recovery、Compliance 等新软件服务，同时介绍未来版本路线图。",
+      "event_stage": "正式推出软件组合",
+      "expected_event_types": [
+        "product-launch"
+      ],
+      "business_chain": "企业虚拟化软件",
+      "relevance": "低",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "软件授权和灾备为主，128 核是套餐口径，未显示服务器 BOM 或采购变化。",
+      "review_reason": "产品推出成立。路线图及已发布版本的旧功能是背景，租户隔离也不是合作。"
+    },
+    {
+      "number": 9,
+      "title": "Simplyblock 获 Red Hat 认证",
+      "source_url": "https://www.storagereview.com/news/simplyblock-red-hat-certified-openshift-virtualization-storage",
+      "evidence_summary": "CSI 驱动及 Kubernetes Operator 获认证并进 Red Hat 生态目录，已存在的零 RPO 灾备也在认证栈中。",
+      "event_stage": "第三方认证",
+      "expected_event_types": [
+        "qualification-certification"
+      ],
+      "business_chain": "企业存储软件",
+      "relevance": "低",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "认证面向现有服务器的软件存储层，暂无设备采购、建设或供应链变化。",
+      "review_reason": "通过认证与发布、监管政策和供应中断各自有不同证据。既有灾备机制不重复打标。"
+    },
+    {
+      "number": 10,
+      "title": "AMD MI350P 评测揭示 PCIe 整机取舍",
+      "source_url": "https://www.storagereview.com/review/amd-instinct-mi350p-first-look",
+      "evidence_summary": "媒体实测双槽风冷 PCIe 卡，最大板功率 600W，评测用 450W；报道列出 Dell 支持多卡的机型。",
+      "event_stage": "独立评测｜实际基准",
+      "expected_event_types": [
+        "technology-update"
+      ],
+      "business_chain": "上游加速卡与服务器集成",
+      "relevance": "中",
+      "priority": "中",
+      "recommended_destination": "观察",
+      "business_reason": "功耗、槽位和风冷可映射服务器设计。评测安装以及 OEM 支持规格尚未体现客户采购或切换。",
+      "review_reason": "以新实测和可量化的系统取舍支持技术标签。评测搭建不是客户部署，也没有扩产、迁厂或首发证据。"
+    },
+    {
+      "number": 11,
+      "title": "Intel 签约拟收购 Classiq",
+      "source_url": "https://www.storagereview.com/news/intel-to-acquire-classiq-quantum-software-silicon-spin-qubits",
+      "evidence_summary": "签署确定性并购协议，拟将量子算法综合工具与硅自旋量子比特结合，仍待审批。",
+      "event_stage": "已签并购协议｜未交割",
+      "expected_event_types": [
+        "merger-acquisition"
+      ],
+      "business_chain": "量子计算软件",
+      "relevance": "低",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "量子软件和 QPU 组合未指向立讯现有服务器、互连或组装需求。",
+      "review_reason": "收购使用并购标签。协同构想不计股权融资、合作发布或实际架构变化。"
+    },
+    {
+      "number": 12,
+      "title": "Cadence 公开 Maestro 模型组合",
+      "source_url": "https://www.storagereview.com/news/cadence-maestro-ai-models-chip-design-super-agents",
+      "evidence_summary": "Cadence 推出面向 EDA 的模型，报道列出 NVIDIA 联合集成及 Socionext 生产设计环境采用。5 倍 token 效率为厂商早期结果。",
+      "event_stage": "正式发布｜限量早期访问｜具名工具采用",
+      "expected_event_types": [
+        "product-launch",
+        "partnership",
+        "deployment-adoption"
+      ],
+      "business_chain": "EDA 与封装设计工具",
+      "relevance": "低",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "EDA 和先进封装设计软件属于工具链，未体现立讯封装工艺、设备或项目改变。",
+      "review_reason": "可以用具名客户证明采用，需保留具体工具、对象和阶段。5 倍效率不可外推为行业普遍结果。"
+    },
+    {
+      "number": 13,
+      "title": "CloudCasa DR 增加 PowerStore 支持",
+      "source_url": "https://www.storagereview.com/news/cloudcasa-dr-dell-powerstore-kubernetes-failover-mcp-server",
+      "evidence_summary": "现有软件新增 Kubernetes 故障切换的 PowerStore 适配、只读 MCP 和 CBT 预览。",
+      "event_stage": "现有软件功能更新",
+      "expected_event_types": [
+        "technology-update"
+      ],
+      "business_chain": "企业存储软件",
+      "relevance": "低",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "复用已有存储阵列，文章未显示存储设备增购、硬件变更或合作签约。",
+      "review_reason": "已发布功能更新成立。CBT 仍为预览；REST API 适配不足以证明合作或新硬件架构。"
+    },
+    {
+      "number": 14,
+      "title": "Cigent 加密工具获 Intel vPro 认证",
+      "source_url": "https://www.storagereview.com/news/cigent-software-full-drive-encryption-intel-vpro-certified-app",
+      "evidence_summary": "全盘加密软件及命令行工具通过 Intel 的性能和功耗评估。",
+      "event_stage": "第三方认证",
+      "expected_event_types": [
+        "qualification-certification"
+      ],
+      "business_chain": "PC 终端安全软件",
+      "relevance": "低",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "认证针对常驻软件，文章无 PC 硬件 BOM、终端组装或采购变化。",
+      "review_reason": "认证通过是新事实。既有加密功能和测试标准属于背景。"
+    },
+    {
+      "number": 15,
+      "title": "Oracle AI 数据库与 IBM SAN 联合验证",
+      "source_url": "https://www.storagereview.com/review/ibm-flashsystem-broadcom-fibre-channel-oracle-ai-database-26ai-validation",
+      "evidence_summary": "实验室对比 64G 和 32G FC，测得向量检索吞吐约 85.0 与 43.7 次/秒，同时做勒索攻击演练。",
+      "event_stage": "实验室基准｜模拟攻击",
+      "expected_event_types": [
+        "technology-update"
+      ],
+      "business_chain": "企业存储与高速互连",
+      "relevance": "中",
+      "priority": "中",
+      "recommended_destination": "观察",
+      "business_reason": "有可量化的互连带宽和存储容量影响。测试未显示客户迁移、网络采购或设备换代。",
+      "review_reason": "独立硬件基准可作技术证据。实验架构是测试配置，演练不是安全事件。"
+    },
+    {
+      "number": 16,
+      "title": "AMD Helios 已在 Meta 安装并测试",
+      "source_url": "https://www.storagereview.com/news/amd-helios-racks-running-at-meta-custom-instinct-gpu-6th-gen-epyc-muse",
+      "evidence_summary": "首批整柜已在 Meta 运行测试，双方协同定制芯片，AMD 承诺在 Meta 股权发行中投资 10 亿美元，后续铺开时间和规模未披露。",
+      "event_stage": "客户现场测试｜合作与投资承诺",
+      "expected_event_types": [
+        "deployment-adoption",
+        "partnership",
+        "investment"
+      ],
+      "business_chain": "数据中心整柜、液冷与供电",
+      "relevance": "高",
+      "priority": "高",
+      "recommended_destination": "首页",
+      "business_reason": "具名客户现场整柜测试，且配套冷板等有明确业务链。未披露立讯供货或规模订单。",
+      "review_reason": "现场安装并运行可标部署，阶段须保留为测试。投资方向为 AMD 投 Meta。计划中的铺开另记。"
+    },
+    {
+      "number": 17,
+      "title": "OCI 上线 Rubin NVL72 并披露扩建计划",
+      "source_url": "https://www.storagereview.com/news/nvidia-vera-rubin-nvl72-vera-cpus-generally-available-oci-multi-gigawatt-superclusters",
+      "evidence_summary": "NVL72 和 Vera CPU 已在 OCI 一般可用。多吉瓦 Supercluster 为扩建计划，正文列出互连、电源和冷却配套。",
+      "event_stage": "云上已可用｜多吉瓦待建设",
+      "expected_event_types": [
+        "deployment-adoption",
+        "partnership"
+      ],
+      "business_chain": "数据中心整柜、高速互连与热电",
+      "relevance": "高",
+      "priority": "高",
+      "recommended_destination": "首页",
+      "business_reason": "具名云平台上线，机柜、交换机、互连、供电及冷却有明确系统链。",
+      "review_reason": "OCI 一般可用支持平台部署，联合扩建支持合作。多吉瓦计划与实际已建容量分开。"
+    },
+    {
+      "number": 18,
+      "title": "IBM FlashSystem 增加盘内异常读取检测",
+      "source_url": "https://www.storagereview.com/news/ibm-flashsystem-data-exfiltration-detection-post-quantum-cryptography",
+      "evidence_summary": "符合条件的阵列以新版固件启用盘内数据外传检测。低于 1% 的误报率为厂商披露。",
+      "event_stage": "固件功能可用",
+      "expected_event_types": [
+        "technology-update"
+      ],
+      "business_chain": "企业存储",
+      "relevance": "低",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "以存储固件安全能力为主，无新增硬件规格、采购或交付证据。",
+      "review_reason": "功能生效有产品和固件版本证据。检测与防御能力不构成安全事件。"
+    },
+    {
+      "number": 19,
+      "title": "Seagate 硬盘与 Broadcom HBA 获 Azure 验证",
+      "source_url": "https://www.storagereview.com/news/seagate-exos-m-hamr-smr-broadcom-ehba-9600-approved-vendor-list-azure",
+      "evidence_summary": "特定 HAMR/SMR 盘获配套 HBA 兼容资格，Azure 通过组合验证。硬盘清单还出现 WD 型号。",
+      "event_stage": "客户认证｜可选配",
+      "expected_event_types": [
+        "qualification-certification"
+      ],
+      "business_chain": "上游存储与服务器选型",
+      "relevance": "中",
+      "priority": "中",
+      "recommended_destination": "观察",
+      "business_reason": "具体硬盘、控制卡组合关系明确，但文章未确认大批采购、上线或对立讯整机接口的改变。",
+      "review_reason": "名单入围及客户验证成立。批准名单不等于已部署、替换供应商或联合签约。"
+    },
+    {
+      "number": 20,
+      "title": "Ollama Windows 版上手测评",
+      "source_url": "https://www.storagereview.com/review/ollama-0-40-11-hands-on-running-local-llms-on-windows",
+      "evidence_summary": "文章测试现成版本的 Windows 本地模型运行、桌面功能及接口。",
+      "event_stage": "软件使用评测",
+      "expected_event_types": [],
+      "business_chain": "本地推理软件",
+      "relevance": "低",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "HP 工作站只是评测环境，未显示终端结构、器件、组装或采购变化。",
+      "review_reason": "常规软件评测可留空。现成版本、使用体验及普通跑分不构成新事件。"
+    },
+    {
+      "number": 21,
+      "title": "Vertiv 推出工厂集成的 SmartIT 机柜",
+      "source_url": "https://www.storagereview.com/news/vertiv-smartit-mgx-orv3-ai-rack-gb300-vera-rubin-nvl72-120-142kw-242kw-liquid-cooling",
+      "evidence_summary": "面向 MGX/ORV3 的电源、分配和直触液冷方案已全球可用。企业配置每计算柜 120–142 kW，辅助柜提供 242 kW N+1 冷却。",
+      "event_stage": "正式推出｜公布整柜设计",
+      "expected_event_types": [
+        "product-launch",
+        "architecture-change"
+      ],
+      "business_chain": "数据中心机柜、电源与液冷",
+      "relevance": "高",
+      "priority": "高",
+      "recommended_destination": "首页",
+      "business_reason": "电源架、母排、CDU、Manifold、冷板及工厂预集成均可直接映射。",
+      "review_reason": "可用与集成拓扑分别举证。过往与 NVIDIA 部署是背景。工厂预装不等于迁厂。"
+    },
+    {
+      "number": 22,
+      "title": "Oracle 披露 Acceleron 前端多平面方案",
+      "source_url": "https://www.storagereview.com/news/oracle-acceleron-front-end-rdma-occl-plugin-multiplanar-failover-3x-nvme-block-storage",
+      "evidence_summary": "计划将 RDMA 和多平面容错延伸到共享前端，配合 SmartNIC 调度、集体通信插件和扩展 NVMe 附接。可用日期未公布。",
+      "event_stage": "正式披露架构｜可用待确认",
+      "expected_event_types": [
+        "architecture-change",
+        "technology-update"
+      ],
+      "business_chain": "云网络、SmartNIC 与存储",
+      "relevance": "中",
+      "priority": "中",
+      "recommended_destination": "观察",
+      "business_reason": "有前后端拓扑和端口故障切换细节，仍未给出新增交换机、线缆或光模块采购规格。",
+      "review_reason": "网络拓扑变化有明确实现。技术标签限独立的 NVMe 附接更新，3 倍为厂商口径。"
+    },
+    {
+      "number": 23,
+      "title": "美国二手电动车周转与价格变化",
+      "source_url": "https://electrek.co/2026/11/04/high-gas-prices-are-pumping-up-used-ev-sales-these-are-flying-off-the-lot/",
+      "evidence_summary": "研究和经销商数据称若干二手 EV 周转较快，文章另报二手 EV 平均成交价上涨 9.8%。",
+      "event_stage": "市场数据｜油价归因为分析",
+      "expected_event_types": [
+        "demand-outlook",
+        "pricing-cost"
+      ],
+      "business_chain": "二手车零售",
+      "relevance": "低",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "二手车转手对新车线束、连接器的采购传导未见证据。",
+      "review_reason": "需求与价格各有数据。转售不能作为部署，新车生产也无法从二手周转推出。"
+    },
+    {
+      "number": 24,
+      "title": "Volvo CE 电动机械进入保护区施工",
+      "source_url": "https://electrek.co/2026/11/04/first-volvo-ce-electric-equipment-does-the-work-without-disturbing-the-wildlife/",
+      "evidence_summary": "Volvo CE 与美国鱼类及野生动物管理局合作，挖掘机和装载机在保护区项目投入使用。",
+      "event_stage": "具体项目使用｜合作",
+      "expected_event_types": [
+        "deployment-adoption",
+        "partnership"
+      ],
+      "business_chain": "工程机械应用",
+      "relevance": "低",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "具体应用成立，但无汽车 E/E 或相关硬件采购规模、规格变化。",
+      "review_reason": "实地使用及具名合作有证据。静音、太阳能移动充电是背景，没有发布或缺货事件。"
+    },
+    {
+      "number": 25,
+      "title": "GM 召回约 6.74 万辆电动车",
+      "source_url": "https://electrek.co/2026/11/04/gm-recalls-67000-cadillac-chevy-evs-over-brake-software-defect/",
+      "evidence_summary": "GM 向 NHTSA 报告 67,380 辆车的制动系统控制模块软件缺陷，特定条件下可能暂时失去制动。",
+      "event_stage": "正式召回",
+      "expected_event_types": [
+        "quality-recall"
+      ],
+      "business_chain": "汽车底盘与制动控制",
+      "relevance": "中",
+      "priority": "中",
+      "recommended_destination": "观察",
+      "business_reason": "涉及制动控制模块，和立讯底盘业务有相邻风险参考。故障定位软件，未披露立讯或零件换供。",
+      "review_reason": "7B 抓到召回。1.5B 无事件标签，但原表将该行标成不可比较。"
+    },
+    {
+      "number": 26,
+      "title": "Ford 公布 Fathom 价格区间",
+      "source_url": "https://electrek.co/2026/11/04/ford-fathom-ev-pickup-prices-range-from-28350-to-high-30ks/",
+      "evidence_summary": "Ford 披露起价 28,350 美元和高配价格带，仍计划 2027 年第四季推出。车型将采用区域式 E/E 和 48V 系统。",
+      "event_stage": "公布价格｜待上市",
+      "expected_event_types": [
+        "pricing-cost"
+      ],
+      "business_chain": "汽车区域架构、配电与线束",
+      "relevance": "高",
+      "priority": "中",
+      "recommended_destination": "观察",
+      "business_reason": "48V 与 Zonal 架构直接对应配电、线束及连接器。此次新增主要是售价，架构在文中为已知背景。",
+      "review_reason": "价格披露可单独打标。可把真正新增的 48V 平台设计公告作为独立架构新闻跟踪。"
+    },
+    {
+      "number": 27,
+      "title": "Range Rover 确认两车型计划停产",
+      "source_url": "https://electrek.co/2026/11/04/range-rover-drops-two-cheapest-suvs-new-entry-level-ev/",
+      "evidence_summary": "品牌负责人确认 Evoque 和 Velar 将于 2027 年结束生产。GT 先前已揭晓，Halewood 投产仍为计划。",
+      "event_stage": "确认未来停产｜已有车型路线",
+      "expected_event_types": [],
+      "business_chain": "汽车车型组合",
+      "relevance": "中",
+      "priority": "低",
+      "recommended_destination": "观察",
+      "business_reason": "车型退场可能影响现有项目，未披露供货项目、订单变化或迁厂。",
+      "review_reason": "现有标签缺少主动产品退场。可在阶段字段记计划停产；禁止借用供货中断、爬坡和换供。"
+    },
+    {
+      "number": 28,
+      "title": "德国纯电新车份额升至 37%",
+      "source_url": "https://electrek.co/2026/11/04/germany-electric-car-sales-record-37-percent-share/",
+      "evidence_summary": "德国 10 月新登记 BEV 占 37%，较前几月持续上升。报道讨论既有补贴对需求的可能影响。",
+      "event_stage": "官方登记数据｜市场变化",
+      "expected_event_types": [
+        "demand-outlook"
+      ],
+      "business_chain": "汽车整车需求",
+      "relevance": "中",
+      "priority": "中",
+      "recommended_destination": "首页",
+      "business_reason": "全国新车动力结构变化，对高压线束、连接器和配电有总量参考。不能推导立讯份额。",
+      "review_reason": "注册统计属于市场需求，既有补贴是背景。财报、技术与政策变更均需要独立事实。"
+    },
+    {
+      "number": 29,
+      "title": "腾势 N9 纯电版进入工信部清单",
+      "source_url": "https://electrek.co/2026/11/04/byds-new-luxury-ev-suv-one-problem-weighs-8200-lbs/",
+      "evidence_summary": "纯电 N9 出现在最新获准销售车型清单。文章关注总质量约 3,760 kg 及三电机参数。",
+      "event_stage": "监管准入｜待正式上市",
+      "expected_event_types": [
+        "qualification-certification"
+      ],
+      "business_chain": "汽车动力系统与整车",
+      "relevance": "中",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "三电机是车型动力配置。无电驱项目、配电架构或供应关系变化。",
+      "review_reason": "据正文采用车型准入标签。3,760 kg 为总质量，清单或申报披露不能视为上市。"
+    },
+    {
+      "number": 30,
+      "title": "小米机器人完成车厂八小时测试",
+      "source_url": "https://electrek.co/2026/11/04/xiaomi-humanoid-robot-8-hour-shift-ev-factory/",
+      "evidence_summary": "小米放出中控侧盖分拣工位测试视频，称连续运行八小时。未披露件数、整班成功率和人工介入。",
+      "event_stage": "生产现场研发验证",
+      "expected_event_types": [
+        "research-prototype"
+      ],
+      "business_chain": "制造自动化与机器人应用",
+      "relevance": "中",
+      "priority": "中",
+      "recommended_destination": "观察",
+      "business_reason": "工位任务有制造参考。未披露机器人批量采购、量产导入或灵巧手等具体硬件需求。",
+      "review_reason": "按验证阶段归类。公司现场的视频或测试可作为原型证据，不能从单次时长推出规模部署或汽车产量爬坡。"
+    },
+    {
+      "number": 31,
+      "title": "Kia EV7 生产规划由文件外泄",
+      "source_url": "https://electrek.co/2026/11/04/kia-ev7-revealed-upcoming-midsize-electric-suv/",
+      "evidence_summary": "媒体转引流出的内部文件，称可能在韩国光州生产中型电动 SUV。缺少正式对外发布及车型技术证据。",
+      "event_stage": "未确认｜内部文件外泄",
+      "expected_event_types": [],
+      "business_chain": "汽车车型组合",
+      "relevance": "低",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "车型预期不够支撑任何 E/E、供应商或量产变化。",
+      "review_reason": "将 rumor 或 unconfirmed 放在独立确认字段。正式活动上的历史 EV 战略不能替这款车确认。"
+    },
+    {
+      "number": 32,
+      "title": "韩国消费者团体拟投诉 Tesla FSD",
+      "source_url": "https://electrek.co/2026/11/04/tesla-fsd-south-korea-consumer-group-complaint-kftc/",
+      "evidence_summary": "媒体称团体计划向韩国公平交易委员会投诉，涉及一部分上海产车辆在当地无法合法启用的销售争议。",
+      "event_stage": "拟投诉｜监管处置待确认",
+      "expected_event_types": [],
+      "business_chain": "汽车 ADAS 合规",
+      "relevance": "中",
+      "priority": "低",
+      "recommended_destination": "观察",
+      "business_reason": "体现 ADAS 市场可用性受认证约束。焦点在销售与合规，无控制器或传感器改变。",
+      "review_reason": "当日证据支持计划投诉，不能写成已立案、已处罚或发布新政策。分类可记 regulatory-complaint 阶段。"
+    },
+    {
+      "number": 33,
+      "title": "得州选举影响 Tesla 和 SpaceX 的评论",
+      "source_url": "https://electrek.co/2026/11/04/what-does-a-blue-texas-sweep-mean-for-tesla-spacex-elon-musk/",
+      "evidence_summary": "文章推演选举可能如何影响 Musk 相关公司，文中回顾既有政策与公司决策。",
+      "event_stage": "政治评论｜情景推演",
+      "expected_event_types": [],
+      "business_chain": "泛行业背景",
+      "relevance": "低",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "未落到汽车 E/E、地面通信设备或已执行的产业政策。",
+      "review_reason": "这类评论应允许返回空标签。历史搬总部和未来政策猜测无需打标。"
+    },
+    {
+      "number": 34,
+      "title": "比亚迪大汉 EV 上市 19 天销量达 4,000",
+      "source_url": "https://electrek.co/2026/11/03/byds-flagship-luxury-ev-sedan-hits-4000-sales-in-19-days/",
+      "evidence_summary": "公司披露单一车型早期销量。10 月 13 日发布、续航和电池能力是报道背景。",
+      "event_stage": "车型销量里程碑",
+      "expected_event_types": [
+        "demand-outlook"
+      ],
+      "business_chain": "汽车整车需求",
+      "relevance": "中",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "单款车型短期销售表现，未披露对应立讯零件、平台排产或供应链变化。",
+      "review_reason": "零售数字计需求信号。先前上市不重复打标，销量也不等同交付部署、财报或产量。"
+    },
+    {
+      "number": 35,
+      "title": "宾州授予 3,700 万美元充电项目资助",
+      "source_url": "https://electrek.co/2026/11/03/pennsylvania-is-way-ahead-on-nevi-charging-now-comes-another-37m/",
+      "evidence_summary": "PennDOT 分配联邦 NEVI 资金，计划在费城区域新增 515 个端口。后续仍需环境审查、签约、施工及调试。",
+      "event_stage": "资金已授予｜建设待执行",
+      "expected_event_types": [
+        "regulation-policy"
+      ],
+      "business_chain": "公共充电与充电连接件",
+      "relevance": "中",
+      "priority": "中",
+      "recommended_destination": "观察",
+      "business_reason": "立讯覆盖大功率充电枪及插座。报道尚未明确端口的功率、制式或设备采购。",
+      "review_reason": "公共项目拨款属于具体政策执行。拟建 515 个端口放在规模字段，实际增容、部署和采购留待后续证据。"
+    },
+    {
+      "number": 36,
+      "title": "现代 IONIQ 5 美国销量与降价",
+      "source_url": "https://electrek.co/2026/11/03/hyundai-ioniq-5-finds-footing-2026-sales-top-33000/",
+      "evidence_summary": "10 月销量 1,981 辆，同比增长 21%；前十月 33,093 辆，同比仍降 23%。报道另记部分版本较此前下调近 1 万美元。",
+      "event_stage": "车型销售数据｜价格动作",
+      "expected_event_types": [
+        "demand-outlook",
+        "pricing-cost"
+      ],
+      "business_chain": "汽车整车需求",
+      "relevance": "中",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "反映车型价格与销量表现，未给出 E/E 平台、排产或供应商影响。",
+      "review_reason": "累计同比和月度同比要分别记录。价格与销量分别举证，整车销量不计部署或财报。"
+    },
+    {
+      "number": 37,
+      "title": "VW ID. Polo 获德国年度车",
+      "source_url": "https://electrek.co/2026/11/03/volkswagens-id-polo-ev-wins-german-car-of-the-year-2027/",
+      "evidence_summary": "核心事件是获奖。CEO 同时披露 ID. Polo 自开放预订后累计超过 5 万人下单，约 15 万是多个车型合计。",
+      "event_stage": "获奖｜补充需求数据",
+      "expected_event_types": [
+        "demand-outlook"
+      ],
+      "business_chain": "汽车整车需求",
+      "relevance": "中",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "具名车型订单可作需求旁证，无立讯采购合同或整车电子部件变化。",
+      "review_reason": "消费者订单只记需求。可增设新闻类型 award，避免把奖项或旧款上市强塞进发布。"
+    },
+    {
+      "number": 38,
+      "title": "荷兰 RDW 批准 Tesla 辅助驾驶更新",
+      "source_url": "https://electrek.co/2026/11/03/tesla-assisted-driving-rdw-speed-cap-10-percent-europe/",
+      "evidence_summary": "限速上浮上限由 50% 降到 10%，同时更名为 Tesla Assisted Driving。欧盟整体审批仍待推进。",
+      "event_stage": "主管机关批准｜软件调整",
+      "expected_event_types": [
+        "qualification-certification",
+        "technology-update"
+      ],
+      "business_chain": "汽车 ADAS 与合规",
+      "relevance": "中",
+      "priority": "中",
+      "recommended_destination": "观察",
+      "business_reason": "涉及辅助驾驶软件功能和区域认证，对控制器、传感器或线束配置的影响未证实。",
+      "review_reason": "单一系统监管审批使用资格标签。限速变化有明确技术前后对比，欧盟批准属于另一未完成节点。"
+    },
+    {
+      "number": 39,
+      "title": "Marti 与 CalmCar 公布土耳其智驾测试合作",
+      "source_url": "https://www.autonomousvehicleinternational.com/news/robotaxis/marti-partners-with-calmcar-to-test-autonomous-driving-technology-in-turkey.html",
+      "evidence_summary": "首辆车已运抵土耳其。双方拟在伊斯坦布尔封闭区测试，仍待许可。",
+      "event_stage": "已宣布合作｜待批测试",
+      "expected_event_types": [
+        "partnership"
+      ],
+      "business_chain": "汽车 ADAS 与 Robotaxi",
+      "relevance": "中",
+      "priority": "低",
+      "recommended_destination": "观察",
+      "business_reason": "方案供应商和车辆具名，未披露控制器、线束、采购量或量产路径。",
+      "review_reason": "运抵可作为物流节点。许可未到、测试未开，更远期的 App 服务不能算实际部署。"
+    },
+    {
+      "number": 40,
+      "title": "Infineon 与高通签约开发中央计算参考设计",
+      "source_url": "https://www.autonomousvehicleinternational.com/news/software/infineon-and-qualcomm-collaborate-on-central-computing-for-software-defined-vehicles.html",
+      "evidence_summary": "安全 MCU 与 Snapdragon Ride SoC 搭配，覆盖安全管理、连接及存储，面向智驾与座舱一体的车载中央电脑。",
+      "event_stage": "已签技术协议｜参考设计",
+      "expected_event_types": [
+        "partnership",
+        "architecture-change"
+      ],
+      "business_chain": "汽车中央计算、域控与 E/E",
+      "relevance": "高",
+      "priority": "中",
+      "recommended_destination": "首页",
+      "business_reason": "SoC 与安全 MCU 的硬件分工、中央集成和接口有清晰因果，映射域控、配电与整车集成。",
+      "review_reason": "参考架构已披露，可打架构标签并附阶段。签协议本身不能证明已有原型、定点或量产。"
+    },
+    {
+      "number": 41,
+      "title": "Waymo 与 Toyota 扩大 bZ4X 合作",
+      "source_url": "https://www.autonomousvehicleinternational.com/news/robotaxis/waymo-and-toyota-to-test-autonomous-bz4x-fleet-in-japan-from-2027.html",
+      "evidence_summary": "2027 年拟在日本初始试运行。Toyota 高冈工厂将同时完成基础车组装和 Waymo 自动驾驶硬件集成。",
+      "event_stage": "确认扩大合作｜测试待开始",
+      "expected_event_types": [
+        "partnership"
+      ],
+      "business_chain": "汽车 ADAS 集成与整车 E/E",
+      "relevance": "中",
+      "priority": "中",
+      "recommended_destination": "观察",
+      "business_reason": "原厂集成自动驾驶硬件是系统机会，组件、接口、量产与供应商细节待披露。",
+      "review_reason": "新合作边界明确。指定工厂不能作为跨厂搬迁证据，计划试运行不能写成部署。"
+    },
+    {
+      "number": 42,
+      "title": "BMW 与 Embotech 厂内自动移车达百万次",
+      "source_url": "https://www.autonomousvehicleinternational.com/news/off-highway/bmw-and-embotech-announce-one-million-automated-vehicle-movements-across-four-plants.html",
+      "evidence_summary": "四座工厂累计完成 100 万次自动移车，约每天 3,500 次。报道同时描述既有 TÜV 安全认证。",
+      "event_stage": "真实运营｜规模里程碑",
+      "expected_event_types": [
+        "deployment-adoption"
+      ],
+      "business_chain": "制造自动化",
+      "relevance": "中",
+      "priority": "中",
+      "recommended_destination": "观察",
+      "business_reason": "厂内生产物流有工艺参考，不能等同于在售车型新增 ADAS 或需求上升。",
+      "review_reason": "移车次数是系统使用量，和汽车产量不同。认证只在首次通过且为本次新增时打标。"
+    },
+    {
+      "number": 43,
+      "title": "Kodiak 在已部署车辆使用 MirrorEye",
+      "source_url": "https://www.autonomousvehicleinternational.com/news/trucks/kodiak-adopts-stoneridge-mirroreye-system-for-autonomous-truck-deployments.html",
+      "evidence_summary": "合作方确认新部署的卡车已集成 Stoneridge 电子后视镜。系统以外部摄像头和舱内显示替换传统镜片。",
+      "event_stage": "已部署｜商业合作",
+      "expected_event_types": [
+        "deployment-adoption",
+        "partnership",
+        "architecture-change"
+      ],
+      "business_chain": "汽车电子后视镜、摄像头与线束",
+      "relevance": "高",
+      "priority": "中",
+      "recommended_destination": "首页",
+      "business_reason": "立讯公开业务包含 CMS，替换链条明确，可影响摄像头、显示和连接。未披露换供或立讯参与。",
+      "review_reason": "合作、实际采用和硬件替换各有证据。既往监管豁免不作为本次监管增量。"
+    },
+    {
+      "number": 44,
+      "title": "大众中国发布 VEGA 与 L2++ HS8",
+      "source_url": "https://www.autonomousvehicleinternational.com/news/adas/volkswagen-launches-full-scenario-level-2-adas-as-part-of-vega-technology-stack.html",
+      "evidence_summary": "VEGA 包含整车平台、CEA 电子架构和智驾。首套全场景 L2++ HS8 已公布，官方称 2026 年计划配套七款新能源车型。",
+      "event_stage": "正式披露技术栈与产品｜装车计划",
+      "expected_event_types": [
+        "product-launch",
+        "architecture-change"
+      ],
+      "business_chain": "汽车 E/E 架构与 ADAS 域控",
+      "relevance": "高",
+      "priority": "高",
+      "recommended_destination": "首页",
+      "business_reason": "CEA 区域架构和 HS8 装车范围对应域控、线束、连接和车辆集成。保留计划口径。",
+      "review_reason": "给架构标签用 CEA 的真实拓扑与整车平台证据。七款车型计划不能表述为七款已交付。"
+    },
+    {
+      "number": 45,
+      "title": "Tensor 与慕尼黑出租车方签署 LOI",
+      "source_url": "https://www.autonomousvehicleinternational.com/news/robotaxis/tensor-and-munchner-taxi-zentrum-plan-robotaxi-service-in-germany.html",
+      "evidence_summary": "双方有意在德国运营 Robocar 出租车，计划由 MTZ 运营，Tensor 提供车辆及订阅服务。",
+      "event_stage": "签署意向书｜待商业执行",
+      "expected_event_types": [
+        "partnership"
+      ],
+      "business_chain": "Robotaxi 运营",
+      "relevance": "中",
+      "priority": "低",
+      "recommended_destination": "观察",
+      "business_reason": "方案提供方明确，但此次信息集中在运营分工，未披露新硬件设计或规模采购。",
+      "review_reason": "只按意向阶段记录合作。LOI 不足以证明订单或部署，订阅模式也不构成 E/E 架构变化。"
+    },
+    {
+      "number": 46,
+      "title": "文远知行子公司景烁科技获融资",
+      "source_url": "https://www.autonomousvehicleinternational.com/news/ai-sensor-fusion/weride-physical-ai-infrastructure-subsidiary-jingshuo-raises-more-than-us10m.html",
+      "evidence_summary": "面向物理 AI 的数据基础设施公司完成 Pre-A 轮，报道金额超 1,000 万美元。其他中文来源使用数千万美元表述。",
+      "event_stage": "融资已披露",
+      "expected_event_types": [
+        "investment"
+      ],
+      "business_chain": "物理 AI 数据平台",
+      "relevance": "低",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "资金用于数据平台、世界模型等能力，暂无立讯对应硬件或项目证据。",
+      "review_reason": "7B 的投资标签成立。数据服务基础设施不应由 infrastructure 一词映射到数据中心整机。"
+    },
+    {
+      "number": 47,
+      "title": "小鹏获广州 L4 示范运营资质",
+      "source_url": "https://www.autonomousvehicleinternational.com/news/legislation/xpeng-secures-approval-for-l4-robotaxi-trials-in-guangzhou.html",
+      "evidence_summary": "小鹏获广州全域 L4 Robotaxi 示范运营资格，称初期将继续通过邀请码逐步开放。",
+      "event_stage": "获示范运营许可｜分阶段开放",
+      "expected_event_types": [
+        "qualification-certification"
+      ],
+      "business_chain": "汽车 ADAS 与 Robotaxi",
+      "relevance": "中",
+      "priority": "中",
+      "recommended_destination": "观察",
+      "business_reason": "官方还披露四颗自研智驾芯片等平台配置。本次新增是许可，后续实际新增运营和采购单独核对。",
+      "review_reason": "获许可和扩大实际车队规模分别举证。不要把获准直接写成已全面商业部署。"
+    },
+    {
+      "number": 48,
+      "title": "智能汽车展第二天议程回顾",
+      "source_url": "https://www.autonomousvehicleinternational.com/news/expo/expo-news-highlights-from-day-2-at-intelligent-vehicle-expo-north-america.html",
+      "evidence_summary": "文章汇总 SDV 网络安全、OTA、电气可靠性和验证议题，以及初创公司的现场演示。",
+      "event_stage": "展会回顾",
+      "expected_event_types": [],
+      "business_chain": "泛汽车技术议题",
+      "relevance": "低",
+      "priority": "低",
+      "recommended_destination": "仅全集",
+      "business_reason": "提到多项立讯相关主题，但未见具体器件、平台变化、采用或采购事实。",
+      "review_reason": "会议议题和技术演讲本身不能触发 technology-update。展品有独立事件时再单篇审阅。"
+    }
+  ]
+}
