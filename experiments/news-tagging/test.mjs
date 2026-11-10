@@ -28,7 +28,14 @@ const grounded = refineEvents([
   { type: 'other-event', status: 'occurred', change_quote: 'The conference discussed AI.' }
 ]);
 assert.deepEqual(grounded.kept.map(event => event.type), ['merger-acquisition']);
-assert.deepEqual(grounded.rejected.map(event => event.rejection_reason), ['forecast_is_not_an_event', 'unspecified_event']);
+assert.deepEqual(grounded.rejected.map(event => event.rejection_reason), ['forecast_is_not_an_event', 'boilerplate_or_fragment']);
+const freshChecks = refineEvents([
+  { type: 'capacity-expansion', status: 'occurred', change_quote: 'CoreWeave has brought most of its planned 22.5MW of IT capacity online at DEN01.' },
+  { type: 'order-contract', status: 'confirmed-plan', change_quote: 'Dropbox has signed a definitive agreement to acquire Tigris Data.' },
+  { type: 'product-launch', status: 'occurred', change_quote: 'Find all our press releases: https://www.valeo.com/en/press-releases/' }
+]);
+assert.deepEqual(freshChecks.kept.map(event => event.type), ['capacity-expansion']);
+assert.deepEqual(freshChecks.rejected.map(event => event.rejection_reason), ['acquisition_is_not_supply_contract', 'boilerplate_or_fragment']);
 const twoSentences = { ...chunk, text: 'BYD launched a new electric SUV. Sales remain uncertain.' };
 assert.deepEqual(evidenceSpans(twoSentences.text).map(span => span.id), [0, 1]);
 assert.equal(validateOutput({ ...raw, events: [{ ...raw.events[0], evidence_id: 1 }] }, twoSentences, taxonomy).events[0].change_quote, 'Sales remain uncertain.');

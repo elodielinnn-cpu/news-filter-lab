@@ -7,7 +7,14 @@ import { screen } from '../news-screening/screen.mjs';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const sources = JSON.parse(await fs.readFile(new URL('fresh-sources.json', import.meta.url), 'utf8'));
 const profile = await loadBusinessProfile(path.join(root, 'config/luxshare-business-profile.json'));
-const decode = value => value.replace(/&(?:nbsp|amp|lt|gt|quot|#39);/giu, token => ({ '&nbsp;': ' ', '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'" })[token.toLowerCase()] || token);
+const namedEntities = { nbsp: ' ', amp: '&', lt: '<', gt: '>', quot: '"', ldquo: '"', rdquo: '"', lsquo: "'", rsquo: "'", ndash: '–', mdash: '—' };
+const decode = value => value.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/giu, (token, entity) => {
+  if (entity.startsWith('#')) {
+    const code = entity[1].toLowerCase() === 'x' ? parseInt(entity.slice(2), 16) : Number(entity.slice(1));
+    return Number.isInteger(code) && code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : token;
+  }
+  return namedEntities[entity.toLowerCase()] || token;
+});
 const clean = value => decode(value.replace(/<[^>]+>/gu, ' ')).replace(/\s+/gu, ' ').trim();
 const articles = [];
 const failures = [];
