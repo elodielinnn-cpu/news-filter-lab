@@ -109,8 +109,8 @@ export function mergeOutputs(outputs) {
   const proposals = new Map();
   for (const output of outputs) {
     for (const event of output.events) {
-      const { chunk, ...identity } = event;
-      events.set(digest(identity), event);
+      // Overlapping chunks can assign different subjects or sentence IDs to the same quoted fact.
+      events.set(digest([event.type, event.status, normalizedText(event.change_quote)]), event);
     }
     for (const proposal of output.proposed_tags) proposals.set(digest([proposal.dimension, proposal.tag, proposal.evidence_quote]), proposal);
   }

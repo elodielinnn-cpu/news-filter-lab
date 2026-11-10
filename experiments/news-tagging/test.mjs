@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
-import { extractAtTags, normalizeTag, chunkText, evidenceSpans, validateOutput, digest } from './adapter.mjs';
+import { extractAtTags, normalizeTag, chunkText, evidenceSpans, validateOutput, mergeOutputs, digest } from './adapter.mjs';
 import { prepareManifest, requestTags, tagManifest, summarize } from './run.mjs';
 import { loadBusinessProfile } from '../news-filter-v3/business-profile.mjs';
 import { refineEvents } from './refine.mjs';
@@ -35,6 +35,20 @@ const freshChecks = refineEvents([
   { type: 'product-launch', status: 'occurred', change_quote: 'Find all our press releases: https://www.valeo.com/en/press-releases/' }
 ]);
 assert.deepEqual(freshChecks.kept.map(event => event.type), ['capacity-expansion']);
+const reviewedChecks = refineEvents([
+  { type: 'architecture-change', status: 'confirmed-plan', change_quote: 'The two companies will deliver clusters built from existing rack-scale systems.' },
+  { type: 'architecture-change', status: 'occurred', change_quote: 'The new design moves cached state off the GPU and onto a shared storage tier.' },
+  { type: 'product-launch', status: 'occurred', change_quote: 'The companies announced a new managed security offering for AI servers.' },
+  { type: 'product-launch', status: 'confirmed-plan', change_quote: 'The companies will deliver clusters built from existing rack-scale systems.' },
+  { type: 'research-prototype', status: 'trial-validation', change_quote: 'The three companies tested the stack at cluster level under heavy load.' },
+  { type: 'qualification-certification', status: 'occurred', change_quote: 'The camera platform has secured design wins with several automakers.' },
+  { type: 'partnership', status: 'confirmed-plan', change_quote: 'The partnership will create new opportunities in a growing market.' }
+]);
+assert.deepEqual(reviewedChecks.kept.map(event => event.type), ['architecture-change', 'product-launch', 'research-prototype', 'qualification-certification']);
+assert.deepEqual(reviewedChecks.rejected.map(event => event.rejection_reason), ['architecture_not_supported_by_quote', 'launch_not_supported_by_quote', 'joint_action_not_supported']);
+const duplicateQuote = { type: 'technology-update', status: 'occurred', subject: 'IBM', evidence_id: 1, change_quote: 'A shared storage tier was introduced.', chunk: 0 };
+assert.equal(mergeOutputs([{ domains: [], content_types: [], events: [duplicateQuote], raw_tags: [], proposed_tags: [] },
+  { domains: [], content_types: [], events: [{ ...duplicateQuote, subject: 'NVIDIA', chunk: 1 }], raw_tags: [], proposed_tags: [] }]).events.length, 1);
 assert.deepEqual(freshChecks.rejected.map(event => event.rejection_reason), ['acquisition_is_not_supply_contract', 'boilerplate_or_fragment']);
 const twoSentences = { ...chunk, text: 'BYD launched a new electric SUV. Sales remain uncertain.' };
 assert.deepEqual(evidenceSpans(twoSentences.text).map(span => span.id), [0, 1]);

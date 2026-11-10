@@ -6,7 +6,7 @@ const rumor = /\b(?:rumou?rs?|leakers?|reportedly|unconfirmed|according to peopl
 const negation = /\b(?:no|not|never|without)\b.{0,35}\b(?:new|chang\w*|replac\w*|adopt\w*|supplier|orders?|agreement)\b|没有.{0,15}(?:变化|更换|新增|订单)|并未|尚未确认/iu;
 const background = /investor relations|corporate governance|annual meeting of shareholders|all rights reserved|previous post|next post|related articles|as we saw|previously covered|in our .{0,60}coverage from/iu;
 const objectReference = /^(?:it|its|these|this|that|they|their|the (?:new )?(?:module|component|design|system))\b|^(?:该|这些|其|这一)/iu;
-const reference = /^(?:it|its|these|this|that|they|their|the (?:new )?(?:module|component|design|system|companies|collaboration|agreement|platform))\b|^(?:该|这些|其|这一)/iu;
+const reference = /^(?:it|its|these|this|that|they|their|the (?:new |strategic )?(?:module|component|design|system|companies|collaboration|agreement|platform|two))\b|^(?:该|这些|其|这一)/iu;
 
 function sentences(paragraphs) {
   return paragraphs.flatMap((paragraph, paragraphIndex) => String(paragraph)
@@ -84,6 +84,13 @@ export function screen(article, profile) {
       if (next.paragraphIndex !== change.paragraphIndex || !reference.test(next.text)) break;
       context.push(next.text);
     }
+    // A paragraph that explicitly refers back to the agreement can identify its product.
+    const next = bodySentences[change.sentenceIndex + 1];
+    if (next?.paragraphIndex === change.paragraphIndex + 1 && reference.test(next.text)) {
+      context.push(next.text);
+      const detail = bodySentences[change.sentenceIndex + 2];
+      if (detail?.paragraphIndex === next.paragraphIndex) context.push(detail.text);
+    }
     const businessEvidence = context.join(' ');
     const products = matchProducts(businessEvidence, profile, domains);
     const direct = directProducts(products);
@@ -124,6 +131,10 @@ export function screen(article, profile) {
   if (unresolved) return { ...unresolved, businessGate: 'needs_review' };
   if (sentenceProducts.some(products => products.length)) {
     return { ...base, businessGate: 'needs_review', reason: '存在变化和产品线索，尚未建立两者对应关系' };
+  }
+  if (domains.includes('datacom') && changes.some(change => change.type === '商业部署与供货'
+    && /\b(?:data[ -]?cent(?:er|re)|IT capacity)\b.{0,100}\bonline\b|\bonline\b.{0,100}\bdata[ -]?cent(?:er|re)\b/iu.test(change.evidence))) {
+    return { ...base, businessGate: 'needs_review', reason: '数据中心产能已上线，但未证实具体立讯产品对应关系' };
   }
   return { ...base, result: '排除', businessGate: 'not_matched', reason: '变化对象没有对应具体产品或有原文支持的业务影响' };
 }

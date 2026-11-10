@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadBusinessProfile } from '../news-filter-v3/business-profile.mjs';
 import { screen } from '../news-screening/screen.mjs';
+import { extractBody } from '../news-screening/extract.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const sourcesPath = process.env.NEWS_TAGGING_SOURCES || fileURLToPath(new URL('fresh-sources.json', import.meta.url));
@@ -29,7 +30,9 @@ for (const source of sources) {
     const paragraphs = fragment => [...fragment.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/giu)].map(match => clean(match[1])).filter(value => value.length > 60).slice(0, 45);
     const articleHtml = html.match(/<article\b[^>]*>([\s\S]*?)<\/article>/iu)?.[1];
     const scoped = articleHtml ? paragraphs(articleHtml) : [];
-    const bodyEvidence = scoped.length >= 3 ? scoped : paragraphs(html);
+    const extracted = extractBody(html);
+    const bodyEvidence = extracted.bodyStatus === 'ok' && extracted.bodyEvidence.length >= 3
+      ? extracted.bodyEvidence.slice(0, 45).map(clean) : scoped.length >= 3 ? scoped : paragraphs(html);
     if (bodyEvidence.length < 3) throw new Error('insufficient_body');
     const article = { title: source.title, url: source.url, sourceId: new URL(source.url).hostname, summary: bodyEvidence[1] || '', bodyEvidence,
       bodyStatus: 'ok', evidenceSource: 'fresh-fetch-2026-11', publishedAt: source.publishedAt || null };

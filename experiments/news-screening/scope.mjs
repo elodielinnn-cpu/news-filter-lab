@@ -13,6 +13,7 @@ const upstreamDomains = new Set(['semiconductor_and_memory_upstream']);
 const aliases = {
   ai_rack_scale_integration: ['rack-scale system', 'rack-scale systems', 'NVL72', 'NVL144'],
   server_power_supply: ['PSUs', 'power shelf', 'power shelves', 'power module', '电源模块', '电源架'],
+  '800v_dc_system': ['800 VDC', '800 V DC', '800-volt DC', '800伏直流'],
   coolant_distribution_unit: ['CDUs'],
   cold_plate: ['cold plates', 'direct-to-chip liquid cooling', '冷板'],
   busbar: ['busbars', '母排'],
@@ -32,7 +33,7 @@ const presentationProducts = [
   ['automotive', 'auto_suspension', '悬架系统', ['suspension system', 'active suspension', '悬架系统', '主动悬架'], 3],
   ['automotive', 'auto_cockpit', '智能座舱硬件', ['cockpit electronics', 'cockpit hardware', '智能座舱硬件'], 3],
   ['automotive', 'auto_control_architecture', '智能驾驶与座舱控制架构', ['central vehicle computers', 'central vehicle computer', 'vehicle control architecture', '中央计算架构'], 3],
-  ['automotive', 'auto_sensing', 'ADAS与感知硬件', ['ADAS sensors', 'vehicle sensors', 'camera monitor system', 'digital cameras', '车载传感器', 'ADAS传感器'], 3]
+  ['automotive', 'auto_sensing', 'ADAS与感知硬件', ['ADAS sensors', 'vehicle sensors', 'camera monitor system', 'digital cameras', 'front-view camera', 'smart camera platform', '车载传感器', 'ADAS传感器', '前视摄像头'], 3]
 ].map(([domain, productId, productName, productAliases, page]) => ({
   domain, productId, productName, aliases: productAliases, relationshipLevel: 'direct',
   evidenceStatus: 'provided_company_overview', scopeEvidence: `Company overview English Oct 2026, slide ${page}`

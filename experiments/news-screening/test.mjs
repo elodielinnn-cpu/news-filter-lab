@@ -42,7 +42,11 @@ const cases = [
   ['terminal volume alone', { title: 'Electric vehicle sales update', bodyEvidence: ['Electric vehicle sales increased 20 percent.'] }, '排除'],
   ['automotive upstream explicit effect', { title: 'Vehicle ADAS architecture upgrade', bodyEvidence: ['The ADAS chip architecture was upgraded.', 'The ADAS chip requires a redesigned automotive connector.'] }, '入选', 'explicit_indirect'],
   ['mobile network direct connector change', { title: '5G network server connector upgrade', bodyEvidence: ['The manufacturer redesigned the high-speed connector to reduce signal loss.'] }, '入选', 'direct'],
-  ['upstream change does not borrow another component impact', { bodyEvidence: ['The GPU architecture was upgraded.', 'The CPU requires a new server power supply.'] }, '待定']
+  ['upstream change does not borrow another component impact', { bodyEvidence: ['The GPU architecture was upgraded.', 'The CPU requires a new server power supply.'] }, '待定'],
+  ['announced rack partnership and planned delivery are linked', { title: 'AI infrastructure partnership', bodyEvidence: ['The operator has added a hardware company to its partner network. The two will deliver dedicated clusters built from rack-scale systems.'] }, '入选', 'direct'],
+  ['agreement paragraph explicitly identifies the power product', { title: 'Critical power partnership', bodyEvidence: ['The company announced a strategic agreement with a semiconductor supplier.', 'The strategic agreement supports reliable deliveries. The components will be integrated into its 800 VDC power systems for data centers.'] }, '入选', 'direct'],
+  ['data center capacity online without product evidence needs review', { title: 'Data center capacity online', bodyEvidence: ['The operator has brought most of its planned 22MW IT capacity online at the DEN01 data center.'] }, '待定'],
+  ['announced automotive camera collaboration maps to sensing hardware', { title: 'Automotive camera collaboration', bodyEvidence: ['Valeo and QNX announced a strategic collaboration to integrate safety software into a new front-view camera platform.'] }, '入选', 'direct']
 ];
 for (const [name, input, expected, relationship] of cases) {
   const result = screen({ ...article, ...input }, profile);
