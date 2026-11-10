@@ -1,0 +1,57 @@
+[
+  {
+    "title": "HPE ProLiant Gen13 Launches With the First Four AMD EPYC Venice Servers: Eight-GPU DL585a, 256-Core DL525, and OCP XD Nodes",
+    "url": "https://www.storagereview.com/news/hpe-proliant-gen13-first-four-amd-epyc-venice-servers",
+    "publishedAt": "Wed, 07 Oct 2026 13:00:00 +0000"
+  },
+  {
+    "title": "Supermicro NVIDIA Vera CPU Rack: 256 Vera CPUs, 400TB of LPDDR5X, and 22,500 Agent Sandboxes in a 208kW Liquid-Cooled 48U",
+    "url": "https://www.storagereview.com/news/supermicro-nvidia-vera-cpu-rack-256-cpus-400tb-22500-agent-sandboxes-208kw",
+    "publishedAt": "Thu, 22 Oct 2026 14:33:04 +0000"
+  },
+  {
+    "title": "Sparxity, Formerly SpiNNcloud, Deploys JUBIS Sparse-Native Rack at Jülich Supercomputing Centre With 10x Solver and 18x Energy Claims",
+    "url": "https://www.storagereview.com/news/sparxity-spinncloud-jubis-sparse-native-rack-julich-supercomputing-centre",
+    "publishedAt": "Wed, 28 Oct 2026 14:48:03 +0000"
+  },
+  {
+    "title": "Supermicro OCP Accepted Portfolio Adds 48V Busbar ORv3 Racks, a 250 kW In-Rack CDU, and a 102.4 Tbps CPO Switch",
+    "url": "https://www.storagereview.com/news/supermicro-ocp-accepted-portfolio-48v-busbar-orv3-racks-250-kw-cdu-cpo-switch",
+    "publishedAt": "Wed, 14 Oct 2026 15:26:03 +0000"
+  },
+  {
+    "title": "Scality AI Inference Factory Serves KV Cache From Object Storage Over RDMA, 14x Faster Than Recompute",
+    "url": "https://www.storagereview.com/news/scality-ai-inference-factory-kv-cache-object-storage-rdma",
+    "publishedAt": "Thu, 08 Oct 2026 16:32:44 +0000"
+  },
+  {
+    "title": "Valeo and Anritsu digital twin validation",
+    "url": "https://www.valeo.com/en/valeo-and-anritsu-to-showcase-digital-twin-validation-solution-for-software-defined-vehicles-at-the-5gaa-meeting/",
+    "publishedAt": null
+  },
+  {
+    "title": "Celestica DS6005 Puts 102.4Tbps of Co-Packaged Optics and 64 1.6TbE Ports in a 1.5OU Liquid-Cooled ORv3 Switch",
+    "url": "https://www.storagereview.com/news/celestica-ds6005-102-4tbps-co-packaged-optics-1-5ou-liquid-cooled-orv3-switch",
+    "publishedAt": "Thu, 15 Oct 2026 16:50:02 +0000"
+  },
+  {
+    "title": "KIOXIA LD4 Brings QLC to E1.L for 1U Servers, Sampling at 30.72TB With a Path to 122.88TB",
+    "url": "https://www.storagereview.com/news/kioxia-ld4-qlc-e1-l-ssd-1u-servers-30-72tb-122-88tb",
+    "publishedAt": "Thu, 08 Oct 2026 16:21:35 +0000"
+  },
+  {
+    "title": "Zella Stack Micro Data Center Ships by Courier, Stacks From 24RU to 48RU, and Cools Up to 124kW",
+    "url": "https://www.storagereview.com/news/zella-stack-micro-data-center-courier-24ru-48ru-124kw",
+    "publishedAt": "Wed, 30 Sep 2026 17:56:43 +0000"
+  },
+  {
+    "title": "NVIDIA BlueField-4 STX Server for CMX at OCP 2026",
+    "url": "https://www.servethehome.com/nvidia-bluefield-4-stx-server-for-cmx-at-ocp-2026/",
+    "publishedAt": "Tue, 20 Oct 2026 03:53:34 +0000"
+  },
+  {
+    "title": "Valeo and NVIDIA Hyperion compute platforms",
+    "url": "https://www.valeo.com/en/valeo-builds-next-generation-high-performance-compute-platforms-built-on-nvidia-hyperion/",
+    "publishedAt": null
+  }
+]

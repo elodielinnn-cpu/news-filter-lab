@@ -1,0 +1,172 @@
+[
+  {
+    "title": "Sparxity, Formerly SpiNNcloud, Deploys JUBIS Sparse-Native Rack at Jülich Supercomputing Centre With 10x Solver and 18x Energy Claims",
+    "url": "https://www.storagereview.com/news/sparxity-spinncloud-jubis-sparse-native-rack-julich-supercomputing-centre",
+    "publishedAt": "Wed, 28 Oct 2026 14:48:03 +0000"
+  },
+  {
+    "title": "Micron’s Next NAND Is G11, Not G10: 400-Plus Layers, 2x Density, and a 512TB SSD Ceiling on a 2H 2027 Ramp",
+    "url": "https://www.storagereview.com/news/micron-g11-nand-400-layers-2x-density-512tb-ssd-2h-2027",
+    "publishedAt": "Tue, 27 Oct 2026 17:43:20 +0000"
+  },
+  {
+    "title": "Supermicro NVIDIA Vera CPU Rack: 256 Vera CPUs, 400TB of LPDDR5X, and 22,500 Agent Sandboxes in a 208kW Liquid-Cooled 48U",
+    "url": "https://www.storagereview.com/news/supermicro-nvidia-vera-cpu-rack-256-cpus-400tb-22500-agent-sandboxes-208kw",
+    "publishedAt": "Thu, 22 Oct 2026 14:33:04 +0000"
+  },
+  {
+    "title": "Nutanix Private Inference System With Supermicro Puts Eight NVIDIA B300 Blackwell Ultra GPUs per Node Behind Dedicated NX Management and Storage Clusters, Ships Early 2027",
+    "url": "https://www.storagereview.com/news/nutanix-supermicro-private-inference-blackwell-ultra-vera-netris-gtc-berlin",
+    "publishedAt": "Wed, 21 Oct 2026 15:11:15 +0000"
+  },
+  {
+    "title": "Meta Prometheus: Inside the Gigawatt Supercluster Scaling to 1 Million GPUs on GB200 and GB300 NVL72",
+    "url": "https://www.storagereview.com/news/meta-prometheus-gigawatt-supercluster-1-million-gpus-gb200-gb300-nvl72",
+    "publishedAt": "Mon, 19 Oct 2026 16:17:27 +0000"
+  },
+  {
+    "title": "XCENA MX1 CXL Computational Memory Shares a KV Cache Across Inference Servers and Powers SK hynix CXL Hybrid Memory at OCP 2026",
+    "url": "https://www.storagereview.com/news/xcena-mx1-cxl-computational-memory-kv-cache-sk-hynix-ocp-2026",
+    "publishedAt": "Fri, 16 Oct 2026 15:01:34 +0000"
+  },
+  {
+    "title": "Celestica DS6005 Puts 102.4Tbps of Co-Packaged Optics and 64 1.6TbE Ports in a 1.5OU Liquid-Cooled ORv3 Switch",
+    "url": "https://www.storagereview.com/news/celestica-ds6005-102-4tbps-co-packaged-optics-1-5ou-liquid-cooled-orv3-switch",
+    "publishedAt": "Thu, 15 Oct 2026 16:50:02 +0000"
+  },
+  {
+    "title": "Astera Labs Orion Scales 8 to 160 Accelerators on a 320-Lane PCIe Fabric With Any GPU, as Aries 7 Brings PCIe 7 Retimers and Optics",
+    "url": "https://www.storagereview.com/news/astera-labs-orion-rack-reference-design-160-accelerators-pcie-fabric-aries-7-pcie-7",
+    "publishedAt": "Wed, 14 Oct 2026 15:32:43 +0000"
+  },
+  {
+    "title": "Supermicro OCP Accepted Portfolio Adds 48V Busbar ORv3 Racks, a 250 kW In-Rack CDU, and a 102.4 Tbps CPO Switch",
+    "url": "https://www.storagereview.com/news/supermicro-ocp-accepted-portfolio-48v-busbar-orv3-racks-250-kw-cdu-cpo-switch",
+    "publishedAt": "Wed, 14 Oct 2026 15:26:03 +0000"
+  },
+  {
+    "title": "Marvell Structera X 3406 and 3506 Put Six DDR4 or DDR5 Channels and Four Hosts on One CXL 3.2 Expander",
+    "url": "https://www.storagereview.com/news/marvell-structera-x-3406-3506-six-channel-cxl-3-2-memory-expander",
+    "publishedAt": "Tue, 13 Oct 2026 14:20:10 +0000"
+  },
+  {
+    "title": "Microsoft Maia 300 Puts 288GB of HBM4 at 18TB/s on an N2P Chiplet and 96 Accelerators in a 167kW Rack",
+    "url": "https://www.storagereview.com/news/microsoft-maia-300-hbm4-n2p-chiplet-96-accelerator-rack",
+    "publishedAt": "Mon, 12 Oct 2026 19:45:29 +0000"
+  },
+  {
+    "title": "Micas Networks Puts Broadcom Tomahawk 6 in Three 102.4T Switches, Including a 1RU Davisson CPO Box",
+    "url": "https://www.storagereview.com/news/micas-networks-tomahawk-6-102t-switches-davisson-cpo",
+    "publishedAt": "Mon, 12 Oct 2026 19:17:59 +0000"
+  },
+  {
+    "title": "NVIDIA and Cisco USFP Optics Target 400Gb/s per Lane, With MGX 1.2 and DSX OS Updates at OCP 2026",
+    "url": "https://www.storagereview.com/news/nvidia-cisco-usfp-optics-400gbps-per-lane-ocp-2026",
+    "publishedAt": "Mon, 12 Oct 2026 15:38:13 +0000"
+  },
+  {
+    "title": "KIOXIA CM9-DLC Brings Direct Liquid Cooling to Dual-Port E3.S SSDs up to 30.72TB",
+    "url": "https://www.storagereview.com/news/kioxia-cm9-dlc-direct-liquid-cooling-e3s-ssd-30-72tb",
+    "publishedAt": "Mon, 12 Oct 2026 15:01:33 +0000"
+  },
+  {
+    "title": "Scality AI Inference Factory Serves KV Cache From Object Storage Over RDMA, 14x Faster Than Recompute",
+    "url": "https://www.storagereview.com/news/scality-ai-inference-factory-kv-cache-object-storage-rdma",
+    "publishedAt": "Thu, 08 Oct 2026 16:32:44 +0000"
+  },
+  {
+    "title": "KIOXIA LD4 Brings QLC to E1.L for 1U Servers, Sampling at 30.72TB With a Path to 122.88TB",
+    "url": "https://www.storagereview.com/news/kioxia-ld4-qlc-e1-l-ssd-1u-servers-30-72tb-122-88tb",
+    "publishedAt": "Thu, 08 Oct 2026 16:21:35 +0000"
+  },
+  {
+    "title": "HPE ProLiant Gen13 Launches With the First Four AMD EPYC Venice Servers: Eight-GPU DL585a, 256-Core DL525, and OCP XD Nodes",
+    "url": "https://www.storagereview.com/news/hpe-proliant-gen13-first-four-amd-epyc-venice-servers",
+    "publishedAt": "Wed, 07 Oct 2026 13:00:00 +0000"
+  },
+  {
+    "title": "Vultr Commits $1.2B to the AMD Helios AI Rack by HPE, HPE’s First Order for the 72-GPU MI455X System",
+    "url": "https://www.storagereview.com/news/vultr-1-2b-amd-helios-ai-rack-by-hpe-first-order",
+    "publishedAt": "Sun, 04 Oct 2026 19:37:15 +0000"
+  },
+  {
+    "title": "Schneider Electric Software-Defined Medium Voltage Switchgear Debuts at YOTTA 2026 in an Equinix Pilot, With 38 kV SF6-Free GIS and a Generator-to-Chip Delivery Model",
+    "url": "https://www.storagereview.com/news/schneider-electric-software-defined-medium-voltage-switchgear-yotta-2026-equinix-pilot",
+    "publishedAt": "Fri, 02 Oct 2026 16:05:44 +0000"
+  },
+  {
+    "title": "CoreWeave Puts NVIDIA Vera Rubin NVL72 Into Production: Cognition Reports 4.8x Over GB200, Vera CPU Racks and Forge Follow",
+    "url": "https://www.storagereview.com/news/coreweave-vera-rubin-nvl72-production-cognition-4-8x-vera-cpu-forge",
+    "publishedAt": "Fri, 02 Oct 2026 15:38:13 +0000"
+  },
+  {
+    "title": "NetApp Novus Splits pNFS Metadata From AFF A90 Data Nodes for a 100 TB/s AI Factory Target, Orderable Now",
+    "url": "https://www.storagereview.com/news/netapp-novus-pnfs-metadata-aff-a90-data-nodes-100-tb-s-ai-factory",
+    "publishedAt": "Thu, 01 Oct 2026 17:48:35 +0000"
+  },
+  {
+    "title": "Zella Stack Micro Data Center Ships by Courier, Stacks From 24RU to 48RU, and Cools Up to 124kW",
+    "url": "https://www.storagereview.com/news/zella-stack-micro-data-center-courier-24ru-48ru-124kw",
+    "publishedAt": "Wed, 30 Sep 2026 17:56:43 +0000"
+  },
+  {
+    "title": "Altera Agilex 27 is the First Agilex 2X Platform Adding 800GbE and 1.6TbE and More",
+    "url": "https://www.servethehome.com/altera-agilex-27-800gbe-1-6tbe-hyperflow/",
+    "publishedAt": "Wed, 28 Oct 2026 18:51:37 +0000"
+  },
+  {
+    "title": "Intel Moves Forward at Ohio One With First Major Structural Truss Installation Arizona Fab 62 Tooling",
+    "url": "https://www.servethehome.com/intel-moves-forward-at-ohio-one-with-first-major-structural-truss-installation/",
+    "publishedAt": "Wed, 21 Oct 2026 15:00:47 +0000"
+  },
+  {
+    "title": "NVIDIA BlueField-4 STX Server for CMX at OCP 2026",
+    "url": "https://www.servethehome.com/nvidia-bluefield-4-stx-server-for-cmx-at-ocp-2026/",
+    "publishedAt": "Tue, 20 Oct 2026 03:53:34 +0000"
+  },
+  {
+    "title": "This is the AMD Helios HPE Juniper QFX5252 Switch Tray at OCP 2026",
+    "url": "https://www.servethehome.com/this-is-the-amd-helios-hpe-juniper-qfx5252-switch-tray-at-ocp-2026/",
+    "publishedAt": "Fri, 16 Oct 2026 04:49:49 +0000"
+  },
+  {
+    "title": "Infineon and Qualcomm central car computers",
+    "url": "https://www.infineon.com/press-release/2026/infpr202611-023",
+    "publishedAt": null
+  },
+  {
+    "title": "Aptiv and NVIDIA automated driving collaboration",
+    "url": "https://www.aptiv.com/en/newsroom/article/aptiv-expands-collaboration-with-nvidia-to-accelerate-affordable-highly-automated-driving",
+    "publishedAt": null
+  },
+  {
+    "title": "Valeo and NVIDIA Hyperion compute platforms",
+    "url": "https://www.valeo.com/en/valeo-builds-next-generation-high-performance-compute-platforms-built-on-nvidia-hyperion/",
+    "publishedAt": null
+  },
+  {
+    "title": "Valeo and Anritsu digital twin validation",
+    "url": "https://www.valeo.com/en/valeo-and-anritsu-to-showcase-digital-twin-validation-solution-for-software-defined-vehicles-at-the-5gaa-meeting/",
+    "publishedAt": null
+  },
+  {
+    "title": "Valeo selected by Nissan for ProPILOT",
+    "url": "https://www.valeo.com/en/valeo-selected-by-nissan-as-partner-for-next-generation-propilot-program/",
+    "publishedAt": null
+  },
+  {
+    "title": "Aptiv camera-only occupancy classification",
+    "url": "https://www.aptiv.com/en/newsroom/article/aptiv-introduces-advanced-occupancy-classification-the-industry-s-first-camera-only-occupant-detection-system",
+    "publishedAt": null
+  },
+  {
+    "title": "Aptiv Auto China 2026 vehicle architecture",
+    "url": "https://www.aptiv.com/en/newsroom/article/Aptiv-at-Auto-China-2026",
+    "publishedAt": null
+  },
+  {
+    "title": "Infineon and Subaru driver safety collaboration",
+    "url": "https://www.infineon.com/press-release/2026/infatv202603-065",
+    "publishedAt": null
+  }
+]

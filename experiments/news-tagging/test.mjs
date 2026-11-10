@@ -46,6 +46,16 @@ const reviewedChecks = refineEvents([
 ]);
 assert.deepEqual(reviewedChecks.kept.map(event => event.type), ['architecture-change', 'product-launch', 'research-prototype', 'qualification-certification']);
 assert.deepEqual(reviewedChecks.rejected.map(event => event.rejection_reason), ['architecture_not_supported_by_quote', 'launch_not_supported_by_quote', 'joint_action_not_supported']);
+const firstBatchChecks = refineEvents([
+  { type: 'product-launch', status: 'confirmed-plan', change_quote: 'Next year, the company will launch the electric van after final testing.' },
+  { type: 'product-launch', status: 'occurred', change_quote: 'The company launched a new liquid-cooled server platform today.' },
+  { type: 'pricing-cost', status: 'confirmed-plan', change_quote: 'The company will announce prices closer to the vehicle launch.' },
+  { type: 'pricing-cost', status: 'occurred', change_quote: 'The new server rack costs $411,200 compared with $172,500 for the older system.' },
+  { type: 'order-contract', status: 'occurred', change_quote: 'You can check out the full text of the contract below.' },
+  { type: 'order-contract', status: 'occurred', change_quote: 'The operator signed a supply agreement for server power systems.' }
+]);
+assert.deepEqual(firstBatchChecks.kept.map(event => event.type), ['product-launch', 'pricing-cost', 'order-contract']);
+assert.deepEqual(firstBatchChecks.rejected.map(event => event.rejection_reason), ['future_launch_not_released', 'price_or_cost_change_not_stated', 'contract_action_not_supported']);
 const duplicateQuote = { type: 'technology-update', status: 'occurred', subject: 'IBM', evidence_id: 1, change_quote: 'A shared storage tier was introduced.', chunk: 0 };
 assert.equal(mergeOutputs([{ domains: [], content_types: [], events: [duplicateQuote], raw_tags: [], proposed_tags: [] },
   { domains: [], content_types: [], events: [{ ...duplicateQuote, subject: 'NVIDIA', chunk: 1 }], raw_tags: [], proposed_tags: [] }]).events.length, 1);

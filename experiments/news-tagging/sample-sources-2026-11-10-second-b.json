@@ -1,0 +1,62 @@
+[
+  {
+    "title": "NVIDIA and Cisco USFP Optics Target 400Gb/s per Lane, With MGX 1.2 and DSX OS Updates at OCP 2026",
+    "url": "https://www.storagereview.com/news/nvidia-cisco-usfp-optics-400gbps-per-lane-ocp-2026",
+    "publishedAt": "Mon, 12 Oct 2026 15:38:13 +0000"
+  },
+  {
+    "title": "NetApp Novus Splits pNFS Metadata From AFF A90 Data Nodes for a 100 TB/s AI Factory Target, Orderable Now",
+    "url": "https://www.storagereview.com/news/netapp-novus-pnfs-metadata-aff-a90-data-nodes-100-tb-s-ai-factory",
+    "publishedAt": "Thu, 01 Oct 2026 17:48:35 +0000"
+  },
+  {
+    "title": "Astera Labs Orion Scales 8 to 160 Accelerators on a 320-Lane PCIe Fabric With Any GPU, as Aries 7 Brings PCIe 7 Retimers and Optics",
+    "url": "https://www.storagereview.com/news/astera-labs-orion-rack-reference-design-160-accelerators-pcie-fabric-aries-7-pcie-7",
+    "publishedAt": "Wed, 14 Oct 2026 15:32:43 +0000"
+  },
+  {
+    "title": "Micas Networks Puts Broadcom Tomahawk 6 in Three 102.4T Switches, Including a 1RU Davisson CPO Box",
+    "url": "https://www.storagereview.com/news/micas-networks-tomahawk-6-102t-switches-davisson-cpo",
+    "publishedAt": "Mon, 12 Oct 2026 19:17:59 +0000"
+  },
+  {
+    "title": "Infineon and Qualcomm central car computers",
+    "url": "https://www.infineon.com/press-release/2026/infpr202611-023",
+    "publishedAt": null
+  },
+  {
+    "title": "Nutanix Private Inference System With Supermicro Puts Eight NVIDIA B300 Blackwell Ultra GPUs per Node Behind Dedicated NX Management and Storage Clusters, Ships Early 2027",
+    "url": "https://www.storagereview.com/news/nutanix-supermicro-private-inference-blackwell-ultra-vera-netris-gtc-berlin",
+    "publishedAt": "Wed, 21 Oct 2026 15:11:15 +0000"
+  },
+  {
+    "title": "XCENA MX1 CXL Computational Memory Shares a KV Cache Across Inference Servers and Powers SK hynix CXL Hybrid Memory at OCP 2026",
+    "url": "https://www.storagereview.com/news/xcena-mx1-cxl-computational-memory-kv-cache-sk-hynix-ocp-2026",
+    "publishedAt": "Fri, 16 Oct 2026 15:01:34 +0000"
+  },
+  {
+    "title": "KIOXIA CM9-DLC Brings Direct Liquid Cooling to Dual-Port E3.S SSDs up to 30.72TB",
+    "url": "https://www.storagereview.com/news/kioxia-cm9-dlc-direct-liquid-cooling-e3s-ssd-30-72tb",
+    "publishedAt": "Mon, 12 Oct 2026 15:01:33 +0000"
+  },
+  {
+    "title": "Schneider Electric Software-Defined Medium Voltage Switchgear Debuts at YOTTA 2026 in an Equinix Pilot, With 38 kV SF6-Free GIS and a Generator-to-Chip Delivery Model",
+    "url": "https://www.storagereview.com/news/schneider-electric-software-defined-medium-voltage-switchgear-yotta-2026-equinix-pilot",
+    "publishedAt": "Fri, 02 Oct 2026 16:05:44 +0000"
+  },
+  {
+    "title": "Intel Moves Forward at Ohio One With First Major Structural Truss Installation Arizona Fab 62 Tooling",
+    "url": "https://www.servethehome.com/intel-moves-forward-at-ohio-one-with-first-major-structural-truss-installation/",
+    "publishedAt": "Wed, 21 Oct 2026 15:00:47 +0000"
+  },
+  {
+    "title": "Aptiv and NVIDIA automated driving collaboration",
+    "url": "https://www.aptiv.com/en/newsroom/article/aptiv-expands-collaboration-with-nvidia-to-accelerate-affordable-highly-automated-driving",
+    "publishedAt": null
+  },
+  {
+    "title": "Aptiv Auto China 2026 vehicle architecture",
+    "url": "https://www.aptiv.com/en/newsroom/article/Aptiv-at-Auto-China-2026",
+    "publishedAt": null
+  }
+]

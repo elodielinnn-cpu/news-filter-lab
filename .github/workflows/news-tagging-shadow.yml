@@ -37,7 +37,7 @@ jobs:
       - name: Fetch independent news batch on branch push
         if: github.event_name == 'push'
         env:
-          NEWS_TAGGING_SOURCES: experiments/news-tagging/sample-sources-2026-11-10-${{ matrix.batch }}.json
+          NEWS_TAGGING_SOURCES: experiments/news-tagging/sample-sources-2026-11-10-second-${{ matrix.batch }}.json
           NEWS_TAGGING_MIN_ARTICLES: '10'
         run: |
           node experiments/news-tagging/fetch-fresh.mjs
