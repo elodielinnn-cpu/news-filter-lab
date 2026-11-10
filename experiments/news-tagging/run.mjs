@@ -26,11 +26,15 @@ export async function prepareManifest(input, taxonomy, runtime, prompt, profile)
 }
 
 export async function requestTags({ endpoint, model, prompt, taxonomy, schema, article, chunk, runtime, fetchImpl = fetch }) {
+  const scopedSchema = structuredClone(schema);
+  const lastEvidenceId = evidenceSpans(chunk.text).length - 1;
+  scopedSchema.properties.events.items.properties.evidence_id.maximum = lastEvidenceId;
+  scopedSchema.properties.proposed_tags.items.properties.evidence_id.maximum = lastEvidenceId;
   const response = await fetchImpl(`${endpoint}/v1/chat/completions`, {
     method: 'POST', headers: { 'content-type': 'application/json' }, signal: AbortSignal.timeout(runtime.request_timeout_ms),
     body: JSON.stringify({
       model, temperature: 0, seed: 42, max_tokens: runtime.max_output_tokens, stream: false,
-      response_format: { type: 'json_object', schema },
+      response_format: { type: 'json_object', schema: scopedSchema },
       messages: [
         { role: 'system', content: prompt },
         { role: 'user', content: JSON.stringify({ taxonomy: { domains: taxonomy.domains, content_types: taxonomy.content_types, event_types: taxonomy.event_types, statuses: taxonomy.statuses }, title: article.title, published_at: article.publishedAt || null, evidence_spans: evidenceSpans(chunk.text) }) }

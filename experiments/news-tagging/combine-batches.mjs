@@ -15,15 +15,18 @@ const reports = await Promise.all(folders.map(async folder => {
   const file = path.join(inputDirectory, folder, 'results.json');
   return JSON.parse(await fs.readFile(file, 'utf8'));
 }));
-if (!reports.length || reports.some(report => report.model !== reports[0].model || report.taxonomyVersion !== reports[0].taxonomyVersion)) {
-  throw new Error('Missing batch or inconsistent model/taxonomy');
+if (!reports.length || reports.some(report => report.model !== reports[0].model || report.taxonomyVersion !== reports[0].taxonomyVersion || report.contextHash !== reports[0].contextHash)) {
+  throw new Error('Missing batch or inconsistent model/taxonomy/context');
 }
-const articles = reports.flatMap(report => report.results);
-const urls = articles.map(article => article.url);
+const allArticles = reports.flatMap(report => report.results);
+const urls = allArticles.map(article => article.url);
 if (new Set(urls).size !== urls.length) throw new Error('Duplicate article URLs across batches');
-if (articles.length < minimumArticles || articles.some(article => article.status !== 'completed')) {
-  throw new Error(`Need ${minimumArticles} complete articles; got ${articles.filter(article => article.status === 'completed').length}/${articles.length}`);
-}
+const articles = allArticles.filter(article => article.status === 'completed');
+const skippedArticles = allArticles.filter(article => article.status !== 'completed').map(article => ({
+  title: article.title, url: article.url, status: article.status, completedChunks: article.completedChunks,
+  totalChunks: article.totalChunks, failures: article.failures
+}));
+if (articles.length < minimumArticles) throw new Error(`Need ${minimumArticles} complete articles; got ${articles.length}/${allArticles.length}`);
 const label = (key, values) => [...new Set(values.map(value => taxonomy[key][value] || value))].join('、');
 const articleRows = articles.map((article, index) => [
   index + 1, article.title, article.sourceId, article.originalDecision,
@@ -48,7 +51,7 @@ await fs.writeFile(path.join(outputDirectory, 'event-review.csv'), encodeCsv([
 ]));
 await fs.writeFile(path.join(outputDirectory, 'summary.json'), JSON.stringify({
   model: reports[0].model, taxonomyVersion: reports[0].taxonomyVersion,
-  batches: folders, completeArticles: articles.length, eventRows: eventRows.length,
+  batches: folders, completeArticles: articles.length, totalArticles: allArticles.length, skippedArticles, eventRows: eventRows.length,
   sourceCounts: Object.fromEntries([...new Set(articles.map(article => article.sourceId))].map(source => [source, articles.filter(article => article.sourceId === source).length]))
 }, null, 2) + '\n');
-console.log(JSON.stringify({ batches: folders.length, completeArticles: articles.length, eventRows: eventRows.length }));
+console.log(JSON.stringify({ batches: folders.length, completeArticles: articles.length, skippedArticles: skippedArticles.length, eventRows: eventRows.length }));

@@ -158,6 +158,8 @@ const response = await requestTags({ ...args, fetchImpl: async (url, request) =>
 } });
 assert.equal(response.output.events[0].change_quote, text);
 assert.equal(sent.response_format.type, 'json_object');
+assert.equal(sent.response_format.schema.properties.events.items.properties.evidence_id.maximum, 0);
+assert.equal(sent.response_format.schema.properties.proposed_tags.items.properties.evidence_id.maximum, 0);
 assert.ok(sent.messages[1].content.includes(text));
 assert.ok(!sent.messages[1].content.includes('cold_plate'));
 await assert.rejects(() => requestTags({ ...args, fetchImpl: async () => ({ ok: true, json: async () => ({ choices: [{ finish_reason: 'length', message: { content: '{}' } }] }) }) }), /incomplete/);

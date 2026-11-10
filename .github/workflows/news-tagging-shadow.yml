@@ -169,7 +169,7 @@ jobs:
           if-no-files-found: warn
 
   combine-fresh-batches:
-    if: github.event_name == 'push'
+    if: always() && github.event_name == 'push'
     needs: tag-frozen-news
     runs-on: ubuntu-24.04
     permissions:
