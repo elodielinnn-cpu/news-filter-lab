@@ -4,6 +4,7 @@ const test = (pattern, text) => pattern.test(text);
 const futureOnly = /\b(?:will|would|could|might|may|plans? to|planned to|expects? to|expected to|aims? to|scheduled to|set to|likely to|forecast|projected|proposal)\b/iu;
 const negated = /\b(?:not|no|without|hasn't|haven't|doesn't|isn't|won't|cannot|can't|neither)\b/iu;
 const boilerplate = /(?:find all our press releases|privacy notice|login credentials|located in .{0,50}chief analyst|newsletter|cookie policy)/iu;
+const editorialAside = /\b(?:let us know what you think|in the comments|i still consider|i think this|you can check out .{0,80} below)\b/iu;
 const oldBackground = /\b(?:predates this announcement|previously|last year|in May|in September|published at GTC Berlin|introduced at Fal\.Con in Las Vegas)\b/iu;
 const architectureEvidence = /\b(?:topology|dual[ -]homed|redundan(?:t|cy) (?:path|route)|shared (?:file|storage|flash) tier|cache hierarchy|spine[ -]and[ -]leaf|(?:moves?|migrat(?:es|ed|ing)?) .{0,100}\b(?:off|onto|from|to)\b|(?:replac(?:es|ed)|redesign(?:s|ed)) .{0,90}\b(?:with|into)\b)\b|拓扑|双归属|共享存储层|架构调整/iu;
 const formalLaunch = /\b(?:announc(?:es|ed)|launch(?:es|ed)|unveil(?:s|ed)|introduc(?:es|ed)|release(?:s|d))\b.{0,110}\b(?:platform|solution|offering|service|product|system)\b|\b(?:launch(?:es|ed|ing)?|unveil(?:s|ed)|introduc(?:es|ed)|release(?:s|d))\b|\b(?:platform|solution|offering|service|product|system)\b.{0,80}\b(?:now available|generally available|launched)\b|正式发布|正式推出/iu;
@@ -11,7 +12,7 @@ const partnershipAction = /\b(?:announc(?:es|ed)|sign(?:s|ed)|added? .{0,50}part
 const technologyChange = /\b(?:adds?|added|updated|upgrad(?:e|ed|es)|redesign(?:s|ed)?|integrat(?:es|ed|ing)|implement(?:s|ed)?|improv(?:es|ed)?|reduc(?:es|ed)?|increas(?:es|ed)?|moves? .{0,100}\b(?:off|onto|from|to)|new (?:feature|function|capability))\b|新增功能|技术升级|性能提升|工艺改进/iu;
 const futureLaunch = /\b(?:will|plans? to|expected to|set to|scheduled to)\s+(?:\w+\s+){0,3}(?:launch|unveil|release|introduce)\b|\blaunch event\b.{0,60}\bwill be held\b|计划发布|将于.{0,20}发布/iu;
 const actualPrice = /(?:[$€£¥]\s?\d|\b\d+(?:\.\d+)?\s?(?:percent|%|dollars?|euros?|yuan)\b|\b(?:price|cost)s?\b.{0,70}\b(?:rose|fell|dropped|climbed|increased|decreased|higher|lower)\b)/iu;
-const contractAction = /\b(?:signed|awarded|selected|entered into|secured .{0,50}(?:order|contract|agreement)|new (?:dealer|supply|purchase) agreement)\b|签署|获得订单|定点/iu;
+const contractAction = /\b(?:signed|awarded|selected|entered into|secured .{0,50}(?:order|contract|agreement)|new (?:dealer|supply|purchase) agreement|(?:expanded|extended) .{0,60}(?:purchasing |procurement )?contract|(?:placed|received|won) .{0,30}order)\b|签署|获得订单|定点/iu;
 const rules = {
   'deployment-adoption': /\b(?:deployed|installed|running|in use|in operation|operating|using|uses|went live|now live|available now|generally available|began testing|started testing|pilot is live|put to work|turning to|into production|trained and served|brought .{0,100} online)\b|已部署|已安装|投入使用|上线|正在运行/iu,
   'order-contract': /\b(?:signed|selected|awarded|contract|purchase agreement|supply agreement|production orders?|commercial agreement|definitive agreement)\b|签约|合同|订单|定点/iu,
@@ -37,7 +38,7 @@ export function refineEvents(events) {
   for (const event of events) {
     const quote = String(event.change_quote || '').replace(/&#(\d+);/gu, (token, code) => Number(code) > 0 && Number(code) <= 0x10ffff ? String.fromCodePoint(Number(code)) : token).replace(/&(?:ldquo|rdquo|lsquo|rsquo);/giu, '"');
     let reason = '';
-    if (boilerplate.test(quote) || quote.length < 45 || /^\S{1,8}es? in a spine/iu.test(quote)) reason = 'boilerplate_or_fragment';
+    if (boilerplate.test(quote) || editorialAside.test(quote) || quote.length < 45 || /^\S{1,8}es? in a spine/iu.test(quote)) reason = 'boilerplate_or_fragment';
     else if (['historical', 'rumor', 'unclear'].includes(event.status)) reason = 'non_current_or_unconfirmed';
     else if (event.type === 'other-event') reason = 'unspecified_event';
     else if (event.status === 'forecast' && !['demand-outlook', 'pricing-cost', 'product-launch'].includes(event.type)) reason = 'forecast_is_not_an_event';
@@ -50,6 +51,7 @@ export function refineEvents(events) {
     else if (event.type === 'product-launch' && (oldBackground.test(quote) || !formalLaunch.test(quote))) reason = 'launch_not_supported_by_quote';
     else if (event.type === 'product-launch' && futureLaunch.test(quote) && !/\b(?:has launched|launched today|unveiled today|now available)\b/iu.test(quote)) reason = 'future_launch_not_released';
     else if (event.type === 'pricing-cost' && !actualPrice.test(quote)) reason = 'price_or_cost_change_not_stated';
+    else if (event.type === 'demand-outlook' && event.status === 'forecast' && /\b(?:could|might|may|potentially)\b/iu.test(quote) && !/\b(?:according to|forecasts?|projects?|estimates?|expects?|predicts?)\b/iu.test(quote)) reason = 'unattributed_demand_speculation';
     else if (rules[event.type] && !test(rules[event.type], quote)) reason = 'type_not_supported_by_quote';
     else if (event.type === 'deployment-adoption' && (futureOnly.test(quote) || negated.test(quote)) && !test(/\b(?:already|currently|now|has deployed|have deployed|is running|are running)\b/iu, quote)) reason = 'deployment_not_yet_live';
     else if (event.type === 'production-ramp' && futureOnly.test(quote) && !test(/\b(?:has begun|have begun|is ramping|are ramping|now shipping)\b/iu, quote)) reason = 'production_not_yet_ramping';

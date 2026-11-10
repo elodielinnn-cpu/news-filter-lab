@@ -55,7 +55,15 @@ const firstBatchChecks = refineEvents([
   { type: 'order-contract', status: 'occurred', change_quote: 'The operator signed a supply agreement for server power systems.' }
 ]);
 assert.deepEqual(firstBatchChecks.kept.map(event => event.type), ['product-launch', 'pricing-cost', 'order-contract']);
-assert.deepEqual(firstBatchChecks.rejected.map(event => event.rejection_reason), ['future_launch_not_released', 'price_or_cost_change_not_stated', 'contract_action_not_supported']);
+assert.deepEqual(firstBatchChecks.rejected.map(event => event.rejection_reason), ['future_launch_not_released', 'price_or_cost_change_not_stated', 'boilerplate_or_fragment']);
+const humanReviewChecks = refineEvents([
+  { type: 'demand-outlook', status: 'forecast', change_quote: 'A turbocharged tax deduction could still power a strong year for commercial EV sales.' },
+  { type: 'demand-outlook', status: 'forecast', change_quote: 'Kpler forecasts electric heavy trucks will displace diesel demand next year.' },
+  { type: 'order-contract', status: 'occurred', change_quote: 'The expanded purchasing contract, extended through July 2028, gives members access to electric trucks.' },
+  { type: 'deployment-adoption', status: 'occurred', change_quote: 'I still consider this a small pilot by any standard, and safety remains the bottleneck.' }
+]);
+assert.deepEqual(humanReviewChecks.kept.map(event => event.type), ['demand-outlook', 'order-contract']);
+assert.deepEqual(humanReviewChecks.rejected.map(event => event.rejection_reason), ['unattributed_demand_speculation', 'boilerplate_or_fragment']);
 const duplicateQuote = { type: 'technology-update', status: 'occurred', subject: 'IBM', evidence_id: 1, change_quote: 'A shared storage tier was introduced.', chunk: 0 };
 assert.equal(mergeOutputs([{ domains: [], content_types: [], events: [duplicateQuote], raw_tags: [], proposed_tags: [] },
   { domains: [], content_types: [], events: [{ ...duplicateQuote, subject: 'NVIDIA', chunk: 1 }], raw_tags: [], proposed_tags: [] }]).events.length, 1);
@@ -96,6 +104,10 @@ assert.throws(() => chunkText(long, 100, 100), /limits/);
 const unicodeChunks = chunkText(['a'.repeat(99) + '😀' + 'b'.repeat(150)], 100, 5);
 assert.ok(unicodeChunks.every(item => !/[\uD800-\uDBFF]$/u.test(item.text) && !/^[\uDC00-\uDFFF]/u.test(item.text)));
 assert.ok(chunkText(['word '.repeat(45), 'word '.repeat(45)], 100, 99).length < 500);
+const sentenceChunks = chunkText([Array.from({ length: 12 }, (_, index) => `Company ${index} announced a new server rack with a redesigned air channel.`).join(' ')], 180, 45);
+assert.ok(sentenceChunks.length > 2);
+assert.ok(sentenceChunks.every(item => /^Company \d+ announced/u.test(item.text)));
+assert.ok(sentenceChunks.every(item => item.text.length <= 180));
 
 const cache = new Map();
 const progress = [];

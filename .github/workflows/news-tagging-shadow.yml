@@ -6,12 +6,7 @@ on:
     branches:
       - codex/news-tagging-shadow
     paths:
-      - .github/workflows/news-tagging-shadow.yml
-      - experiments/news-tagging/**
-      - experiments/news-screening/**
-      - experiments/news-filter-v3/business-profile.mjs
-      - config/luxshare-business-profile.json
-      - outputs/news-screening/audit/4c92e2cb37ce/baseline.json
+      - experiments/news-tagging/sample-sources-*.json
 
 permissions:
   contents: read

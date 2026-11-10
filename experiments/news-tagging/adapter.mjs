@@ -15,16 +15,20 @@ export function normalizeTag(value) {
 export function chunkText(paragraphs, maxCharacters, overlapCharacters) {
   if (!Number.isInteger(maxCharacters) || maxCharacters < 100 || !Number.isInteger(overlapCharacters) || overlapCharacters < 0 || overlapCharacters >= maxCharacters) throw new Error('Invalid chunk limits');
   const text = paragraphs.map(normalizedText).filter(Boolean).join('\n\n');
+  const sentenceEnds = [...new Intl.Segmenter(undefined, { granularity: 'sentence' }).segment(text)]
+    .map(({ index, segment }) => index + segment.length);
   const chunks = [];
   let start = 0;
   while (start < text.length) {
     let end = Math.min(text.length, start + maxCharacters);
-    const boundary = text.lastIndexOf('\n\n', end);
-    if (end < text.length && boundary > start + maxCharacters / 2) end = boundary;
+    const boundary = sentenceEnds.findLast(position => position > start + maxCharacters / 2 && position <= end);
+    if (end < text.length && boundary) end = boundary;
     if (end < text.length && /[\uD800-\uDBFF]/u.test(text[end - 1])) end -= 1;
     chunks.push({ index: chunks.length, start, end, text: text.slice(start, end) });
     if (end === text.length) break;
-    start = Math.max(start + 1, end - overlapCharacters);
+    const desiredStart = Math.max(start + 1, end - overlapCharacters);
+    start = sentenceEnds.findLast(position => position > start && position <= desiredStart)
+      || (sentenceEnds.includes(end) ? end : desiredStart);
     if (/[\uDC00-\uDFFF]/u.test(text[start])) start += 1;
   }
   return chunks;
