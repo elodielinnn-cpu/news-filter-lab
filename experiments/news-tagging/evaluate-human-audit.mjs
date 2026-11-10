@@ -1,8 +1,10 @@
 import fs from 'node:fs/promises';
 
-const audit = JSON.parse(await fs.readFile(new URL('human-audit-48.json', import.meta.url), 'utf8'));
 const input = process.argv[2];
-if (!input) throw new Error('Usage: node experiments/news-tagging/evaluate-human-audit.mjs RESULTS_JSON [--refined]');
+const auditOption = process.argv.indexOf('--audit');
+const auditPath = auditOption < 0 ? new URL('human-audit-48.json', import.meta.url) : process.argv[auditOption + 1];
+if (!input || !auditPath) throw new Error('Usage: node experiments/news-tagging/evaluate-human-audit.mjs RESULTS_JSON [--refined] [--audit AUDIT_JSON]');
+const audit = JSON.parse(await fs.readFile(auditPath, 'utf8'));
 const report = JSON.parse(await fs.readFile(input, 'utf8'));
 if (!Array.isArray(report.results)) throw new Error('Expected results array');
 const refined = process.argv.includes('--refined');

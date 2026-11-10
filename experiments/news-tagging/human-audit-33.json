@@ -1,0 +1,378 @@
+{
+  "source": "News_Tagging_33_Manual_Review.xlsx, 逐篇审核; user supplied 2026-11-10",
+  "note": "Human review benchmark for the 33 complete articles. The one partial Intel Ohio One article is excluded. Labels are review targets, not independently verified source facts.",
+  "articles": [
+    {
+      "number": 1,
+      "title": "Meta Prometheus: Inside the Gigawatt Supercluster Scaling to 1 Million GPUs on GB200 and GB300 NVL72",
+      "source_url": "https://www.storagereview.com/news/meta-prometheus-gigawatt-supercluster-1-million-gpus-gb200-gb300-nvl72",
+      "expected_event_types": [
+        "architecture-change",
+        "technology-update",
+        "deployment-adoption",
+        "capacity-expansion"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "数据中心整柜、互连和散热。Meta 确认 Prometheus 一期完成，已用 GB200/GB300 训练 Muse。GB300 将双柜收为单柜，网络由调度式转向非调度式。固件自动化有实际改善。百万 GPU 是扩建目标，Rubin 待接入；CoreWeave 是另一项目。"
+    },
+    {
+      "number": 2,
+      "title": "Aptiv camera-only occupancy classification",
+      "source_url": "https://www.aptiv.com/en/newsroom/article/aptiv-introduces-advanced-occupancy-classification-the-industry-s-first-camera-only-occupant-detection-system",
+      "expected_event_types": [
+        "product-launch",
+        "architecture-change"
+      ],
+      "recommended_destination": "仅全集",
+      "review_reason": "汽车座舱感知和约束系统。Aptiv 6 月 8 日正式推出 AOC，以舱内摄像头代替座椅感知硬件，涉及座椅线束与装配。厂商报告法规工况测试结果，未披露 OEM 定点或主管机构认证。旧闻仅全集，未来法规猜测删掉。"
+    },
+    {
+      "number": 3,
+      "title": "Micron’s Next NAND Is G11, Not G10: 400-Plus Layers, 2x Density, and a 512TB SSD Ceiling on a 2H 2027 Ramp",
+      "source_url": "https://www.storagereview.com/news/micron-g11-nand-400-layers-2x-density-512tb-ssd-2h-2027",
+      "expected_event_types": [
+        "technology-update"
+      ],
+      "recommended_destination": "观察",
+      "review_reason": "数据中心上游 NAND。Micron 公开 G11 晶圆键合和 400 层以上工艺路线，量产拟于 2027 年下半年。512TB 是 SSD 路线图，未披露整机设计或具体采购。披露已发生，性能和量产均须保留目标口径。"
+    },
+    {
+      "number": 4,
+      "title": "Microsoft Maia 300 Puts 288GB of HBM4 at 18TB/s on an N2P Chiplet and 96 Accelerators in a 167kW Rack",
+      "source_url": "https://www.storagereview.com/news/microsoft-maia-300-hbm4-n2p-chiplet-96-accelerator-rack",
+      "expected_event_types": [
+        "product-launch",
+        "architecture-change",
+        "technology-update"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "数据中心整柜与热电。Microsoft 在 OCP 正式发布 Maia 300。96 加速器、167 kW 整柜和 HBM4、芯粒变化均已披露。Maia 300 计划 2027 年部署；Maia 200 现有生产负载独立记，机柜功率与设施产能分开。"
+    },
+    {
+      "number": 5,
+      "title": "CoreWeave Puts NVIDIA Vera Rubin NVL72 Into Production: Cognition Reports 4.8x Over GB200, Vera CPU Racks and Forge Follow",
+      "source_url": "https://www.storagereview.com/news/coreweave-vera-rubin-nvl72-production-cognition-4-8x-vera-cpu-forge",
+      "expected_event_types": [
+        "deployment-adoption",
+        "product-launch",
+        "technology-update"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "数据中心整柜。Cognition 已在 CoreWeave 的 Rubin NVL72 跑生产工作负载，平台限量可用。4.8 倍是特定任务与 GB200 的具名客户对比。Forge 是独立软件发布，Vera CPU 待上线。云服务投运与工厂量产分开。"
+    },
+    {
+      "number": 6,
+      "title": "Infineon and Subaru driver safety collaboration",
+      "source_url": "https://www.infineon.com/press-release/2026/infatv202603-065",
+      "expected_event_types": [
+        "partnership",
+        "architecture-change"
+      ],
+      "recommended_destination": "仅全集",
+      "review_reason": "汽车 ADAS 与车辆运动控制。Infineon 与 Subaru 3 月 9 日公布合作，下一代整合 ECU 由 AURIX TC4x 主控，兼顾智驾和运动控制。合作公告与产品开发计划分开。作为历史样本留全集。"
+    },
+    {
+      "number": 7,
+      "title": "Marvell Structera X 3406 and 3506 Put Six DDR4 or DDR5 Channels and Four Hosts on One CXL 3.2 Expander",
+      "source_url": "https://www.storagereview.com/news/marvell-structera-x-3406-3506-six-channel-cxl-3-2-memory-expander",
+      "expected_event_types": [
+        "product-launch",
+        "technology-update"
+      ],
+      "recommended_destination": "观察",
+      "review_reason": "上游内存扩展。Marvell 正式公布两款 Structera X CXL 3.2 控制器，六通道、四主机共享和压缩引擎有明确参数。2027 年一季度计划送样。具体 OEM 整机或整柜适配证据不足，按既定 CXL 口径观察。"
+    },
+    {
+      "number": 8,
+      "title": "Vultr Commits $1.2B to the AMD Helios AI Rack by HPE, HPE’s First Order for the 72-GPU MI455X System",
+      "source_url": "https://www.storagereview.com/news/vultr-1-2b-amd-helios-ai-rack-by-hpe-first-order",
+      "expected_event_types": [
+        "order-contract"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "数据中心整柜与热电。HPE 官宣 12 亿美元 Vultr Helios 整柜首单，涉及 72 GPU、六个 QFX5252 托盘与直接液冷。采购已宣布，部署仍待交付。#10 是同平台托盘细节，可关联显示。按发布时价值评估。"
+    },
+    {
+      "number": 9,
+      "title": "Altera Agilex 27 is the First Agilex 2X Platform Adding 800GbE and 1.6TbE and More",
+      "source_url": "https://www.servethehome.com/altera-agilex-27-800gbe-1-6tbe-hyperflow/",
+      "expected_event_types": [
+        "product-launch",
+        "technology-update"
+      ],
+      "recommended_destination": "观察",
+      "review_reason": "上游 FPGA。Altera 宣布 Agilex 27，披露 800GbE、1.6TbE、PCIe 6/7 与片上 HyperFlow。工程样品预计 2027 年下半年，未见具名整机落地。作者个人期待删掉。"
+    },
+    {
+      "number": 10,
+      "title": "This is the AMD Helios HPE Juniper QFX5252 Switch Tray at OCP 2026",
+      "source_url": "https://www.servethehome.com/this-is-the-amd-helios-hpe-juniper-qfx5252-switch-tray-at-ocp-2026/",
+      "expected_event_types": [
+        "architecture-change"
+      ],
+      "recommended_destination": "观察",
+      "review_reason": "数据中心整柜交换托盘。OCP 拆开展示 QFX5252，双交换芯片、液冷 Manifold 和柜内背面互连接口有实物证据。既有设计的实物披露有增量；此前已经介绍，按 #08 Helios 项目关联。"
+    },
+    {
+      "number": 11,
+      "title": "Valeo selected by Nissan for ProPILOT",
+      "source_url": "https://www.valeo.com/en/valeo-selected-by-nissan-as-partner-for-next-generation-propilot-program/",
+      "expected_event_types": [
+        "qualification-certification"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "汽车 ADAS 域控、感知与车载互连。Valeo 已被 Nissan 选为下一代 ProPILOT 系统 Tier-1，明确域控制器、传感器和 Wayve AI Driver 的集成范围。合并类目只取客户定点，合同金额、验证和量产待后续。"
+    },
+    {
+      "number": 12,
+      "title": "NVIDIA and Cisco USFP Optics Target 400Gb/s per Lane, With MGX 1.2 and DSX OS Updates at OCP 2026",
+      "source_url": "https://www.storagereview.com/news/nvidia-cisco-usfp-optics-400gbps-per-lane-ocp-2026",
+      "expected_event_types": [
+        "partnership",
+        "architecture-change",
+        "technology-update"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "数据中心光互连与机柜热电。NVIDIA/Cisco 公布 USFP 共研计划，400Gb/s 单通道是目标，无送样日。MGX 1.2 已披露盲插液冷和 5,000A 母排。USFP、机柜架构和 G300/G302 的阶段须分开。"
+    },
+    {
+      "number": 13,
+      "title": "NetApp Novus Splits pNFS Metadata From AFF A90 Data Nodes for a 100 TB/s AI Factory Target, Orderable Now",
+      "source_url": "https://www.storagereview.com/news/netapp-novus-pnfs-metadata-aff-a90-data-nodes-100-tb-s-ai-factory",
+      "expected_event_types": [
+        "product-launch",
+        "architecture-change",
+        "partnership",
+        "technology-update"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "数据中心整机、存储互连。Novus 已宣布可订，Supermicro 元数据节点与 AFF A90 数据层分离。100 TB/s 是外推值。另有与 Supermicro 的系统合作及 AIDE 功能更新。目标客户、可订状态及已签订单分别判断。"
+    },
+    {
+      "number": 14,
+      "title": "Astera Labs Orion Scales 8 to 160 Accelerators on a 320-Lane PCIe Fabric With Any GPU, as Aries 7 Brings PCIe 7 Retimers and Optics",
+      "source_url": "https://www.storagereview.com/news/astera-labs-orion-rack-reference-design-160-accelerators-pcie-fabric-aries-7-pcie-7",
+      "expected_event_types": [
+        "product-launch",
+        "architecture-change"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "数据中心整柜与互连。Orion 可组合 PCIe 参考架构已有通电展示，支持可换计算托盘和 8–160 加速器的设计范围。Aries 7 是同周公布的另一互连产品组合，送样仍按计划。无终端客户部署。"
+    },
+    {
+      "number": 15,
+      "title": "Micas Networks Puts Broadcom Tomahawk 6 in Three 102.4T Switches, Including a 1RU Davisson CPO Box",
+      "source_url": "https://www.storagereview.com/news/micas-networks-tomahawk-6-102t-switches-davisson-cpo",
+      "expected_event_types": [
+        "product-launch",
+        "architecture-change"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "数据中心交换机、CPO、热管理。Micas 发布三款 102.4T 交换机，分别采用风冷可插拔、液冷可插拔、1RU Davisson CPO。只有一款现场可运行；前两款计划 2026 Q4，CPO 计划 2027 Q1 生产。"
+    },
+    {
+      "number": 16,
+      "title": "Infineon and Qualcomm central car computers",
+      "source_url": "https://www.infineon.com/press-release/2026/infpr202611-023",
+      "expected_event_types": [
+        "partnership",
+        "architecture-change"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "汽车中央计算与 E/E。Infineon 和 Qualcomm 11 月 2 日确认技术协议，以安全 MCU 配合 Snapdragon Ride SoC，面向座舱与智驾合并。是明确参考架构。与前次 48 篇中的同一事件去重。"
+    },
+    {
+      "number": 17,
+      "title": "Nutanix Private Inference System With Supermicro Puts Eight NVIDIA B300 Blackwell Ultra GPUs per Node Behind Dedicated NX Management and Storage Clusters, Ships Early 2027",
+      "source_url": "https://www.storagereview.com/news/nutanix-supermicro-private-inference-blackwell-ultra-vera-netris-gtc-berlin",
+      "expected_event_types": [
+        "product-launch",
+        "partnership",
+        "architecture-change"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "数据中心服务器、互连与集成。Nutanix/Supermicro 已公布具名私有推理方案，B300 GPU 节点与独立管理和存储集群隔离。计划 2027 年初出货。Netris 为另一合作，既有 70 余部署不能计入本方案。"
+    },
+    {
+      "number": 18,
+      "title": "XCENA MX1 CXL Computational Memory Shares a KV Cache Across Inference Servers and Powers SK hynix CXL Hybrid Memory at OCP 2026",
+      "source_url": "https://www.storagereview.com/news/xcena-mx1-cxl-computational-memory-kv-cache-sk-hynix-ocp-2026",
+      "expected_event_types": [
+        "architecture-change",
+        "research-prototype",
+        "partnership"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "数据中心 CXL、RDMA 和系统集成。XCENA 实际演示多推理服务器共用 CXL KV 池和近数据向量检索，另与 SK hynix 联调混合内存的 RDMA 路径。跨服务器设计与硬件接口有实证；阶段为演示和联调。"
+    },
+    {
+      "number": 19,
+      "title": "KIOXIA CM9-DLC Brings Direct Liquid Cooling to Dual-Port E3.S SSDs up to 30.72TB",
+      "source_url": "https://www.storagereview.com/news/kioxia-cm9-dlc-direct-liquid-cooling-e3s-ssd-30-72tb",
+      "expected_event_types": [
+        "product-launch",
+        "technology-update"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "数据中心液冷与服务器。KIOXIA 公布 CM9-DLC，在双端口 E3.S 上引入直接液冷，SSD 纳入冷板回路，涉及整机散热集成。报道确认 CM9 系列在送样，DLC 单独送样及普遍可用日未披露。"
+    },
+    {
+      "number": 20,
+      "title": "Schneider Electric Software-Defined Medium Voltage Switchgear Debuts at YOTTA 2026 in an Equinix Pilot, With 38 kV SF6-Free GIS and a Generator-to-Chip Delivery Model",
+      "source_url": "https://www.storagereview.com/news/schneider-electric-software-defined-medium-voltage-switchgear-yotta-2026-equinix-pilot",
+      "expected_event_types": [
+        "product-launch",
+        "deployment-adoption",
+        "architecture-change",
+        "partnership"
+      ],
+      "recommended_destination": "观察",
+      "review_reason": "数据中心园区供配电。Schneider 公布软件定义中压开关柜，Equinix 真实站点试点已运行，减少控制布线是明确变化。另发布三方 Generator-to-Chip 交付合作。中压上游与机柜电源间接关联，先观察。"
+    },
+    {
+      "number": 21,
+      "title": "Aptiv and NVIDIA automated driving collaboration",
+      "source_url": "https://www.aptiv.com/en/newsroom/article/aptiv-expands-collaboration-with-nvidia-to-accelerate-affordable-highly-automated-driving",
+      "expected_event_types": [
+        "partnership",
+        "architecture-change"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "汽车 ADAS 域控及热设计。Aptiv 10 月 21 日宣布扩大与 NVIDIA 合作，将 Hyperion/Halos 纳入模块化计算架构，披露 Thor 平台仅风冷方案。计划 CES 2027 展示，客户定点和量产未披露。"
+    },
+    {
+      "number": 22,
+      "title": "Aptiv Auto China 2026 vehicle architecture",
+      "source_url": "https://www.aptiv.com/en/newsroom/article/Aptiv-at-Auto-China-2026",
+      "expected_event_types": [
+        "technology-update",
+        "architecture-change"
+      ],
+      "recommended_destination": "仅全集",
+      "review_reason": "汽车 E/E。Aptiv 5 月回顾北京车展，实际展出单 SoC 卫星雷达、应急供电等工程方案。按已展示技术保留，与新品发售和订单分开。作为历史样本留全集。"
+    },
+    {
+      "number": 23,
+      "title": "HPE ProLiant Gen13 Launches With the First Four AMD EPYC Venice Servers: Eight-GPU DL585a, 256-Core DL525, and OCP XD Nodes",
+      "source_url": "https://www.storagereview.com/news/hpe-proliant-gen13-first-four-amd-epyc-venice-servers",
+      "expected_event_types": [
+        "product-launch",
+        "architecture-change",
+        "technology-update"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "数据中心整机、互连和散热。HPE 正式宣布首四款 Venice ProLiant Gen13，10U 风冷 DL585a 和单路高内存带宽 DL525 有明确设计取舍，iLO 8 为独立管理技术更新。各机型交付计划分开。"
+    },
+    {
+      "number": 24,
+      "title": "Supermicro NVIDIA Vera CPU Rack: 256 Vera CPUs, 400TB of LPDDR5X, and 22,500 Agent Sandboxes in a 208kW Liquid-Cooled 48U",
+      "source_url": "https://www.storagereview.com/news/supermicro-nvidia-vera-cpu-rack-256-cpus-400tb-22500-agent-sandboxes-208kw",
+      "expected_event_types": [
+        "product-launch",
+        "architecture-change"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "数据中心整柜、母排、CDU。Supermicro 公布 256 Vera CPU 的 48U 全液冷柜，800 VDC 侧柜和 DLC-2 支持与 GPU 柜协同。已可询价，出货日未披露；文中已出货的是配套 NVL72。"
+    },
+    {
+      "number": 25,
+      "title": "Sparxity, Formerly SpiNNcloud, Deploys JUBIS Sparse-Native Rack at Jülich Supercomputing Centre With 10x Solver and 18x Energy Claims",
+      "source_url": "https://www.storagereview.com/news/sparxity-spinncloud-jubis-sparse-native-rack-julich-supercomputing-centre",
+      "expected_event_types": [
+        "deployment-adoption"
+      ],
+      "recommended_destination": "观察",
+      "review_reason": "数据中心科研机柜。Sparxity 公布 JUBIS 已部署于具名 Jülich 超算中心，属实际采用。10 倍和 18 倍是厂商口径，缺独立基准。更名及下一代芯片路线图不打新品。项目规模和通用供应链外溢待核。"
+    },
+    {
+      "number": 26,
+      "title": "Supermicro OCP Accepted Portfolio Adds 48V Busbar ORv3 Racks, a 250 kW In-Rack CDU, and a 102.4 Tbps CPO Switch",
+      "source_url": "https://www.storagereview.com/news/supermicro-ocp-accepted-portfolio-48v-busbar-orv3-racks-250-kw-cdu-cpo-switch",
+      "expected_event_types": [
+        "product-launch",
+        "architecture-change",
+        "technology-update"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "数据中心机柜热电和光互连。Supermicro 明确扩大可用 OCP Accepted 产品组合，48V 母排、250 kW 柜内 CDU、102.4T CPO 和快接有直接映射。OCP 组合认可与每款 SKU 的新增认证分开。"
+    },
+    {
+      "number": 27,
+      "title": "Scality AI Inference Factory Serves KV Cache From Object Storage Over RDMA, 14x Faster Than Recompute",
+      "source_url": "https://www.storagereview.com/news/scality-ai-inference-factory-kv-cache-object-storage-rdma",
+      "expected_event_types": [
+        "product-launch",
+        "architecture-change",
+        "research-prototype"
+      ],
+      "recommended_destination": "观察",
+      "review_reason": "数据中心存储与互连。Scality 软件已可购买，KV 从对象存储经 RDMA 直达显存，并有小规模实验。14 倍相对重算，不代表通用结果。现有标准服务器可承载，客户部署和新硬件采购待证。"
+    },
+    {
+      "number": 28,
+      "title": "Valeo and Anritsu digital twin validation",
+      "source_url": "https://www.valeo.com/en/valeo-and-anritsu-to-showcase-digital-twin-validation-solution-for-software-defined-vehicles-at-the-5gaa-meeting/",
+      "expected_event_types": [
+        "partnership",
+        "research-prototype"
+      ],
+      "recommended_destination": "观察",
+      "review_reason": "汽车车载通信与测试。Valeo/Anritsu 已集成虚拟 ECU 与蜂窝测试设备，扩大到 eCall 用例，计划在 5GAA 展示。属已搭建的验证方案，客户采用、整车测试认证及上市未知。"
+    },
+    {
+      "number": 29,
+      "title": "Celestica DS6005 Puts 102.4Tbps of Co-Packaged Optics and 64 1.6TbE Ports in a 1.5OU Liquid-Cooled ORv3 Switch",
+      "source_url": "https://www.storagereview.com/news/celestica-ds6005-102-4tbps-co-packaged-optics-1-5ou-liquid-cooled-orv3-switch",
+      "expected_event_types": [
+        "product-launch",
+        "architecture-change",
+        "partnership"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "数据中心 CPO、母排、液冷。Celestica 正式介绍 DS6005，102.4T、1.5OU 液冷、外置激光与 ORv3 直流母排接口具体。Broadcom 共研范围已披露。参数初步，送样和出货日未定。"
+    },
+    {
+      "number": 30,
+      "title": "KIOXIA LD4 Brings QLC to E1.L for 1U Servers, Sampling at 30.72TB With a Path to 122.88TB",
+      "source_url": "https://www.storagereview.com/news/kioxia-ld4-qlc-e1-l-ssd-1u-servers-30-72tb-122-88tb",
+      "expected_event_types": [
+        "product-launch",
+        "technology-update"
+      ],
+      "recommended_destination": "观察",
+      "review_reason": "数据中心存储。LD4 首款 E1.L QLC 已宣布，15.36/30.72TB 已向部分客户送样。122.88TB 是已验证的架构上限，与可购规格分开。目标 1U 服务器，尚无具名整机采用。"
+    },
+    {
+      "number": 31,
+      "title": "Zella Stack Micro Data Center Ships by Courier, Stacks From 24RU to 48RU, and Cools Up to 124kW",
+      "source_url": "https://www.storagereview.com/news/zella-stack-micro-data-center-courier-24ru-48ru-124kw",
+      "expected_event_types": [
+        "product-launch",
+        "architecture-change"
+      ],
+      "recommended_destination": "观察",
+      "review_reason": "数据中心微型机柜。Zella Stack 公开推出，现场叠装由 24RU 扩至 48RU，可混合风液冷。常规快递为设计能力；无已交付客户。124 kW 是冷却选项上限，非所有配置。"
+    },
+    {
+      "number": 32,
+      "title": "NVIDIA BlueField-4 STX Server for CMX at OCP 2026",
+      "source_url": "https://www.servethehome.com/nvidia-bluefield-4-stx-server-for-cmx-at-ocp-2026/",
+      "expected_event_types": [
+        "architecture-change"
+      ],
+      "recommended_destination": "观察",
+      "review_reason": "数据中心上下文存储与服务器互连。OCP 现场见 BlueField-4 STX CMX，新板由双 Vera 改为单 Vera、板载 LPDDR5X 和高密度接口。实物为阶段证据，客户出货、定价和量产未披露。"
+    },
+    {
+      "number": 33,
+      "title": "Valeo and NVIDIA Hyperion compute platforms",
+      "source_url": "https://www.valeo.com/en/valeo-builds-next-generation-high-performance-compute-platforms-built-on-nvidia-hyperion/",
+      "expected_event_types": [
+        "partnership",
+        "architecture-change"
+      ],
+      "recommended_destination": "首页",
+      "review_reason": "汽车中央计算及功能安全。Valeo 与 NVIDIA 明确开发和工业化基于 Hyperion 的车规算力平台，双 DRIVE AGX Thor 对应冗余与集中计算。开发方案已披露，定点、交付和验证待后续。"
+    }
+  ]
+}

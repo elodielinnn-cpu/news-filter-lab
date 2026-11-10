@@ -41,6 +41,10 @@ const eventRows = articles.flatMap((article, index) => [
     taxonomy.statuses[event.status] || event.status, '剔除', event.rejection_reason, event.subject, event.change_quote, '', '', article.url])
 ]);
 await fs.mkdir(outputDirectory, { recursive: true });
+await fs.writeFile(path.join(outputDirectory, 'results.json'), JSON.stringify({
+  model: reports[0].model, taxonomyVersion: reports[0].taxonomyVersion,
+  contextHash: reports[0].contextHash, results: articles
+}, null, 2) + '\n');
 await fs.writeFile(path.join(outputDirectory, 'article-review.csv'), encodeCsv([
   ['编号', '标题', '来源', '现有筛选', '业务标签', '模型原始事件标签', '证据检查后标签', '人工正确事件标签', '建议去向（首页/观察/仅全集）', '人工理由或漏掉的事件', '原文链接'],
   ...articleRows
