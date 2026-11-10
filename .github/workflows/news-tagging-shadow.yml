@@ -30,7 +30,13 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Validate adapter and prepare frozen batch
+      - name: Fetch independent news batch on branch push
+        if: github.event_name == 'push'
+        run: |
+          node experiments/news-tagging/fetch-fresh.mjs
+          echo "NEWS_TAGGING_INPUT=$GITHUB_WORKSPACE/outputs/news-tagging/fresh-batch.json" >> "$GITHUB_ENV"
+
+      - name: Validate adapter and prepare selected batch
         run: |
           node experiments/news-screening/test.mjs
           node experiments/news-tagging/test.mjs
@@ -127,8 +133,12 @@ jobs:
           key: news-tagging-7b-v1-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Compare 7B with saved 1.5B results
-        if: always() && hashFiles('outputs/news-tagging/results.json') != ''
+        if: github.event_name != 'push' && always() && hashFiles('outputs/news-tagging/results.json') != ''
         run: node experiments/news-tagging/compare-models.mjs
+
+      - name: Evaluate refined tags against human audit
+        if: github.event_name != 'push' && always() && hashFiles('outputs/news-tagging/results.json') != ''
+        run: node experiments/news-tagging/evaluate-human-audit.mjs outputs/news-tagging/results.json --refined > outputs/news-tagging/human-audit-evaluation.json
 
       - name: Attach tagging report
         if: always()

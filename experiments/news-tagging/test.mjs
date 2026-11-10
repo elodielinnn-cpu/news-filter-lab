@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import { extractAtTags, normalizeTag, chunkText, evidenceSpans, validateOutput, digest } from './adapter.mjs';
 import { prepareManifest, requestTags, tagManifest, summarize } from './run.mjs';
 import { loadBusinessProfile } from '../news-filter-v3/business-profile.mjs';
+import { refineEvents } from './refine.mjs';
 
 const taxonomy = JSON.parse(await fs.readFile(new URL('taxonomy.json', import.meta.url), 'utf8'));
 const runtime = JSON.parse(await fs.readFile(new URL('runtime.json', import.meta.url), 'utf8'));
@@ -21,6 +22,13 @@ assert.deepEqual(extractAtTags('@GPU @gpu @冷板 @server-cooling'), ['gpu', '�
 assert.equal(normalizeTag('@Server_Cooling'), 'server-cooling');
 assert.equal(evidenceSpans(text)[0].text, text);
 assert.equal(valid.events[0].change_quote, text);
+const grounded = refineEvents([
+  { type: 'deployment-adoption', status: 'forecast', change_quote: 'The company plans to deploy the fleet next year.' },
+  { type: 'merger-acquisition', status: 'occurred', change_quote: 'Intel signed an agreement to acquire Classiq.' },
+  { type: 'other-event', status: 'occurred', change_quote: 'The conference discussed AI.' }
+]);
+assert.deepEqual(grounded.kept.map(event => event.type), ['merger-acquisition']);
+assert.deepEqual(grounded.rejected.map(event => event.rejection_reason), ['forecast_is_not_an_event', 'unspecified_event']);
 const twoSentences = { ...chunk, text: 'BYD launched a new electric SUV. Sales remain uncertain.' };
 assert.deepEqual(evidenceSpans(twoSentences.text).map(span => span.id), [0, 1]);
 assert.equal(validateOutput({ ...raw, events: [{ ...raw.events[0], evidence_id: 1 }] }, twoSentences, taxonomy).events[0].change_quote, 'Sales remain uncertain.');

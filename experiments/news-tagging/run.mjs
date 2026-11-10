@@ -6,6 +6,7 @@ import { activeProducts, isConsumerStory } from '../news-screening/scope.mjs';
 import { articleId, encodeCsv } from '../news-screening/audit.mjs';
 import { chunkText, digest, evidenceSpans, mergeOutputs, outputSchema, validateOutput } from './adapter.mjs';
 import { compareDecisions, comparisonCsv } from './compare.mjs';
+import { refineEvents } from './refine.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 export async function prepareManifest(input, taxonomy, runtime, prompt, profile) {
@@ -96,10 +97,13 @@ export async function tagManifest({ manifest, runtime, taxonomy, infer, loadCach
       }
     }
     const status = !article.chunks.length ? 'no_evidence' : completed === article.chunks.length ? 'completed' : completed ? 'partial' : 'failed';
+    const merged = mergeOutputs(outputs);
+    const refined = refineEvents(merged.events);
     results.push({ id: article.id, title: article.title, url: article.url, sourceId: article.sourceId, originalDecision: article.originalDecision,
       originalBusiness: article.originalBusiness, originalAffectedObject: article.originalAffectedObject,
       originalEvidence: article.originalEvidence, originalReason: article.originalReason,
-      evidenceSource: article.evidenceSource, status, completedChunks: completed, totalChunks: article.chunks.length, ...mergeOutputs(outputs), failures, cacheWarnings });
+      evidenceSource: article.evidenceSource, status, completedChunks: completed, totalChunks: article.chunks.length, ...merged,
+      refined_events: refined.kept, rejected_events: refined.rejected, failures, cacheWarnings });
   }
   return { mode: 'semantic-shadow', generatedAt: new Date().toISOString(), model: manifest.model, modelRevision: manifest.modelRevision, taxonomyVersion: taxonomy.version, contextHash: manifest.contextHash, requests, cacheHits, validatedResponseTokens: totalTokens, elapsedMs: now() - startedAt, results };
 }

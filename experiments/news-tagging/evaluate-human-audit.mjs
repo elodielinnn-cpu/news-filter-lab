@@ -2,15 +2,17 @@ import fs from 'node:fs/promises';
 
 const audit = JSON.parse(await fs.readFile(new URL('human-audit-48.json', import.meta.url), 'utf8'));
 const input = process.argv[2];
-if (!input) throw new Error('Usage: node experiments/news-tagging/evaluate-human-audit.mjs RESULTS_JSON');
+if (!input) throw new Error('Usage: node experiments/news-tagging/evaluate-human-audit.mjs RESULTS_JSON [--refined]');
 const report = JSON.parse(await fs.readFile(input, 'utf8'));
 if (!Array.isArray(report.results)) throw new Error('Expected results array');
+const refined = process.argv.includes('--refined');
 
 const byUrl = new Map(report.results.map(article => [article.url, article]));
 const rows = audit.articles.map(item => {
   const actual = byUrl.get(item.source_url);
   const expected = item.expected_event_types;
-  const observed = actual?.status === 'completed' ? [...new Set(actual.events.map(event => event.type))].sort() : [];
+  if (refined && actual?.status === 'completed' && !Array.isArray(actual.refined_events)) throw new Error('Refined events absent from results');
+  const observed = actual?.status === 'completed' ? [...new Set((refined ? actual.refined_events : actual.events).map(event => event.type))].sort() : [];
   return {
     number: item.number, title: item.title, url: item.source_url,
     status: actual?.status || 'missing', expected, observed,
@@ -28,4 +30,4 @@ const summary = {
   withExtraTags: rows.filter(row => row.extra.length).length,
   emptyExpected: rows.filter(row => !row.expected.length).length
 };
-console.log(JSON.stringify({ model: report.model, summary, rows }, null, 2));
+console.log(JSON.stringify({ model: report.model, mode: refined ? 'refined' : 'raw', summary, rows }, null, 2));
