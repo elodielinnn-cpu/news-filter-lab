@@ -24,6 +24,10 @@ jobs:
   tag-frozen-news:
     runs-on: ubuntu-24.04
     timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        batch: ${{ fromJSON(github.event_name == 'push' && '["a","b","c"]' || '["baseline"]') }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -32,6 +36,9 @@ jobs:
 
       - name: Fetch independent news batch on branch push
         if: github.event_name == 'push'
+        env:
+          NEWS_TAGGING_SOURCES: experiments/news-tagging/sample-sources-2026-11-10-${{ matrix.batch }}.json
+          NEWS_TAGGING_MIN_ARTICLES: '10'
         run: |
           node experiments/news-tagging/fetch-fresh.mjs
           echo "NEWS_TAGGING_INPUT=$GITHUB_WORKSPACE/outputs/news-tagging/fresh-batch.json" >> "$GITHUB_ENV"
@@ -161,7 +168,30 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: industrial-news-semantic-tags-${{ github.run_id }}
+          name: industrial-news-semantic-tags-${{ github.run_id }}-${{ matrix.batch }}
           path: outputs/news-tagging/
-          retention-days: 3
+          retention-days: 14
           if-no-files-found: warn
+
+  combine-fresh-batches:
+    if: github.event_name == 'push'
+    needs: tag-frozen-news
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: industrial-news-semantic-tags-${{ github.run_id }}-*
+          path: outputs/news-tagging/parts
+      - name: Combine all complete batches for human review
+        run: node experiments/news-tagging/combine-batches.mjs outputs/news-tagging/parts outputs/news-tagging/combined 30
+      - uses: actions/upload-artifact@v4
+        with:
+          name: industrial-news-semantic-tags-${{ github.run_id }}-combined
+          path: outputs/news-tagging/combined/
+          retention-days: 14
