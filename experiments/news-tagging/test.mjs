@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { extractAtTags, normalizeTag, chunkText, evidenceSpans, validateOutput, mergeOutputs, digest } from './adapter.mjs';
-import { prepareManifest, requestTags, tagManifest, summarize } from './run.mjs';
+import { prepareManifest, requestTags, tagManifest, summarize, selectMainEvent } from './run.mjs';
 import { loadBusinessProfile } from '../news-filter-v3/business-profile.mjs';
 import { refineEvents } from './refine.mjs';
 import { evidenceGaps, eventRecordWarnings } from './quality.mjs';
@@ -24,6 +24,9 @@ assert.equal(normalizeTag('@Server_Cooling'), 'server-cooling');
 assert.equal(evidenceSpans(text)[0].text, text);
 assert.equal(valid.events[0].change_quote, text);
 assert.equal(valid.events[0].object, 'server cold plate');
+assert.equal(selectMainEvent([{ article_role: 'related', type: 'partnership' }, { article_role: 'primary', type: 'product-launch' }]).type, 'product-launch');
+assert.equal(selectMainEvent([{ article_role: 'primary', type: 'demand-outlook', status: 'forecast' }, { article_role: 'primary', type: 'order-contract', status: 'occurred' }]).type, 'order-contract');
+assert.equal(selectMainEvent([]), null);
 const supportChunk = { ...chunk, text: 'NetApp announced the Novus storage platform. NetApp says Novus is orderable today. A separate product is planned for next year. The market remains uncertain.' };
 const supportEvent = { type: 'product-launch', status: 'occurred', actor: 'NetApp', object: 'Novus', action: 'opened orders', article_role: 'primary', evidence_id: 0 };
 const withSupport = id => validateOutput({ ...raw, events: [{ ...supportEvent, supporting_evidence_id: id }] }, supportChunk, taxonomy).events[0];

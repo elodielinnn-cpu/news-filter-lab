@@ -6,7 +6,8 @@ const inScopeDomains = new Set(['datacom-telecom', 'automotive']);
 
 export function compareDecisions(report) {
   return report.results.map(article => {
-    const events = (article.refined_events || article.events).filter(event =>
+    const candidates = Object.hasOwn(article, 'main_event') ? (article.main_event ? [article.main_event] : []) : (article.refined_events || article.events);
+    const events = candidates.filter(event =>
       relevantStages.has(event.status));
     const relevant = article.domains.some(domain => inScopeDomains.has(domain)) &&
       !article.content_types.some(type => lowValueContent.has(type));

@@ -10,6 +10,11 @@ import { refineEvents } from './refine.mjs';
 import { evidenceGaps, eventRecordWarnings } from './quality.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
+export function selectMainEvent(events) {
+  const material = events.filter(event => ['occurred', 'confirmed-plan', 'trial-validation'].includes(event.status));
+  return material.find(event => event.article_role === 'primary') || material.find(event => event.article_role === 'related')
+    || material[0] || events.find(event => event.article_role === 'primary') || events[0] || null;
+}
 export async function prepareManifest(input, taxonomy, runtime, prompt, profile) {
   if (!input || !Array.isArray(input.articles)) throw new Error('Input must contain an articles array');
   const products = activeProducts(profile).map(({ productId, productName, relationshipLevel }) => ({ productId, productName, relationshipLevel }));
@@ -105,13 +110,14 @@ export async function tagManifest({ manifest, runtime, taxonomy, infer, loadCach
     const status = !article.chunks.length ? 'no_evidence' : completed === article.chunks.length ? 'completed' : completed ? 'partial' : 'failed';
     const merged = mergeOutputs(outputs);
     const refined = refineEvents(merged.events);
+    const mainEvent = selectMainEvent(refined.kept);
     const reviewWarnings = eventRecordWarnings(article.title, merged.events);
     const missedEvidence = status === 'completed' ? evidenceGaps(article, refined.kept) : [];
     results.push({ id: article.id, title: article.title, url: article.url, sourceId: article.sourceId, originalDecision: article.originalDecision,
       originalBusiness: article.originalBusiness, originalAffectedObject: article.originalAffectedObject,
       originalEvidence: article.originalEvidence, originalReason: article.originalReason,
       evidenceSource: article.evidenceSource, status, completedChunks: completed, totalChunks: article.chunks.length, ...merged,
-      refined_events: refined.kept, rejected_events: refined.rejected,
+      refined_events: refined.kept, rejected_events: refined.rejected, main_event: mainEvent,
       event_record_warnings: reviewWarnings, milestone_evidence_gaps: missedEvidence, failures, cacheWarnings });
   }
   return { mode: 'semantic-shadow', generatedAt: new Date().toISOString(), model: manifest.model, modelRevision: manifest.modelRevision, taxonomyVersion: taxonomy.version, contextHash: manifest.contextHash, requests, cacheHits, validatedResponseTokens: totalTokens, elapsedMs: now() - startedAt, results };
@@ -148,6 +154,7 @@ export function summarize(report, taxonomy) {
     eventRecordWarnings: successful.reduce((total, article) => total + (article.event_record_warnings || []).length, 0),
     milestoneEvidenceGaps: successful.reduce((total, article) => total + (article.milestone_evidence_gaps || []).length, 0),
     eventCoverage: count(successful, item => item.events.map(event => event.type)),
+    mainEventCoverage: count(successful, item => item.main_event ? [item.main_event.type] : []),
     contentCoverage: count(successful, item => item.content_types),
     unusedEventTypes: Object.keys(taxonomy.event_types).filter(type => !successful.some(article => article.events.some(event => event.type === type))),
     proposedTags: [...proposals.values()].sort((a, b) => b.articleIds.length - a.articleIds.length || a.tag.localeCompare(b.tag))
@@ -200,10 +207,10 @@ async function main() {
   await fs.writeFile(path.join(outputDirectory, 'results.json'), JSON.stringify(report, null, 2) + '\n');
   const label = (values, dictionary) => values.map(value => dictionary[value] || value).join('、');
   const rows = report.results.map(article => [article.title, article.sourceId, article.originalDecision, article.status, `${article.completedChunks}/${article.totalChunks}`, article.evidenceSource,
-    label(article.domains, taxonomy.domains), label(article.content_types, taxonomy.content_types), label([...new Set(article.events.map(event => event.type))], taxonomy.event_types),
-    article.events.map(event => event.subject).join('\n'),
-    article.events.map(event => taxonomy.statuses[event.status]).join('\n'),
-    article.events.map(event => event.change_quote).join('\n'), article.proposed_tags.map(tag => `${tag.dimension}/${tag.tag}: ${tag.description}`).join('\n'), article.url]);
+    label(article.domains, taxonomy.domains), label(article.content_types, taxonomy.content_types),
+    article.main_event ? label([article.main_event.type], taxonomy.event_types) : '',
+    article.main_event?.subject || '', article.main_event ? taxonomy.statuses[article.main_event.status] : '',
+    article.main_event?.change_quote || '', article.proposed_tags.map(tag => `${tag.dimension}/${tag.tag}: ${tag.description}`).join('\n'), article.url]);
   await fs.writeFile(path.join(outputDirectory, 'tags.csv'), encodeCsv([['标题', '来源', '现有结果', '处理状态', '完成分块', '证据来源', '业务标签', '内容类型', '事件标签', '变化对象', '事实状态', '事件原句', '候选新标签', '链接'], ...rows]));
   const eventRows = report.results.flatMap(article => article.events.map(event => {
     const rejected = article.rejected_events.find(item => item.type === event.type && item.chunk === event.chunk && item.evidence_id === event.evidence_id);

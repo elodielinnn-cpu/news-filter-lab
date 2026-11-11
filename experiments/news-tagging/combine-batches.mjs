@@ -31,7 +31,7 @@ const label = (key, values) => [...new Set(values.map(value => taxonomy[key][val
 const articleRows = articles.map((article, index) => [
   index + 1, article.title, article.sourceId, article.originalDecision,
   label('domains', article.domains), label('event_types', article.events.map(event => event.type)),
-  label('event_types', article.refined_events.map(event => event.type)),
+  label('event_types', (article.main_event ? [article.main_event] : article.refined_events.slice(0, 1)).map(event => event.type)),
   '', '', '', article.url
 ]);
 const eventRows = articles.flatMap((article, index) => [
@@ -55,7 +55,7 @@ await fs.writeFile(path.join(outputDirectory, 'results.json'), JSON.stringify({
   contextHash: reports[0].contextHash, results: articles
 }, null, 2) + '\n');
 await fs.writeFile(path.join(outputDirectory, 'article-review.csv'), encodeCsv([
-  ['编号', '标题', '来源', '现有筛选', '业务标签', '模型原始事件标签', '证据检查后标签', '人工正确事件标签', '建议去向（首页/观察/仅全集）', '人工理由或漏掉的事件', '原文链接'],
+  ['编号', '标题', '来源', '现有筛选', '业务标签', '模型候选事件标签', '主要事件标签（证据检查后）', '人工正确事件标签', '建议去向（首页/观察/仅全集）', '人工理由或漏掉的事件', '原文链接'],
   ...articleRows
 ]));
 await fs.writeFile(path.join(outputDirectory, 'event-review.csv'), encodeCsv([

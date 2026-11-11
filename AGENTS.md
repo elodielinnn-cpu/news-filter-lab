@@ -2,6 +2,8 @@
 
 This repository is the cloud news-screening experiment for Luxshare. The active business scope is automotive and data center/communications; exclude 3C. The tagging workflow is a shadow trial and must not silently change the production news website or treat tag presence as proof of a Luxshare product relationship.
 
+For management reading, tagging serves two decisions: whether a story belongs on the homepage, and what its main concrete development is. Show one main event tag per article; add another only when a separate development materially changes that decision. Keep detailed candidates and evidence for review, not as a long list of reader-facing tags. Do not spend time on fine-grained distinctions that cannot change the homepage decision or main event description.
+
 Before editing, inspect the branch, status, recent commits, and relevant code. Protect pre-existing work. After editing, run relevant tests and workflow syntax checks, review the diff, stage only task files, and make one focused local commit.
 
 Before a normal push:
