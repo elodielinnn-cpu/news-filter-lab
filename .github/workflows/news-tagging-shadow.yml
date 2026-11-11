@@ -6,8 +6,8 @@ on:
     branches:
       - codex/news-tagging-shadow
     paths:
-      - experiments/news-tagging/sample-sources-*.json
-      - experiments/news-tagging/human-audit-33.json
+      - experiments/news-tagging/**
+      - .github/workflows/news-tagging-shadow.yml
 
 permissions:
   contents: read
