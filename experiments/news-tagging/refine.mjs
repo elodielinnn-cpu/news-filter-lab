@@ -36,9 +36,12 @@ export function refineEvents(events) {
   const kept = [];
   const rejected = [];
   for (const event of events) {
-    const quote = String(event.change_quote || '').replace(/&#(\d+);/gu, (token, code) => Number(code) > 0 && Number(code) <= 0x10ffff ? String.fromCodePoint(Number(code)) : token).replace(/&(?:ldquo|rdquo|lsquo|rsquo);/giu, '"');
+    const decode = value => String(value || '').replace(/&#(\d+);/gu, (token, code) => Number(code) > 0 && Number(code) <= 0x10ffff ? String.fromCodePoint(Number(code)) : token).replace(/&(?:ldquo|rdquo|lsquo|rsquo);/giu, '"');
+    const primaryQuote = decode(event.change_quote);
+    const quote = [primaryQuote, decode(event.supporting_quote)].filter(Boolean).join(' ');
     let reason = '';
-    if (boilerplate.test(quote) || editorialAside.test(quote) || quote.length < 45 || /^\S{1,8}es? in a spine/iu.test(quote)) reason = 'boilerplate_or_fragment';
+    if (event.article_role === 'background') reason = 'unrelated_background_event';
+    else if (boilerplate.test(quote) || editorialAside.test(quote) || quote.length < 45 || /^\S{1,8}es? in a spine/iu.test(quote)) reason = 'boilerplate_or_fragment';
     else if (['historical', 'rumor', 'unclear'].includes(event.status)) reason = 'non_current_or_unconfirmed';
     else if (event.type === 'other-event') reason = 'unspecified_event';
     else if (event.status === 'forecast' && !['demand-outlook', 'pricing-cost', 'product-launch'].includes(event.type)) reason = 'forecast_is_not_an_event';
@@ -49,12 +52,12 @@ export function refineEvents(events) {
     else if (event.type === 'partnership' && !partnershipAction.test(quote)) reason = 'joint_action_not_supported';
     else if (event.type === 'architecture-change' && !architectureEvidence.test(quote)) reason = 'architecture_not_supported_by_quote';
     else if (event.type === 'product-launch' && (oldBackground.test(quote) || !formalLaunch.test(quote))) reason = 'launch_not_supported_by_quote';
-    else if (event.type === 'product-launch' && futureLaunch.test(quote) && !/\b(?:has launched|launched today|unveiled today|now available)\b/iu.test(quote)) reason = 'future_launch_not_released';
+    else if (event.type === 'product-launch' && futureLaunch.test(primaryQuote) && !/\b(?:has launched|launched today|unveiled today|now available)\b/iu.test(quote)) reason = 'future_launch_not_released';
     else if (event.type === 'pricing-cost' && !actualPrice.test(quote)) reason = 'price_or_cost_change_not_stated';
     else if (event.type === 'demand-outlook' && event.status === 'forecast' && /\b(?:could|might|may|potentially)\b/iu.test(quote) && !/\b(?:according to|forecasts?|projects?|estimates?|expects?|predicts?)\b/iu.test(quote)) reason = 'unattributed_demand_speculation';
     else if (rules[event.type] && !test(rules[event.type], quote)) reason = 'type_not_supported_by_quote';
-    else if (event.type === 'deployment-adoption' && (futureOnly.test(quote) || negated.test(quote)) && !test(/\b(?:already|currently|now|has deployed|have deployed|is running|are running)\b/iu, quote)) reason = 'deployment_not_yet_live';
-    else if (event.type === 'production-ramp' && futureOnly.test(quote) && !test(/\b(?:has begun|have begun|is ramping|are ramping|now shipping)\b/iu, quote)) reason = 'production_not_yet_ramping';
+    else if (event.type === 'deployment-adoption' && (futureOnly.test(primaryQuote) || negated.test(primaryQuote)) && !test(/\b(?:already|currently|now|has deployed|have deployed|is running|are running)\b/iu, quote)) reason = 'deployment_not_yet_live';
+    else if (event.type === 'production-ramp' && futureOnly.test(primaryQuote) && !test(/\b(?:has begun|have begun|is ramping|are ramping|now shipping)\b/iu, quote)) reason = 'production_not_yet_ramping';
     else if (event.type === 'financial-results' && test(/\b(?:vehicle|car|EV|registration|grant|funding)\s+(?:sales|registrations|funding|grant)\b/iu, quote) && !test(/\b(?:revenue|income|profit|earnings)\b/iu, quote)) reason = 'not_company_financial_results';
     (reason ? rejected : kept).push(reason ? { ...event, rejection_reason: reason } : event);
   }

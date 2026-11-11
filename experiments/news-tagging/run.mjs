@@ -7,6 +7,7 @@ import { articleId, encodeCsv } from '../news-screening/audit.mjs';
 import { chunkText, digest, evidenceSpans, mergeOutputs, outputSchema, validateOutput } from './adapter.mjs';
 import { compareDecisions, comparisonCsv } from './compare.mjs';
 import { refineEvents } from './refine.mjs';
+import { evidenceGaps, eventRecordWarnings } from './quality.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 export async function prepareManifest(input, taxonomy, runtime, prompt, profile) {
@@ -29,6 +30,7 @@ export async function requestTags({ endpoint, model, prompt, taxonomy, schema, a
   const scopedSchema = structuredClone(schema);
   const lastEvidenceId = evidenceSpans(chunk.text).length - 1;
   scopedSchema.properties.events.items.properties.evidence_id.maximum = lastEvidenceId;
+  scopedSchema.properties.events.items.properties.supporting_evidence_id.maximum = lastEvidenceId;
   scopedSchema.properties.proposed_tags.items.properties.evidence_id.maximum = lastEvidenceId;
   const response = await fetchImpl(`${endpoint}/v1/chat/completions`, {
     method: 'POST', headers: { 'content-type': 'application/json' }, signal: AbortSignal.timeout(runtime.request_timeout_ms),
@@ -103,11 +105,14 @@ export async function tagManifest({ manifest, runtime, taxonomy, infer, loadCach
     const status = !article.chunks.length ? 'no_evidence' : completed === article.chunks.length ? 'completed' : completed ? 'partial' : 'failed';
     const merged = mergeOutputs(outputs);
     const refined = refineEvents(merged.events);
+    const reviewWarnings = eventRecordWarnings(article.title, merged.events);
+    const missedEvidence = status === 'completed' ? evidenceGaps(article, refined.kept) : [];
     results.push({ id: article.id, title: article.title, url: article.url, sourceId: article.sourceId, originalDecision: article.originalDecision,
       originalBusiness: article.originalBusiness, originalAffectedObject: article.originalAffectedObject,
       originalEvidence: article.originalEvidence, originalReason: article.originalReason,
       evidenceSource: article.evidenceSource, status, completedChunks: completed, totalChunks: article.chunks.length, ...merged,
-      refined_events: refined.kept, rejected_events: refined.rejected, failures, cacheWarnings });
+      refined_events: refined.kept, rejected_events: refined.rejected,
+      event_record_warnings: reviewWarnings, milestone_evidence_gaps: missedEvidence, failures, cacheWarnings });
   }
   return { mode: 'semantic-shadow', generatedAt: new Date().toISOString(), model: manifest.model, modelRevision: manifest.modelRevision, taxonomyVersion: taxonomy.version, contextHash: manifest.contextHash, requests, cacheHits, validatedResponseTokens: totalTokens, elapsedMs: now() - startedAt, results };
 }
@@ -140,6 +145,8 @@ export function summarize(report, taxonomy) {
     noEvidence: report.results.filter(item => item.status === 'no_evidence').length,
     failureCoverage: Object.fromEntries(Object.entries(failureCoverage).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))),
     proposalWarningCoverage: Object.fromEntries(Object.entries(proposalWarningCoverage).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))),
+    eventRecordWarnings: successful.reduce((total, article) => total + (article.event_record_warnings || []).length, 0),
+    milestoneEvidenceGaps: successful.reduce((total, article) => total + (article.milestone_evidence_gaps || []).length, 0),
     eventCoverage: count(successful, item => item.events.map(event => event.type)),
     contentCoverage: count(successful, item => item.content_types),
     unusedEventTypes: Object.keys(taxonomy.event_types).filter(type => !successful.some(article => article.events.some(event => event.type === type))),
@@ -198,11 +205,22 @@ async function main() {
     article.events.map(event => taxonomy.statuses[event.status]).join('\n'),
     article.events.map(event => event.change_quote).join('\n'), article.proposed_tags.map(tag => `${tag.dimension}/${tag.tag}: ${tag.description}`).join('\n'), article.url]);
   await fs.writeFile(path.join(outputDirectory, 'tags.csv'), encodeCsv([['标题', '来源', '现有结果', '处理状态', '完成分块', '证据来源', '业务标签', '内容类型', '事件标签', '变化对象', '事实状态', '事件原句', '候选新标签', '链接'], ...rows]));
+  const eventRows = report.results.flatMap(article => article.events.map(event => {
+    const rejected = article.rejected_events.find(item => item.type === event.type && item.chunk === event.chunk && item.evidence_id === event.evidence_id);
+    const warnings = article.event_record_warnings.find(item => item.type === event.type && item.chunk === event.chunk && item.evidence_id === event.evidence_id);
+    return [article.title, article.url, event.type, event.actor || '', event.object || '', event.action || '', event.status,
+      event.article_role || '', event.chunk, event.evidence_id, event.change_quote, event.supporting_evidence_id ?? '',
+      event.supporting_quote || '', rejected ? '剔除' : '保留', rejected?.rejection_reason || '', (warnings?.warnings || []).join(';')];
+  }));
+  await fs.writeFile(path.join(outputDirectory, 'event-record-review.csv'), encodeCsv([['标题', '链接', '事件标签', '主体', '产品或项目', '动作', '阶段', '文章角色', '分段', '主证据编号', '主证据原文', '补充证据编号', '补充证据原文', '证据检查', '剔除原因', '核对提示'], ...eventRows]));
+  const gapRows = report.results.flatMap(article => article.milestone_evidence_gaps.map(gap => [article.title, article.url, gap.type, gap.chunk, gap.evidence_id, gap.quote]));
+  await fs.writeFile(path.join(outputDirectory, 'milestone-evidence-gaps.csv'), encodeCsv([['标题', '链接', '可能漏掉的事件', '分段', '句子编号', '原文证据句'], ...gapRows]));
   await fs.writeFile(path.join(outputDirectory, 'tag-discovery.json'), JSON.stringify(report.summary, null, 2) + '\n');
   const lines = [
     '# 语义标签试跑结果', '',
     `模型为 ${report.model}。处理完整 ${report.summary.completed} 篇，部分完成 ${report.summary.partial} 篇，失败 ${report.summary.failed} 篇，缺少证据 ${report.summary.noEvidence} 篇。`, '',
     `本次调用 ${report.requests} 次，缓存命中 ${report.cacheHits} 次，耗时 ${(report.elapsedMs / 60000).toFixed(1)} 分钟。`, '',
+    `待核对的事件记录 ${report.summary.eventRecordWarnings} 条；正文含明确里程碑但未被保留事件引用的证据 ${report.summary.milestoneEvidenceGaps} 处。具体位置见 results.json。`, '',
     '## 未完成原因', '',
     ...Object.entries(report.summary.failureCoverage).map(([reason, count]) => `- ${reason}: ${count} 段`),
     ...(Object.keys(report.summary.failureCoverage).length ? [] : ['无。']), '',

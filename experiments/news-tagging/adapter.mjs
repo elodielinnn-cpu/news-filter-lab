@@ -54,11 +54,13 @@ export function outputSchema(taxonomy) {
       raw_tags: list(string, 6),
       events: list({
         type: 'object', additionalProperties: false,
-        required: ['type', 'status', 'subject', 'evidence_id'],
+        required: ['type', 'status', 'actor', 'object', 'action', 'article_role', 'evidence_id'],
         properties: {
           type: { type: 'string', enum: Object.keys(taxonomy.event_types) },
-          status: { type: 'string', enum: Object.keys(taxonomy.statuses) }, subject: string,
-          evidence_id: evidenceId
+          status: { type: 'string', enum: Object.keys(taxonomy.statuses) },
+          actor: string, object: string, action: string,
+          article_role: { type: 'string', enum: ['primary', 'related', 'background'] },
+          evidence_id: evidenceId, supporting_evidence_id: evidenceId
         }
       }),
       proposed_tags: list({
@@ -85,8 +87,14 @@ export function validateOutput(value, chunk, taxonomy) {
   const contentTypes = requireList(value.content_types, new Set(Object.keys(taxonomy.content_types)), 'content types', 4);
   if (!Array.isArray(value.events) || value.events.length > 4 || !Array.isArray(value.raw_tags) || value.raw_tags.length > 6 || value.raw_tags.some(tag => typeof tag !== 'string') || !Array.isArray(value.proposed_tags) || value.proposed_tags.length > 1) throw new Error('Invalid event/tag arrays');
   const events = value.events.map(event => {
-    if (!event || !Object.hasOwn(taxonomy.event_types, event.type) || !Object.hasOwn(taxonomy.statuses, event.status) || typeof event.subject !== 'string' || !event.subject.trim()) throw new Error('Invalid event classification');
-    return { type: event.type, status: event.status, subject: event.subject, evidence_id: event.evidence_id, change_quote: evidence(event.evidence_id), chunk: chunk.index };
+    if (!event || !Object.hasOwn(taxonomy.event_types, event.type) || !Object.hasOwn(taxonomy.statuses, event.status)
+      || [event.actor, event.object, event.action].some(field => typeof field !== 'string' || !field.trim())
+      || !['primary', 'related', 'background'].includes(event.article_role)) throw new Error('Invalid event record');
+    const supportingId = event.supporting_evidence_id;
+    if (supportingId !== undefined && (supportingId === event.evidence_id || Math.abs(supportingId - event.evidence_id) > 2)) throw new Error('Supporting evidence must be a nearby, distinct sentence');
+    return { type: event.type, status: event.status, subject: event.object, actor: event.actor, object: event.object,
+      action: event.action, article_role: event.article_role, evidence_id: event.evidence_id,
+      change_quote: evidence(event.evidence_id), ...(supportingId === undefined ? {} : { supporting_evidence_id: supportingId, supporting_quote: evidence(supportingId) }), chunk: chunk.index };
   });
   const proposalWarnings = Array.isArray(value.proposal_warnings) ? value.proposal_warnings.filter(item => typeof item === 'string') : [];
   const proposals = [];
@@ -113,8 +121,8 @@ export function mergeOutputs(outputs) {
   const proposals = new Map();
   for (const output of outputs) {
     for (const event of output.events) {
-      // Overlapping chunks can assign different subjects or sentence IDs to the same quoted fact.
-      events.set(digest([event.type, event.status, normalizedText(event.change_quote)]), event);
+      // Collapse overlap only when the actor, object and cited fact are the same event.
+      events.set(digest([event.type, event.status, event.actor || '', event.object || event.subject || '', normalizedText(event.change_quote)]), event);
     }
     for (const proposal of output.proposed_tags) proposals.set(digest([proposal.dimension, proposal.tag, proposal.evidence_quote]), proposal);
   }

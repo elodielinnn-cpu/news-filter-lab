@@ -4,6 +4,7 @@ import { extractAtTags, normalizeTag, chunkText, evidenceSpans, validateOutput, 
 import { prepareManifest, requestTags, tagManifest, summarize } from './run.mjs';
 import { loadBusinessProfile } from '../news-filter-v3/business-profile.mjs';
 import { refineEvents } from './refine.mjs';
+import { evidenceGaps, eventRecordWarnings } from './quality.mjs';
 
 const taxonomy = JSON.parse(await fs.readFile(new URL('taxonomy.json', import.meta.url), 'utf8'));
 const runtime = JSON.parse(await fs.readFile(new URL('runtime.json', import.meta.url), 'utf8'));
@@ -15,13 +16,14 @@ const manifest = await prepareManifest({ articles: [fixture] }, taxonomy, runtim
 const chunk = manifest.articles[0].chunks[0];
 const raw = {
   domains: ['datacom-telecom'], content_types: ['industry-news'], raw_tags: ['@Cooling', '@server_cooling'], proposed_tags: [],
-  events: [{ type: 'technology-update', status: 'occurred', subject: 'server cold plate', evidence_id: 0 }]
+  events: [{ type: 'technology-update', status: 'occurred', actor: 'server maker', object: 'server cold plate', action: 'redesigned', article_role: 'primary', evidence_id: 0 }]
 };
 const valid = validateOutput(raw, chunk, taxonomy);
 assert.deepEqual(extractAtTags('@GPU @gpu @冷板 @server-cooling'), ['gpu', '冷板', 'server-cooling']);
 assert.equal(normalizeTag('@Server_Cooling'), 'server-cooling');
 assert.equal(evidenceSpans(text)[0].text, text);
 assert.equal(valid.events[0].change_quote, text);
+assert.equal(valid.events[0].object, 'server cold plate');
 const grounded = refineEvents([
   { type: 'deployment-adoption', status: 'forecast', change_quote: 'The company plans to deploy the fleet next year.' },
   { type: 'merger-acquisition', status: 'occurred', change_quote: 'Intel signed an agreement to acquire Classiq.' },
@@ -72,9 +74,25 @@ const secondBatchMustKeep = refineEvents([
 ]);
 assert.deepEqual(secondBatchMustKeep.kept.map(event => event.type), ['order-contract', 'product-launch', 'deployment-adoption', 'product-launch']);
 assert.equal(secondBatchMustKeep.rejected.length, 0);
-const duplicateQuote = { type: 'technology-update', status: 'occurred', subject: 'IBM', evidence_id: 1, change_quote: 'A shared storage tier was introduced.', chunk: 0 };
+const pairedEvidence = refineEvents([{
+  type: 'product-launch', status: 'occurred', actor: 'NetApp', object: 'Novus', action: 'announced and opened for orders',
+  article_role: 'primary', change_quote: 'NetApp announced Novus, a new storage architecture for AI factories.',
+  supporting_quote: 'The first Novus configuration is orderable today.'
+}]);
+assert.equal(pairedEvidence.kept.length, 1);
+assert.equal(refineEvents([{ type: 'product-launch', status: 'occurred', change_quote: 'NetApp announced Novus and the first configuration is orderable today.', supporting_quote: 'The company will deliver later configurations to more customers next year.' }]).kept.length, 1);
+assert.equal(refineEvents([{ type: 'deployment-adoption', status: 'occurred', actor: 'CoreWeave', object: 'Vera Rubin NVL72', action: 'deployed', article_role: 'background', change_quote: 'CoreWeave put Vera Rubin NVL72 into production earlier this month.' }]).rejected[0].rejection_reason, 'unrelated_background_event');
+const netAppChunk = { index: 0, text: 'NetApp announced Novus, a new storage architecture for AI factories. NetApp says the first Novus configuration is orderable today.' };
+const netAppGap = evidenceGaps({ chunks: [netAppChunk] }, []);
+assert.deepEqual(netAppGap.map(gap => [gap.type, gap.chunk, gap.evidence_id]), [['product-launch', 0, 1]]);
+assert.equal(evidenceGaps({ chunks: [netAppChunk] }, [{ type: 'product-launch', chunk: 0, evidence_id: 0, supporting_evidence_id: 1 }]).length, 0);
+assert.equal(evidenceGaps({ chunks: [{ index: 0, text: 'Valeo has been selected by Nissan as the system Tier-1 supplier for ProPILOT.' }] }, [])[0].type, 'qualification-certification');
+assert.deepEqual(eventRecordWarnings('Meta Prometheus supercluster', [{ type: 'deployment-adoption', actor: 'CoreWeave', object: 'Vera Rubin NVL72', change_quote: 'CoreWeave put Vera Rubin NVL72 into production.', chunk: 1, evidence_id: 8 }])[0].warnings, ['actor_not_named_in_headline']);
+const duplicateQuote = { type: 'technology-update', status: 'occurred', subject: 'shared storage tier', actor: 'IBM', object: 'shared storage tier', evidence_id: 1, change_quote: 'A shared storage tier was introduced.', chunk: 0 };
 assert.equal(mergeOutputs([{ domains: [], content_types: [], events: [duplicateQuote], raw_tags: [], proposed_tags: [] },
-  { domains: [], content_types: [], events: [{ ...duplicateQuote, subject: 'NVIDIA', chunk: 1 }], raw_tags: [], proposed_tags: [] }]).events.length, 1);
+  { domains: [], content_types: [], events: [{ ...duplicateQuote, chunk: 1 }], raw_tags: [], proposed_tags: [] }]).events.length, 1);
+assert.equal(mergeOutputs([{ domains: [], content_types: [], events: [duplicateQuote], raw_tags: [], proposed_tags: [] },
+  { domains: [], content_types: [], events: [{ ...duplicateQuote, actor: 'NVIDIA', chunk: 1 }], raw_tags: [], proposed_tags: [] }]).events.length, 2);
 assert.deepEqual(freshChecks.rejected.map(event => event.rejection_reason), ['acquisition_is_not_supply_contract', 'boilerplate_or_fragment']);
 const twoSentences = { ...chunk, text: 'BYD launched a new electric SUV. Sales remain uncertain.' };
 assert.deepEqual(evidenceSpans(twoSentences.text).map(span => span.id), [0, 1]);
@@ -167,6 +185,7 @@ const response = await requestTags({ ...args, fetchImpl: async (url, request) =>
 assert.equal(response.output.events[0].change_quote, text);
 assert.equal(sent.response_format.type, 'json_object');
 assert.equal(sent.response_format.schema.properties.events.items.properties.evidence_id.maximum, 0);
+assert.equal(sent.response_format.schema.properties.events.items.properties.supporting_evidence_id.maximum, 0);
 assert.equal(sent.response_format.schema.properties.proposed_tags.items.properties.evidence_id.maximum, 0);
 assert.ok(sent.messages[1].content.includes(text));
 assert.ok(!sent.messages[1].content.includes('cold_plate'));

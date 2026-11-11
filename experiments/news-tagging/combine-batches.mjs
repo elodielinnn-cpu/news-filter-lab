@@ -40,6 +40,15 @@ const eventRows = articles.flatMap((article, index) => [
   ...article.rejected_events.map(event => [index + 1, article.title, taxonomy.event_types[event.type] || event.type,
     taxonomy.statuses[event.status] || event.status, '剔除', event.rejection_reason, event.subject, event.change_quote, '', '', article.url])
 ]);
+const recordRows = articles.flatMap((article, index) => article.events.map(event => {
+  const rejected = article.rejected_events.find(item => item.type === event.type && item.chunk === event.chunk && item.evidence_id === event.evidence_id);
+  const warning = (article.event_record_warnings || []).find(item => item.type === event.type && item.chunk === event.chunk && item.evidence_id === event.evidence_id);
+  return [index + 1, article.title, event.type, event.actor || '', event.object || '', event.action || '', event.status,
+    event.article_role || '', event.chunk, event.evidence_id, event.change_quote, event.supporting_evidence_id ?? '',
+    event.supporting_quote || '', rejected ? '剔除' : '保留', rejected?.rejection_reason || '', (warning?.warnings || []).join(';'), article.url];
+}));
+const gapRows = articles.flatMap((article, index) => (article.milestone_evidence_gaps || []).map(gap =>
+  [index + 1, article.title, gap.type, gap.chunk, gap.evidence_id, gap.quote, article.url]));
 await fs.mkdir(outputDirectory, { recursive: true });
 await fs.writeFile(path.join(outputDirectory, 'results.json'), JSON.stringify({
   model: reports[0].model, taxonomyVersion: reports[0].taxonomyVersion,
@@ -53,9 +62,19 @@ await fs.writeFile(path.join(outputDirectory, 'event-review.csv'), encodeCsv([
   ['文章编号', '标题', '模型标签', '模型阶段', '证据检查', '剔除原因', '变化对象', '原文证据句', '人工判断（对/错/待定）', '正确标签或阶段', '原文链接'],
   ...eventRows
 ]));
+await fs.writeFile(path.join(outputDirectory, 'event-record-review.csv'), encodeCsv([
+  ['文章编号', '标题', '事件标签', '主体', '产品或项目', '动作', '阶段', '文章角色', '分段', '主证据编号', '主证据原文', '补充证据编号', '补充证据原文', '证据检查', '剔除原因', '核对提示', '原文链接'],
+  ...recordRows
+]));
+await fs.writeFile(path.join(outputDirectory, 'milestone-evidence-gaps.csv'), encodeCsv([
+  ['文章编号', '标题', '可能漏掉的事件', '分段', '句子编号', '原文证据句', '原文链接'],
+  ...gapRows
+]));
 await fs.writeFile(path.join(outputDirectory, 'summary.json'), JSON.stringify({
   model: reports[0].model, taxonomyVersion: reports[0].taxonomyVersion,
   batches: folders, completeArticles: articles.length, totalArticles: allArticles.length, skippedArticles, eventRows: eventRows.length,
+  eventRecordWarnings: articles.reduce((total, article) => total + (article.event_record_warnings || []).length, 0),
+  milestoneEvidenceGaps: gapRows.length,
   sourceCounts: Object.fromEntries([...new Set(articles.map(article => article.sourceId))].map(source => [source, articles.filter(article => article.sourceId === source).length]))
 }, null, 2) + '\n');
 console.log(JSON.stringify({ batches: folders.length, completeArticles: articles.length, skippedArticles: skippedArticles.length, eventRows: eventRows.length }));
