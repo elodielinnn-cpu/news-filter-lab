@@ -64,6 +64,14 @@ const humanReviewChecks = refineEvents([
 ]);
 assert.deepEqual(humanReviewChecks.kept.map(event => event.type), ['demand-outlook', 'order-contract']);
 assert.deepEqual(humanReviewChecks.rejected.map(event => event.rejection_reason), ['unattributed_demand_speculation', 'boilerplate_or_fragment']);
+const secondBatchMustKeep = refineEvents([
+  { type: 'order-contract', status: 'occurred', change_quote: 'HPE has booked its first order for the AMD Helios AI Rack by HPE, a $1.2 billion commitment from Vultr.' },
+  { type: 'product-launch', status: 'occurred', change_quote: 'The first NetApp Novus configuration pairs Data Director with AFF A90 systems, and NetApp says it is orderable today.' },
+  { type: 'deployment-adoption', status: 'occurred', change_quote: 'The Equinix pilot is the first live deployment.' },
+  { type: 'product-launch', status: 'occurred', change_quote: 'Supermicro says the OCP portfolio is available now.' }
+]);
+assert.deepEqual(secondBatchMustKeep.kept.map(event => event.type), ['order-contract', 'product-launch', 'deployment-adoption', 'product-launch']);
+assert.equal(secondBatchMustKeep.rejected.length, 0);
 const duplicateQuote = { type: 'technology-update', status: 'occurred', subject: 'IBM', evidence_id: 1, change_quote: 'A shared storage tier was introduced.', chunk: 0 };
 assert.equal(mergeOutputs([{ domains: [], content_types: [], events: [duplicateQuote], raw_tags: [], proposed_tags: [] },
   { domains: [], content_types: [], events: [{ ...duplicateQuote, subject: 'NVIDIA', chunk: 1 }], raw_tags: [], proposed_tags: [] }]).events.length, 1);
