@@ -53,8 +53,10 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: outputs/news-tagging/cache
-          key: news-tagging-7b-v1-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: news-tagging-7b-v1-
+          key: news-tagging-7b-v2-${{ matrix.batch }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            news-tagging-7b-v2-${{ matrix.batch }}-
+            news-tagging-7b-v1-
 
       - name: Download and verify pinned runtime
         timeout-minutes: 35
@@ -133,7 +135,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: outputs/news-tagging/cache
-          key: news-tagging-7b-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          key: news-tagging-7b-v2-${{ matrix.batch }}-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Compare 7B with saved 1.5B results
         if: github.event_name != 'push' && always() && hashFiles('outputs/news-tagging/results.json') != ''

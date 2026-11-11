@@ -91,10 +91,15 @@ export function validateOutput(value, chunk, taxonomy) {
       || [event.actor, event.object, event.action].some(field => typeof field !== 'string' || !field.trim())
       || !['primary', 'related', 'background'].includes(event.article_role)) throw new Error('Invalid event record');
     const supportingId = event.supporting_evidence_id;
-    if (supportingId !== undefined && (supportingId === event.evidence_id || Math.abs(supportingId - event.evidence_id) > 2)) throw new Error('Supporting evidence must be a nearby, distinct sentence');
+    const supportingWarning = supportingId === undefined ? ''
+      : !Number.isInteger(supportingId) || !spans[supportingId] ? 'supporting_evidence_id_absent'
+        : supportingId === event.evidence_id ? 'supporting_evidence_same_sentence'
+          : Math.abs(supportingId - event.evidence_id) > 2 ? 'supporting_evidence_not_nearby' : '';
+    const evidenceWarnings = [...new Set([...(Array.isArray(event.evidence_warnings) ? event.evidence_warnings.filter(value => typeof value === 'string') : []), supportingWarning].filter(Boolean))];
     return { type: event.type, status: event.status, subject: event.object, actor: event.actor, object: event.object,
       action: event.action, article_role: event.article_role, evidence_id: event.evidence_id,
-      change_quote: evidence(event.evidence_id), ...(supportingId === undefined ? {} : { supporting_evidence_id: supportingId, supporting_quote: evidence(supportingId) }), chunk: chunk.index };
+      change_quote: evidence(event.evidence_id), ...(supportingId === undefined || supportingWarning ? {} : { supporting_evidence_id: supportingId, supporting_quote: evidence(supportingId) }),
+      ...(evidenceWarnings.length ? { evidence_warnings: evidenceWarnings } : {}), chunk: chunk.index };
   });
   const proposalWarnings = Array.isArray(value.proposal_warnings) ? value.proposal_warnings.filter(item => typeof item === 'string') : [];
   const proposals = [];

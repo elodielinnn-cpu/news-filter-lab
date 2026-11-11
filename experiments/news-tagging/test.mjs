@@ -24,6 +24,14 @@ assert.equal(normalizeTag('@Server_Cooling'), 'server-cooling');
 assert.equal(evidenceSpans(text)[0].text, text);
 assert.equal(valid.events[0].change_quote, text);
 assert.equal(valid.events[0].object, 'server cold plate');
+const supportChunk = { ...chunk, text: 'NetApp announced the Novus storage platform. NetApp says Novus is orderable today. A separate product is planned for next year. The market remains uncertain.' };
+const supportEvent = { type: 'product-launch', status: 'occurred', actor: 'NetApp', object: 'Novus', action: 'opened orders', article_role: 'primary', evidence_id: 0 };
+const withSupport = id => validateOutput({ ...raw, events: [{ ...supportEvent, supporting_evidence_id: id }] }, supportChunk, taxonomy).events[0];
+assert.equal(withSupport(1).supporting_quote, 'NetApp says Novus is orderable today.');
+assert.deepEqual(withSupport(0).evidence_warnings, ['supporting_evidence_same_sentence']);
+assert.deepEqual(withSupport(3).evidence_warnings, ['supporting_evidence_not_nearby']);
+assert.deepEqual(withSupport(99).evidence_warnings, ['supporting_evidence_id_absent']);
+assert.deepEqual(validateOutput({ ...raw, events: [withSupport(0)] }, supportChunk, taxonomy).events[0].evidence_warnings, ['supporting_evidence_same_sentence']);
 const grounded = refineEvents([
   { type: 'deployment-adoption', status: 'forecast', change_quote: 'The company plans to deploy the fleet next year.' },
   { type: 'merger-acquisition', status: 'occurred', change_quote: 'Intel signed an agreement to acquire Classiq.' },
@@ -140,6 +148,9 @@ const progress = [];
 const infer = async () => ({ output: proposed, actualModel: runtime.model, usage: { total_tokens: 100 } });
 const report = await tagManifest({ manifest, runtime, taxonomy, prompt, infer, loadCache: async key => cache.get(key), saveCache: async (key, value) => cache.set(key, value), onProgress: item => progress.push(item) });
 assert.equal(report.results[0].status, 'completed');
+const repeatedSupport = await tagManifest({ manifest, runtime, taxonomy, prompt, infer: async () => ({ output: { ...raw, events: [{ ...raw.events[0], supporting_evidence_id: 0 }] } }) });
+assert.equal(repeatedSupport.results[0].status, 'completed');
+assert.deepEqual(repeatedSupport.results[0].event_record_warnings[0].warnings, ['supporting_evidence_same_sentence', 'actor_not_named_in_headline', 'actor_not_named_in_evidence']);
 assert.equal(report.requests, 1);
 assert.deepEqual(progress.map(item => [item.processedChunks, item.totalChunks, item.outcome]), [[1, 1, 'completed']]);
 assert.equal(summarize(report, taxonomy).proposedTags[0].articleIds.length, 1);

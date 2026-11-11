@@ -26,7 +26,7 @@ export function eventRecordWarnings(title, events) {
   return events.flatMap(event => {
     const actor = event.actor || event.subject || '';
     const evidence = [event.change_quote, event.supporting_quote].filter(Boolean).join(' ').toLowerCase();
-    const warnings = [];
+    const warnings = [...(event.evidence_warnings || [])];
     if (actor.length >= 4 && !headline.includes(actor.toLowerCase())) warnings.push('actor_not_named_in_headline');
     if (actor.length >= 4 && !evidence.includes(actor.toLowerCase())) warnings.push('actor_not_named_in_evidence');
     if (event.object && !evidence.includes(event.object.toLowerCase())) warnings.push('object_not_named_in_evidence');
