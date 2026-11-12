@@ -7,7 +7,7 @@
 | 每日云端抓取 | `.github/workflows/collect.yml` → `collect.py` → `rules.json` | 读取 RSS，主要按标题、摘要和少量正文关键词写入 `results/` | 否 |
 | 两项业务试验 | `experiments/news-tagging/fetch-fresh.mjs` → `experiments/news-screening/screen.mjs` | 抓取正文，按汽车和通信／数据中心知识库输出入选、待定、排除及证据；不发布到网站 | 否 |
 
-每日流程仍是旧实现：`rules.json` 包含消费电子，`collect.py` 没有使用两项业务知识库、事件证据门或主事件字段。不能把本次试验结果说成网站已采用的规则。`experiments/news-tagging/` 的 Qwen 打标是另一条独立的云端影子试验；本次 30 篇程序初筛没有调用它。
+每日流程仍是旧实现：`rules.json` 包含消费电子，`collect.py` 没有使用两项业务知识库、事件证据门或主事件字段。不能把本次试验结果说成网站已采用的规则。此前 `experiments/news-tagging/` 的 Qwen 云端影子任务已停用并删除自动触发工作流；本次 30 篇程序初筛没有调用它。每日 `collect.yml` 抓取任务仍保留。
 
 ## 两项业务程序规则的执行顺序
 
