@@ -1,6 +1,7 @@
 import { containsAlias } from '../news-filter-v3/business-profile.mjs';
 import { eventRules, hardwareDetails, impactRelation, nonIndustryTitle, softwareOnly, speculativeImpact } from './rules.mjs';
 import { articleDomains, domainNames, matchProducts, productMention, scopeVersion } from './scope.mjs';
+import { tagArticle } from '../unified-tagging.mjs';
 
 const rumor = /\b(?:rumou?rs?|leakers?|reportedly|unconfirmed|according to people|sources? said)\b|传闻|爆料|据称|知情人士/iu;
 const negation = /\b(?:no|not|never|without)\b.{0,35}\b(?:new|chang\w*|replac\w*|adopt\w*|supplier|orders?|agreement)\b|没有.{0,15}(?:变化|更换|新增|订单)|并未|尚未确认/iu;
@@ -49,7 +50,7 @@ function withEvidence(base, change, products, businessEvidence, relationship, im
   };
 }
 
-export function screen(article, profile) {
+export function screenLegacy(article, profile) {
   const domains = articleDomains(article);
   const base = {
     result: '待定', reason: '', evidence: '', business: domains.map(domain => domainNames[domain]).join('、'),
@@ -137,4 +138,43 @@ export function screen(article, profile) {
     return { ...base, businessGate: 'needs_review', reason: '数据中心产能已上线，但未证实具体立讯产品对应关系' };
   }
   return { ...base, result: '排除', businessGate: 'not_matched', reason: '变化对象没有对应具体产品或有原文支持的业务影响' };
+}
+
+export function screen(article, profile) {
+  const unified = tagArticle(article, { scope: ['datacom', 'automotive'] });
+  const main = unified.mainEvent;
+  const domains = articleDomains(article);
+  let result = '排除';
+  let reason = '没有范围内且可核对的新增事件';
+  let businessGate = 'not_checked';
+  let products = [];
+  if (!domains.length) reason = '不属于通信与数据中心或汽车范围';
+  else if (!['ok', 'rss_evidence'].includes(article.bodyStatus)) {
+    result = '待定';
+    reason = '正文不足，事件及业务关系待核对';
+  } else if (main) {
+    const paragraph = article.bodyEvidence?.[main.paragraphId - 1] || main.evidence;
+    products = matchProducts(paragraph, profile, domains);
+    if (products.some(product => product.relationshipLevel === 'direct')) {
+      result = '入选';
+      businessGate = 'direct_product';
+      reason = `事件与直接产品在同段：${main.eventType}`;
+    } else if (products.length) {
+      result = '待定';
+      businessGate = 'indirect_needs_impact';
+      reason = '事件成立，上游/邻接产品对立讯直接产品的影响未证实';
+    } else {
+      result = '待定';
+      businessGate = 'product_unresolved';
+      reason = '事件成立，具体立讯业务对象尚未对应';
+    }
+  }
+  return { result, reason, rule: 'unified-v1', scopeVersion, inScope: domains.length > 0,
+    business: domains.map(domain => domainNames[domain]).join('、'), businessGate,
+    eventGate: main ? 'passed' : 'not_found', event: main?.eventType || '', stage: main?.stage || 'unknown',
+    eventEvidence: main?.evidence || '', affectedObject: products.map(product => product.productName).join('、'),
+    businessEvidence: main?.evidence || '', relationship: businessGate, impactEvidence: '',
+    changes: unified.facts, affectedProducts: products, unifiedTagging: unified,
+    homepageCandidate: result === '入选' && Boolean(main),
+    dataQuality: article.publishedAt ? 'complete' : 'missing_published_at' };
 }

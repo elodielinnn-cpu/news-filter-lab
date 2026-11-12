@@ -1,14 +1,12 @@
 import { encodeCsv } from '../news-screening/audit.mjs';
 
-const relevantStages = new Set(['occurred', 'confirmed-plan', 'trial-validation']);
-const lowValueContent = new Set(['promotion', 'tutorial', 'product-review', 'roundup']);
-const inScopeDomains = new Set(['datacom-telecom', 'automotive']);
+const lowValueContent = new Set(['promotion', 'tutorial']);
+const inScopeDomains = new Set(['datacom', 'automotive']);
 
 export function compareDecisions(report) {
   return report.results.map(article => {
     const candidates = Object.hasOwn(article, 'main_event') ? (article.main_event ? [article.main_event] : []) : (article.refined_events || article.events);
-    const events = candidates.filter(event =>
-      relevantStages.has(event.status));
+    const events = candidates.filter(event => event.article_role !== 'background');
     const relevant = article.domains.some(domain => inScopeDomains.has(domain)) &&
       !article.content_types.some(type => lowValueContent.has(type));
     const tagDecision = article.status === 'completed'

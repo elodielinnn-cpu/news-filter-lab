@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { loadBusinessProfile } from '../news-filter-v3/business-profile.mjs';
-import { screen } from './screen.mjs';
+import { screenLegacy as screen } from './screen.mjs'; // Historical 9-class baseline only.
 import { clean, extractBody } from './extract.mjs';
 
 const profile = await loadBusinessProfile(new URL('../../config/luxshare-business-profile.json', import.meta.url));

@@ -1,23 +1,47 @@
 {
-  "version": "industry-tags-v1",
-  "domains": {"datacom-telecom": "通信与数据中心", "automotive": "汽车", "out-of-scope": "范围外"},
+  "version": "unified-v1",
+  "domains": {
+    "datacom": "通信与数据中心",
+    "automotive": "汽车电子",
+    "consumer": "消费电子"
+  },
   "content_types": {
-    "industry-news": "产业新闻", "company-announcement": "企业公告", "financial-disclosure": "财务披露",
-    "technical-analysis": "技术分析", "market-research": "市场研究", "product-review": "产品评测",
-    "tutorial": "使用与安装教程", "promotion": "广告促销", "opinion": "观点评论", "interview": "访谈",
-    "event-coverage": "展会与会议报道", "standards-document": "标准与规范", "research-patent": "研究与专利", "roundup": "资讯汇编"
+    "industry-news": "产业新闻",
+    "company-announcement": "企业公告",
+    "financial-disclosure": "财务披露",
+    "technical-analysis": "技术分析",
+    "market-research": "市场研究",
+    "product-review": "产品评测",
+    "tutorial": "使用与安装教程",
+    "promotion": "广告促销",
+    "opinion": "观点评论",
+    "interview": "访谈",
+    "event-coverage": "展会与会议报道",
+    "standards-document": "标准与规范",
+    "research-patent": "研究与专利",
+    "roundup": "资讯汇编"
   },
   "event_types": {
-    "technology-update": "技术与工艺更新", "architecture-change": "系统架构变化", "product-launch": "新品与平台发布",
-    "supplier-change": "供应商与份额变化", "order-contract": "订单与合同", "partnership": "合作与联合开发",
-    "investment": "资本投资", "capacity-expansion": "产能扩张", "manufacturing-relocation": "制造迁移",
-    "production-ramp": "试产量产与产能爬坡", "deployment-adoption": "部署与采用", "qualification-certification": "客户定点、认证与验证",
-    "financial-results": "业绩与经营变化", "demand-outlook": "需求与出货展望", "pricing-cost": "价格与成本变化",
-    "supply-disruption": "供应中断与短缺", "merger-acquisition": "并购整合", "regulation-policy": "政策与监管",
-    "export-restriction": "贸易与出口限制", "quality-recall": "质量问题与召回", "security-incident": "安全事件",
-    "restructuring-exit": "重组与业务退出", "research-prototype": "研究原型与试验", "standards-interoperability": "标准与互操作变化",
-    "other-event": "其他具体变化"
+    "technology": "新技术",
+    "product": "新产品",
+    "partnership": "商业合作",
+    "order": "订单与定点",
+    "investment": "投资与产能",
+    "operations": "经营变化",
+    "risk": "政策与风险"
   },
-  "statuses": {"occurred": "已发生", "confirmed-plan": "正式计划", "trial-validation": "试验验证", "forecast": "预测", "rumor": "传闻", "historical": "历史背景", "unclear": "未明确"},
-  "relations": {"direct": "直接产品变化", "explicit-indirect": "明确上下游影响", "unclear": "关系未明"}
+  "statuses": {
+    "published": "已发布",
+    "validation": "试验验证",
+    "initial_use": "初步应用",
+    "scale_use": "规模应用",
+    "planned": "计划中",
+    "unknown": "未明确",
+    "not_applicable": "不适用"
+  },
+  "relations": {
+    "direct": "直接产品类别",
+    "explicit_indirect": "明确上下游影响",
+    "unresolved": "关系未明"
+  }
 }

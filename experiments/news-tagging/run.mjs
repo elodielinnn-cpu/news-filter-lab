@@ -11,9 +11,10 @@ import { evidenceGaps, eventRecordWarnings } from './quality.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 export function selectMainEvent(events) {
-  const material = events.filter(event => ['occurred', 'confirmed-plan', 'trial-validation'].includes(event.status));
-  return material.find(event => event.article_role === 'primary') || material.find(event => event.article_role === 'related')
-    || material[0] || events.find(event => event.article_role === 'primary') || events[0] || null;
+  return events.find(event => event.article_role === 'primary' && event.verification_status !== 'needs_review')
+    || events.find(event => event.article_role === 'primary')
+    || events.find(event => event.article_role === 'related' && event.verification_status !== 'needs_review')
+    || events[0] || null;
 }
 export async function prepareManifest(input, taxonomy, runtime, prompt, profile) {
   if (!input || !Array.isArray(input.articles)) throw new Error('Input must contain an articles array');
@@ -111,13 +112,15 @@ export async function tagManifest({ manifest, runtime, taxonomy, infer, loadCach
     const merged = mergeOutputs(outputs);
     const refined = refineEvents(merged.events);
     const mainEvent = selectMainEvent(refined.kept);
+    const displayEvents = [mainEvent, ...refined.kept.filter(event => event !== mainEvent && event.article_role === 'primary')]
+      .filter(Boolean).slice(0, 2);
     const reviewWarnings = eventRecordWarnings(article.title, merged.events);
     const missedEvidence = status === 'completed' ? evidenceGaps(article, refined.kept) : [];
     results.push({ id: article.id, title: article.title, url: article.url, sourceId: article.sourceId, originalDecision: article.originalDecision,
       originalBusiness: article.originalBusiness, originalAffectedObject: article.originalAffectedObject,
       originalEvidence: article.originalEvidence, originalReason: article.originalReason,
       evidenceSource: article.evidenceSource, status, completedChunks: completed, totalChunks: article.chunks.length, ...merged,
-      refined_events: refined.kept, rejected_events: refined.rejected, main_event: mainEvent,
+      refined_events: refined.kept, rejected_events: refined.rejected, main_event: mainEvent, display_events: displayEvents,
       event_record_warnings: reviewWarnings, milestone_evidence_gaps: missedEvidence, failures, cacheWarnings });
   }
   return { mode: 'semantic-shadow', generatedAt: new Date().toISOString(), model: manifest.model, modelRevision: manifest.modelRevision, taxonomyVersion: taxonomy.version, contextHash: manifest.contextHash, requests, cacheHits, validatedResponseTokens: totalTokens, elapsedMs: now() - startedAt, results };
