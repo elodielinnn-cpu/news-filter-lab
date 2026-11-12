@@ -7,6 +7,7 @@ import { extractBody } from '../news-screening/extract.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const sourcesPath = process.env.NEWS_TAGGING_SOURCES || fileURLToPath(new URL('fresh-sources.json', import.meta.url));
+const outputPath = process.env.NEWS_TAGGING_FETCH_OUTPUT || path.join(root, 'outputs/news-tagging/fresh-batch.json');
 const sources = JSON.parse(await fs.readFile(sourcesPath, 'utf8'));
 const minimumArticles = Number(process.env.NEWS_TAGGING_MIN_ARTICLES || 5);
 if (!Array.isArray(sources) || !Number.isInteger(minimumArticles) || minimumArticles < 1) throw new Error('Invalid source manifest or minimum article count');
@@ -41,7 +42,6 @@ for (const source of sources) {
   } catch (error) { failures.push({ url: source.url, error: String(error.message).slice(0, 100) }); }
 }
 if (articles.length < minimumArticles) throw new Error(`Fresh batch has only ${articles.length} complete articles (minimum ${minimumArticles}): ${JSON.stringify(failures)}`);
-const directory = path.join(root, 'outputs/news-tagging');
-await fs.mkdir(directory, { recursive: true });
-await fs.writeFile(path.join(directory, 'fresh-batch.json'), JSON.stringify({ fetchedAt: new Date().toISOString(), articles, failures }, null, 2) + '\n');
+await fs.mkdir(path.dirname(outputPath), { recursive: true });
+await fs.writeFile(outputPath, JSON.stringify({ fetchedAt: new Date().toISOString(), articles, failures }, null, 2) + '\n');
 console.log(JSON.stringify({ fetched: articles.length, failures, decisions: articles.map(a => a.decision.result) }));

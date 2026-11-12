@@ -1,0 +1,172 @@
+[
+  {
+    "title": "Lenovo ThinkSystem SC755 V5 Puts 96 EPYC 9006 CPUs and 24,000 Cores in a Liquid-Cooled Rack",
+    "url": "https://www.storagereview.com/news/lenovo-thinksystem-sc755-v5-sr755-v5-de6800-amd-epyc-9006",
+    "publishedAt": "Wed, 11 Nov 2026 18:29:14 +0000"
+  },
+  {
+    "title": "Cornelis CN5000 Connects 300 Dual-EPYC 9745 Nodes at GWDG as AMD Joint HPC Program Launches",
+    "url": "https://www.storagereview.com/news/cornelis-cn5000-amd-epyc-gwdg-emmy-p4-joint-hpc-program",
+    "publishedAt": "Wed, 11 Nov 2026 17:47:19 +0000"
+  },
+  {
+    "title": "Nexsan Unity NV12000 Puts 15.72PB of NVMe Flash in 10U With 122.88TB QLC SSDs",
+    "url": "https://www.storagereview.com/news/nexsan-unity-nv12000-15pb-nvme-flash-10u",
+    "publishedAt": "Wed, 11 Nov 2026 17:29:56 +0000"
+  },
+  {
+    "title": "AMD EPYC Venice SP7 Review: 256 Cores Per Socket and the Bandwidth to Feed Them",
+    "url": "https://www.storagereview.com/review/amd-epyc-venice-sp7-review",
+    "publishedAt": "Wed, 11 Nov 2026 00:57:44 +0000"
+  },
+  {
+    "title": "Dell PowerEdge R9825 Review: 512 Venice Cores in an Air-Cooled 3U Server",
+    "url": "https://www.storagereview.com/review/dell-poweredge-r9825-review",
+    "publishedAt": "Tue, 10 Nov 2026 22:13:29 +0000"
+  },
+  {
+    "title": "Portworx Kube Datastore Reaches GA With Single-Replica Pools on FlashArray",
+    "url": "https://www.storagereview.com/news/portworx-kube-datastore-ga-single-replica-pools-pre-staged-volumes",
+    "publishedAt": "Tue, 10 Nov 2026 20:38:15 +0000"
+  },
+  {
+    "title": "DapuStor J5101 M.2 Boot SSD Idles at 2W With PLP and Up to 1.92TB",
+    "url": "https://www.storagereview.com/news/dapustor-j5101-enterprise-nvme-m-2-boot-ssd",
+    "publishedAt": "Tue, 10 Nov 2026 19:39:57 +0000"
+  },
+  {
+    "title": "AMD EPYC Embedded 9006 Brings 256 Zen 6 Cores and PCIe Gen 6 to Test, Storage, and Firewall Systems",
+    "url": "https://www.storagereview.com/news/amd-epyc-embedded-9006-series-256-cores-pcie-gen-6",
+    "publishedAt": "Tue, 10 Nov 2026 19:15:53 +0000"
+  },
+  {
+    "title": "NVIDIA Vera CPU Review: 2TB/s of Memory Bandwidth and a Real Challenger to x86",
+    "url": "https://www.storagereview.com/review/nvidia-vera-cpu-review",
+    "publishedAt": "Tue, 10 Nov 2026 18:13:22 +0000"
+  },
+  {
+    "title": "Supermicro Plans 10,000 SambaNova SN50 RDUs for GPU-Paired Inference Racks, With GPUs on Prefill and RDUs on Decode",
+    "url": "https://www.storagereview.com/news/supermicro-sambanova-sn50-rdu-inference-racks-10000-chips",
+    "publishedAt": "Wed, 04 Nov 2026 18:31:43 +0000"
+  },
+  {
+    "title": "Simplyblock Earns Red Hat Certification for OpenShift Virtualization Storage, With Zero-RPO DR Built In",
+    "url": "https://www.storagereview.com/news/simplyblock-red-hat-certified-openshift-virtualization-storage",
+    "publishedAt": "Wed, 04 Nov 2026 17:37:52 +0000"
+  },
+  {
+    "title": "AMD Instinct MI350P First Look: 144GB of HBM3E in a 600W PCIe Card",
+    "url": "https://www.storagereview.com/review/amd-instinct-mi350p-first-look",
+    "publishedAt": "Tue, 03 Nov 2026 17:07:17 +0000"
+  },
+  {
+    "title": "AMD EPYC 9006 Results Are Here and AMD Delivers a Knockout Part Deux",
+    "url": "https://www.servethehome.com/amd-epyc-9006-results-are-here-and-amd-delivers-a-knockout-part-deux",
+    "publishedAt": "Tue, 10 Nov 2026 17:00:08 +0000"
+  },
+  {
+    "title": "Supermicro Super AI Station Review: The AI Server That Doubles as a Workstation",
+    "url": "https://www.servethehome.com/supermicro-super-ai-station-review-the-ai-server-that-doubles-as-a-workstation",
+    "publishedAt": "Thu, 05 Nov 2026 21:15:28 +0000"
+  },
+  {
+    "title": "CloudCasa DR Adds Dell PowerStore Failover for Kubernetes and a Read-Only MCP Server",
+    "url": "https://www.storagereview.com/news/cloudcasa-dr-dell-powerstore-kubernetes-failover-mcp-server"
+  },
+  {
+    "title": "AMD Helios Racks Are Running at Meta, With a Custom Instinct GPU and a $1 Billion Stake to Follow",
+    "url": "https://www.storagereview.com/news/amd-helios-racks-running-at-meta-custom-instinct-gpu-6th-gen-epyc-muse"
+  },
+  {
+    "title": "72-GPU NVIDIA Vera Rubin NVL72 Racks Anchor OCI’s Planned Multi-Gigawatt Expansion",
+    "url": "https://www.storagereview.com/news/nvidia-vera-rubin-nvl72-vera-cpus-generally-available-oci-multi-gigawatt-superclusters"
+  },
+  {
+    "title": "IBM FlashSystem Flags Data Theft in the Drive Before Ransomware Encrypts, Under 1% False Positives",
+    "url": "https://www.storagereview.com/news/ibm-flashsystem-data-exfiltration-detection-post-quantum-cryptography"
+  },
+  {
+    "title": "Seagate Exos M HAMR SMR Drives Join Broadcom’s eHBA 9600 Approved Vendor List After Azure Qualification",
+    "url": "https://www.storagereview.com/news/seagate-exos-m-hamr-smr-broadcom-ehba-9600-approved-vendor-list-azure"
+  },
+  {
+    "title": "Vertiv SmartIT Ships Factory-Validated MGX and ORV3 Racks for GB300 and Rubin: 120 to 142kW per Rack, 242kW N+1 Liquid Cooling",
+    "url": "https://www.storagereview.com/news/vertiv-smartit-mgx-orv3-ai-rack-gb300-vera-rubin-nvl72-120-142kw-242kw-liquid-cooling"
+  },
+  {
+    "title": "Oracle Acceleron Adds Front-End RDMA, an NCCL and RCCL Plugin for Multiplanar Failover, and 3x NVMe Block Storage Performance on OCI",
+    "url": "https://www.storagereview.com/news/oracle-acceleron-front-end-rdma-occl-plugin-multiplanar-failover-3x-nvme-block-storage"
+  },
+  {
+    "title": "Spectra Logic Storage Reclaim Packages Tape, BlackPearl, and Data Movers Into Six Configurations From 1PB to 24PB to Free Flash",
+    "url": "https://www.storagereview.com/news/spectra-logic-storage-reclaim-tape-blackpearl-six-configurations-1pb-24pb"
+  },
+  {
+    "title": "Dell Ships Quantum-Safe Fibre Channel Encryption on PowerStore in November, Adds Identity Recovery and AI Factory Hardening to PowerProtect",
+    "url": "https://www.storagereview.com/news/dell-powerstore-quantum-safe-fibre-channel-encryption-november-powerprotect-identity-recovery-ai-factory"
+  },
+  {
+    "title": "Dedicated Smartbird AI Clusters Integrate WEKA NeuralMesh for Managed Enterprise AI",
+    "url": "https://www.storagereview.com/news/smartbird-dedicated-ai-clusters-weka-neuralmesh-managed-enterprise-ai"
+  },
+  {
+    "title": "NVIDIA Minerva Brings AIOps to AI Factories Through Dell, Lenovo, and Supermicro",
+    "url": "https://www.storagereview.com/news/nvidia-minerva-aiops-ai-factory-observability-dell-lenovo-supermicro"
+  },
+  {
+    "title": "VAST Agent Sandbox Foundation Stack Puts NVIDIA OpenShell Sandboxes on Zero-Copy Clones and Logs Every Tool Call",
+    "url": "https://www.storagereview.com/news/vast-agent-sandbox-foundation-stack-nvidia-openshell-nemoclaw-zero-copy-clones"
+  },
+  {
+    "title": "NVIDIA GTC Berlin: 14-Day DSX POD AI Factories, a 2.5x Substrate Buildout, and the OpenShell Reference Architecture",
+    "url": "https://www.storagereview.com/news/nvidia-gtc-berlin-2026-dsx-pod-14-day-ai-factory-substrate-openshell-ai-ran"
+  },
+  {
+    "title": "DeepL Deploys the VAST AI Operating System for Voice Translation Training, Expecting 3x the Capacity From Its Existing NVMe",
+    "url": "https://www.storagereview.com/news/deepl-vast-ai-operating-system-3x-nvme-capacity-syncengine"
+  },
+  {
+    "title": "Dell AI Factory with NVIDIA Adds a 256-CPU Vera Rack, a Groq 3 LPU Inference Rack, and a 64GB GB10 Desktop",
+    "url": "https://www.storagereview.com/news/dell-ai-factory-nvidia-poweredge-m9882-vera-cpu-rack-xe9810-groq-3-gtc-berlin"
+  },
+  {
+    "title": "HPE Private Cloud AI Adds MCP Servers, Mixed H200 and RTX PRO 6000 Clusters, and a 256-CPU NVIDIA Vera Rack",
+    "url": "https://www.storagereview.com/news/hpe-private-cloud-ai-mcp-servers-mixed-gpu-clusters-vera-cpu-rack"
+  },
+  {
+    "title": "NVIDIA JUPITER Quantum Simulation Models a 104-Qubit Fault-Tolerant Processor Across 8,192 GH200 GPUs and 512 TiB",
+    "url": "https://www.storagereview.com/news/nvidia-jupiter-quantum-simulation-104-qubit-fault-tolerant-8192-gh200"
+  },
+  {
+    "title": "HPE Spaceborne Computer-4 Will Run AI Inference on the Moon Aboard Astrolab’s FLIP Rover",
+    "url": "https://www.storagereview.com/news/hpe-spaceborne-computer-4-ai-inference-moon-astrolab-flip-rover"
+  },
+  {
+    "title": "Valeo and KE:SAI Launch a Franco-German Open-Source Initiative to Build Generalist Autonomous Driving Systems",
+    "url": "https://www.valeo.com/en/valeo-and-kesai-launch-a-franco-german-open-source-initiative-to-build-generalist-autonomous-driving-systems"
+  },
+  {
+    "title": "Valeo Presents Breakthrough Aluminum Cooling Technology for Data Centers at OCP Global Summit 2026",
+    "url": "https://www.valeo.com/en/valeo-presents-breakthrough-aluminum-cooling-technology-for-data-centers-at-ocp-global-summit-2026-and-reaches-significant-durability-milestones"
+  },
+  {
+    "title": "Smarter, Safer, More Sustainable: How Valeo is Engineering the Future of Global Trucking Fleets",
+    "url": "https://www.valeo.com/en/smarter-safer-more-sustainable-how-valeo-is-engineering-the-future-of-global-trucking-fleets"
+  },
+  {
+    "title": "Valeo Accelerates Future Lighting at its Angers Plant",
+    "url": "https://www.valeo.com/en/valeo-accelerates-future-lighting-at-its-angers-plant"
+  },
+  {
+    "title": "Valeo Secures Contract for Next-Generation Radar Technology with North American OEM",
+    "url": "https://www.valeo.com/en/valeo-secures-contract-for-next-generation-radar-technology-with-north-american-oem"
+  },
+  {
+    "title": "Valeo selected by Nissan to take electric mobility one step further in Europe with V2G",
+    "url": "https://www.valeo.com/en/valeo-selected-by-nissan-to-take-electric-mobility-one-step-further-in-europe-with-v2g-vehicle-to-grid"
+  },
+  {
+    "title": "Valeo Accelerates the Energy Transition with First 48V 2-Speed eAxle for Dacia Duster, Bigster & Striker",
+    "url": "https://www.valeo.com/en/valeo-accelerates-the-energy-transition-with-first-48v-2-speed-eaxle-for-dacia-duster-bigster-striker"
+  }
+]
