@@ -15,13 +15,13 @@ const domainRules = {
 };
 const mention = /\b(?:announc(?:ed|es)|introduc(?:ed|es)|unveil(?:ed|s)|launch(?:ed|es)|releas(?:ed|es)|present(?:ed|s)|publish(?:ed|es))\b|宣布|发布|推出|亮相|公布/iu;
 const patterns = {
-  order: /\b(?:(?:signed|secured|booked|awarded|won|received) .{0,75}\b(?:contract|order|supply agreement)|selected by .{0,80}\b(?:customer|oem|automaker|manufacturer)|nominated by|purchase order|supply contract|design win|procurement framework|contract for)\b|签署合同|获得订单|客户定点|获选供应商|采购协议|中标/iu,
+  order: /\b(?:(?:signed|secured|booked|awarded|won|received) .{0,75}\b(?:contract|order|supply agreement)|selected by .{0,80}\b(?:customer|oem|automaker|manufacturer)|nominated by|purchase order|supply contract|design win|procurement framework|contract for|(?:announc(?:ed|es)|signed) an? agreement to (?:launch|supply|deliver)|through this contract)\b|签署合同|获得订单|客户定点|获选供应商|采购协议|中标/iu,
   partnership: /\b(?:partner(?:ship|ed)? with|announc(?:ed|es) a partnership|collaborat(?:ion|e|ed|ing) (?:with|on)|signed a technology agreement|joint(?:ly)? develop|co-develop|joint agreement|joint program|work(?:ing)? together to|will build and sell|team(?:s|ed)? up with)\b|达成合作|联合开发|合作协议|联合交付/iu,
   investment: /\b(?:invest(?:ed|ment|ing)|acquir(?:e|ed|es|ing)|propos(?:ed|es) acquir(?:ing|e)|to buy .{0,80}(?:company|firm)|merger|capacity expansion|expand(?:ed|s) capacity|new factory|broke ground|manufacturing transfer|buildout)\b|投资|融资|并购|收购|扩产|迁产|新工厂|开工/iu,
   operations: /\b(?:earnings|revenue|profit|shipment|demand|price|cost|market share|sales|backlog|restructur|business exit)\b.{0,100}\b(?:rose|fell|grew|declined|increased|decreased|reached|reported|forecast|expect|change|shift|record)\b|\b(?:reported|posted)\b.{0,100}\b(?:earnings|revenue|profit|shipments?|sales)\b|营收|利润|出货|需求|价格|成本|份额|重组|业务退出/iu,
   risk: /\b(?:export controls?|sanctions?|tariffs?|new regulation|new policy|shortage|supply disruption|initiated a recall|issued a recall|suffered a breach|cyberattack|major outage)\b|出口管制|关税|新规|短缺|供应中断|发起召回|数据泄露|遭到攻击/iu,
-  product: /\b(?:announc(?:ed|es)|introduc(?:e[ds]?|ing)|unveil(?:ed|s)|launch(?:ed|es)|releas(?:e[ds]?|ing)|present(?:ed|s))\b.{0,150}\b(?:products?|platforms?|systems?|racks?|servers?|modules?|solutions?|services?|designs?|cpus?|gpus?|radars?|technology|thinksystem|smartit)\b|\bnew\b.{0,75}\b(?:reference design|platform|server|rack|system|product)\b|发布.{0,35}(?:产品|平台|方案|系统|机柜|服务器|模组|雷达)|推出.{0,35}(?:产品|平台|方案|系统|机柜|服务器|模组|雷达)/iu,
-  technology: /\b(?:new (?:technology|architecture|process|material|standard|design)|improv(?:ed|es) .{0,80}(?:performance|efficiency|yield)|validat(?:e[ds]?|ing) .{0,100}(?:memory|stack|technology|durability|performance|architecture|design)|completed .{0,50}\bvalidation\b|validated that .{0,80}\btechnology\b|tested .{0,80}(?:durability|performance|architecture)|updat(?:ed|es) .{0,100}(?:specs?|specifications?|architecture|design)|revis(?:ed|es) .{0,100}(?:specs?|specifications?|architecture|design)|breakthrough|reference architecture)\b|新技术|新架构|新工艺|新材料|技术突破|性能验证|耐久验证|参考架构/iu
+  product: /\b(?:announc(?:ed|es)|introduc(?:e[ds]?|ing)|unveil(?:ed|s)|launch(?:ed|es)|releas(?:e[ds]?|ing)|present(?:ed|s))\b.{0,150}\b(?:products?|platforms?|systems?|racks?|servers?|modules?|solutions?|services?|designs?|cpus?|gpus?|radars?|eaxle|technology|thinksystem|smartit)\b|\bcommercial launch of\b.{0,100}|\bnew\b.{0,75}\b(?:reference design|platform|server|rack|system|product)\b|发布.{0,35}(?:产品|平台|方案|系统|机柜|服务器|模组|雷达)|推出.{0,35}(?:产品|平台|方案|系统|机柜|服务器|模组|雷达)/iu,
+  technology: /\b(?:new (?:technology|architecture|process|material|standard|design)|improv(?:ed|es) .{0,80}(?:performance|efficiency|yield)|validat(?:e[ds]?|ing) .{0,100}(?:memory|stack|technology|durability|performance|architecture|design)|completed .{0,50}\bvalidation\b|validated that .{0,80}\btechnology\b|tested .{0,80}(?:durability|performance|architecture)|updat(?:ed|es) .{0,100}(?:specs?|specifications?|architecture|design)|revis(?:ed|es) .{0,100}(?:specs?|specifications?|architecture|design)|breakthrough|reference architecture|(?:airflow|cooling|power|bandwidth|latency|layout).{0,110}(?:needed to|allows?|enables?|reduces?|improves?))\b|新技术|新架构|新工艺|新材料|技术突破|性能验证|耐久验证|参考架构/iu
 };
 const planned = /\b(?:plans? to|expected to|scheduled to|aims? to|intends? to|proposed|proposal|will (?:launch|deliver|begin|build|deploy|test|validate|present))\b|计划|预计|将于|拟于|目标是|有望/iu;
 const testing = /\b(?:testing|under test|(?:initial |completed |recent )?validation (?:of|status|results?)|completed (?:the )?(?:initial )?validation|has (?:now )?validated|pilot|prototype|trial|installed for testing|proof of concept|tests? (?:showed|confirmed|found))\b|测试中|完成验证|验证结果|试验|试点|样机|送样|原型/iu;
@@ -57,7 +57,7 @@ export function classifyStage(text, type) {
 function classifyEvent(sentence, title) {
   if (noise.test(sentence) || negated.test(sentence) || rumor.test(sentence) || /\bno shortage\b/iu.test(sentence)) return '';
   if (patterns.order.test(sentence)) return 'order';
-  if (scaleUse.test(sentence) && /\b(?:racks?|servers?|systems?|modules?|products?|radars?|platforms?)\b|机柜|服务器|模组|产品|雷达|系统/iu.test(sentence)
+  if (scaleUse.test(sentence) && /\b(?:racks?|servers?|systems?|modules?|products?|radars?|platforms?|drives?|ssds?)\b|机柜|服务器|模组|产品|雷达|系统/iu.test(sentence)
     && !/\b(?:factory|plant|facility|capacity)\b|工厂|产线|产能/iu.test(sentence)) return 'product';
   if (patterns.investment.test(sentence)) return 'investment';
   if (patterns.risk.test(sentence)) return 'risk';
@@ -75,16 +75,33 @@ function classifyEvent(sentence, title) {
 }
 
 function findActor(sentence, title) {
-  const beforeAction = normalize(sentence.split(/\b(?:announced|introduced|unveiled|launched|signed|secured|selected|validated|plans|has|will|is|reported|says|confirms|deployed|started)\b|宣布|发布|推出|签署|获得|完成验证/u)[0]);
-  if (beforeAction && beforeAction.length <= 70 && !/^(?:the|this|it|its|they|their|该|其)\b/iu.test(beforeAction)) return beforeAction;
-  const titleActor = normalize(String(title).split(/\b(?:announces?|introduces?|unveils?|launches?|signs?|secures?|selects?|validates?|plans?|will|is)\b|宣布|发布|推出|签署|获得/u)[0]);
-  return titleActor && titleActor.length <= 70 ? titleActor : '未明确';
+  const titleLead = String(title).match(/^[\p{Lu}][\p{L}\p{N}.-]*(?:\s+[\p{Lu}][\p{L}\p{N}.-]*)?/u)?.[0] || '';
+  const beforeAction = normalize(sentence.split(/\b(?:announced|introduced|unveiled|launched|signed|secured|selected|validated|plans|has|have|will|is|reported|says|confirms|deployed|started|expanded|introducing|provides|highlights)\b|宣布|发布|推出|签署|获得|完成验证/u)[0]);
+  const lead = titleLead.split(' ')[0];
+  if (lead && new RegExp(`\\b${lead.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'iu').test(beforeAction)) {
+    const match = beforeAction.match(new RegExp(`\\b${lead.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:\\s+(?:and|&|×)\\s+[\\p{Lu}][\\p{L}\\p{N}.-]+|\\s+[\\p{Lu}][\\p{L}\\p{N}.-]+)?`, 'iu'));
+    if (match) return match[0];
+  }
+  if (/^[\p{Lu}][\p{L}\p{N}.-]+\b/u.test(beforeAction) && beforeAction.length <= 45
+    && !reviewTitle.test(title) && !/^(?:the|this|it|its|they|their)\b/iu.test(beforeAction)) return beforeAction;
+  const titleNames = String(title).match(/\b(?:[A-Z][a-z]{2,}|[A-Z]{3,})\b/gu) || [];
+  const firstTitleName = titleNames.find(name => !/^(?:GPU|CPU|NVL|AI|HPC|SSD|The|New|Review)$/u.test(name));
+  if (firstTitleName && new RegExp(`\\b${firstTitleName}\\b`, 'u').test(sentence)) return firstTitleName;
+  return '未明确';
+}
+
+export function eventEvidenceWindow(article, main) {
+  if (!main || !Array.isArray(article.bodyEvidence)) return main?.evidence || '';
+  const current = article.bodyEvidence[main.paragraphId - 1] || main.evidence;
+  const next = article.bodyEvidence[main.paragraphId];
+  const identifiers = [...String(main.evidence).matchAll(/\b(?:[A-Z]{2,}\s+[A-Z]{2,}|[A-Z]+[0-9][A-Z0-9-]*)\b/gu)].map(match => match[0]);
+  return next && identifiers.some(identifier => next.includes(identifier)) ? `${current}\n${next}` : current;
 }
 
 function findObject(sentence, title, actor) {
   const withoutActor = normalize(sentence.replace(new RegExp(actor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'iu'), ''));
   const afterAction = withoutActor.split(/\b(?:announced|introduced|unveiled|launched|signed|secured|selected|validated|plans to|has developed|has deployed|is running|presents)\b|发布|推出|签署|获得|完成验证/u).at(-1);
-  return normalize(afterAction || title).slice(0, 150) || normalize(title).slice(0, 150);
+  return normalize(afterAction || title) || normalize(title);
 }
 
 export function tagArticle(article, { scope = ['datacom', 'automotive', 'consumer'] } = {}) {
@@ -94,10 +111,13 @@ export function tagArticle(article, { scope = ['datacom', 'automotive', 'consume
   const facts = [];
   for (const [paragraphIndex, paragraph] of paragraphs.entries()) {
     for (const [sentenceIndex, sentence] of splitSentences(paragraph).entries()) {
-      const type = classifyEvent(sentence, title);
+      let type = classifyEvent(sentence, title);
+      const priorProduct = facts.findLast(fact => fact.paragraphId === paragraphIndex + 1 && fact.eventType === 'product');
+      const refersToPriorProduct = priorProduct && /\b(?:it|the (?:product|drive|system)|this (?:product|drive|system))\b|该产品|该系统/iu.test(sentence);
+      if (!type && scaleUse.test(sentence) && refersToPriorProduct) type = 'product';
       if (!type) continue;
-      const actor = findActor(sentence, title);
-      const object = findObject(sentence, title, actor);
+      const actor = refersToPriorProduct && type === 'product' ? priorProduct.actor : findActor(sentence, title);
+      const object = refersToPriorProduct && type === 'product' ? priorProduct.object : findObject(sentence, title, actor);
       const context = `${title} ${sentence}`;
       let domains = Object.entries(domainRules).filter(([id, rule]) => scope.includes(id) && rule.test(context)).map(([id]) => id);
       if (!domains.length) domains = Object.entries(domainRules)
@@ -127,6 +147,15 @@ export function tagArticle(article, { scope = ['datacom', 'automotive', 'consume
     if (shown.length === 2) break;
   }
   const main = shown[0] || null;
+  if (main?.eventType === 'product' && main.stage === 'published') {
+    const laterStage = facts.find(fact => fact.paragraphId === main.paragraphId && fact.eventType === 'product'
+      && fact.stage === 'scale_use' && fact.id !== main.id && fact.actor === main.actor
+      && /\b(?:it|the (?:product|drive|system)|this (?:product|drive|system))\b|该产品|该系统/iu.test(fact.evidence));
+    if (laterStage) {
+      main.stage = 'scale_use';
+      main.stageEvidence = laterStage.evidence;
+    }
+  }
   return { version: TAGGING_VERSION, scope: [...scope], facts, mainEvent: main, displayEvents: shown,
     displayTags: main ? [...main.domains.map(id => TAGGING_TAXONOMY.domains[id]), TAGGING_TAXONOMY.events[main.eventType],
       ...(['unknown', 'not_applicable'].includes(main.stage) ? [] : [TAGGING_TAXONOMY.stages[main.stage]])] : [],

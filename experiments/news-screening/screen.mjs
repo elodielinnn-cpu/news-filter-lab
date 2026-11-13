@@ -1,7 +1,7 @@
 import { containsAlias } from '../news-filter-v3/business-profile.mjs';
 import { eventRules, hardwareDetails, impactRelation, nonIndustryTitle, softwareOnly, speculativeImpact } from './rules.mjs';
 import { articleDomains, domainNames, matchProducts, productMention, scopeVersion } from './scope.mjs';
-import { tagArticle } from '../unified-tagging.mjs';
+import { eventEvidenceWindow, tagArticle } from '../unified-tagging.mjs';
 
 const rumor = /\b(?:rumou?rs?|leakers?|reportedly|unconfirmed|according to people|sources? said)\b|传闻|爆料|据称|知情人士/iu;
 const negation = /\b(?:no|not|never|without)\b.{0,35}\b(?:new|chang\w*|replac\w*|adopt\w*|supplier|orders?|agreement)\b|没有.{0,15}(?:变化|更换|新增|订单)|并未|尚未确认/iu;
@@ -153,8 +153,8 @@ export function screen(article, profile) {
     result = '待定';
     reason = '正文不足，事件及业务关系待核对';
   } else if (main) {
-    const paragraph = article.bodyEvidence?.[main.paragraphId - 1] || main.evidence;
-    products = matchProducts(paragraph, profile, domains);
+    const paragraph = eventEvidenceWindow(article, main);
+    products = matchProducts(`${article.title}. ${paragraph}`, profile, domains);
     if (products.some(product => product.relationshipLevel === 'direct')) {
       result = '入选';
       businessGate = 'direct_product';

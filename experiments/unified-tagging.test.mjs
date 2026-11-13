@@ -24,6 +24,17 @@ const availableAfterPlan = tag('Server rack cloud expansion', ['Oracle plans to 
 assert.ok(availableAfterPlan.facts.some(fact => fact.eventType === 'product' && fact.stage === 'published'));
 const futureProduction = tag('New server rack plans', ['Vertiv will begin mass production of its new server rack next year.']);
 assert.equal(futureProduction.mainEvent?.stage, 'planned');
+const sameProductProgress = tag('Enterprise SSD announced', [
+  'DapuStor announced an enterprise SSD for cloud servers. The drive has 2W idle power. DapuStor says it is in volume production and running in customer environments.'
+]);
+assert.equal(sameProductProgress.mainEvent?.stage, 'scale_use');
+assert.match(sameProductProgress.mainEvent?.stageEvidence || '', /volume production/u);
+const launchedAxle = tag('Valeo eAxle for Dacia', ['Valeo announces the commercial launch of its 48V eAxle for automotive applications.']);
+assert.equal(launchedAxle.mainEvent?.eventType, 'product');
+assert.equal(launchedAxle.mainEvent?.stage, 'published');
+const reviewActor = tag('NVIDIA Vera CPU Review', ['Memory bandwidth tests measured 25% more throughput in a server CPU system.']);
+assert.notEqual(reviewActor.mainEvent?.actor, 'Memory');
+assert.notEqual(reviewActor.mainEvent?.actor, 'Vera');
 
 const contract = tag('Valeo radar contract', ['Valeo secured a new contract for automotive radar with a vehicle manufacturer.'], ['automotive', 'datacom']);
 assert.deepEqual(contract.displayTags, ['汽车电子', '订单与定点']);

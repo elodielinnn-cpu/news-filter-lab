@@ -15,6 +15,10 @@ const uncertain = screen(make('Valeo automotive radar order', ['Valeo secured a 
 assert.equal(uncertain.unifiedTagging.mainEvent?.eventType, 'order');
 assert.equal(uncertain.result, '待定');
 
+const rack = screen(make('AI inference rack collaboration', ['Two manufacturers announced a partnership to build inference racks with integrated networking, cabling and power.']), profile);
+assert.equal(rack.result, '入选');
+assert.ok(rack.affectedProducts.some(product => product.productId === 'ai_rack_scale_integration'));
+
 const noBody = screen({ ...make('Server rack launched', []), bodyStatus: 'insufficient' }, profile);
 assert.equal(noBody.result, '待定');
 assert.equal(noBody.eventGate, 'not_found');
