@@ -20,7 +20,7 @@ const rows = source.articles.map((article, index) => {
     originalEvent: article.decision?.event || '',
     newResult: current.result, newEvent: main?.eventType || '',
     newDomain: main?.domains || [], newStage: main?.stage || 'unknown',
-    actor: main?.actor || '', object: main?.object || '', evidence: main?.evidence || '',
+    actor: main?.actor || '', object: main?.object || '', evidence: main?.evidence || '', stageEvidence: main?.stageEvidence || '',
     paragraphId: main?.paragraphId || null,
     businessRelation: current.businessGate,
     businessProducts: current.affectedProducts.map(product => ({ productId: product.productId, relationshipLevel: product.relationshipLevel })),
@@ -42,8 +42,8 @@ const report = {
 };
 await fs.mkdir(path.dirname(outputPath), { recursive: true });
 await fs.writeFile(outputPath, JSON.stringify(report, null, 2) + '\n');
-const csv = encodeCsv([['编号','标题','原结果','原事件','新结果','行业','主事件','阶段','主体','对象','证据段落','证据','业务关系','首页候选','资料质量','差异类型','原因','链接'],
+const csv = encodeCsv([['编号','标题','原结果','原事件','新结果','行业','主事件','阶段','主体','对象','证据段落','事件证据','阶段证据','业务关系','首页候选','资料质量','差异类型','原因','链接'],
   ...rows.map(row => [row.sampleNumber,row.title,row.originalResult,row.originalEvent,row.newResult,row.newDomain.join('、'),row.newEvent,row.newStage,
-    row.actor,row.object,row.paragraphId || '',row.evidence,row.businessRelation,row.homepageCandidate ? '是' : '否',row.dataQuality,row.difference,row.reason,row.url])]);
+    row.actor,row.object,row.paragraphId || '',row.evidence,row.stageEvidence,row.businessRelation,row.homepageCandidate ? '是' : '否',row.dataQuality,row.difference,row.reason,row.url])]);
 await fs.writeFile(outputPath.replace(/\.json$/u, '.csv'), csv);
 console.log(JSON.stringify(report.totals));

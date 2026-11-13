@@ -46,6 +46,21 @@ const reviewOnlySpecs = tag('Server CPU review', ['This server CPU has 256 cores
 assert.equal(reviewOnlySpecs.mainEvent, null);
 const reviewResult = tag('Server CPU review', ['Our testing measured a 25% performance increase in a server CPU system.']);
 assert.equal(reviewResult.mainEvent?.eventType, 'technology');
+assert.equal(reviewResult.mainEvent?.stage, 'unknown');
+const cloudScope = tag('Oracle Acceleron cloud network', [
+  'Oracle announced new RDMA and SmartNIC capabilities for OCI cloud networking.'
+], ['datacom', 'automotive']);
+assert.deepEqual(cloudScope.articleDomains, ['datacom']);
+const futureRelease = tag('Dell PowerStore software release', [
+  'Dell announced the next PowerStore software release for cloud servers, due in November, with new encryption.'
+]);
+assert.equal(futureRelease.mainEvent?.stage, 'planned');
+const modelUse = tag('Valeo 48V eAxle for Dacia', [
+  'Valeo announces the commercial launch of its 48V 2-Speed eAxle for automotive applications.',
+  'The 48V 2-Speed eAxle has been selected by Dacia for its powertrain launched on Duster and Bigster, with Striker coming later.'
+]);
+assert.equal(modelUse.mainEvent?.stage, 'initial_use');
+assert.match(modelUse.mainEvent?.stageEvidence || '', /Duster and Bigster/u);
 const consumer = tag('New iPhone speaker', ['Apple introduced a new smartphone speaker module.'], ['datacom', 'automotive']);
 assert.equal(consumer.mainEvent, null);
 

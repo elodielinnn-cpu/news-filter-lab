@@ -1,0 +1,894 @@
+{
+  "version": "unified-v1",
+  "generatedAt": "2026-11-13T03:25:15.265Z",
+  "input": "manual-followup-dated-input.json",
+  "scope": [
+    "datacom",
+    "automotive"
+  ],
+  "modelRun": false,
+  "totals": {
+    "articles": 30,
+    "oldResults": {
+      "入选": 4,
+      "待定": 12,
+      "排除": 14
+    },
+    "newResults": {
+      "入选": 9,
+      "待定": 19,
+      "排除": 2
+    },
+    "missingDates": 0,
+    "noMainEvent": 2
+  },
+  "articles": [
+    {
+      "sampleNumber": 1,
+      "title": "Lenovo ThinkSystem SC755 V5 Puts 96 EPYC 9006 CPUs and 24,000 Cores in a Liquid-Cooled Rack",
+      "url": "https://www.storagereview.com/news/lenovo-thinksystem-sc755-v5-sr755-v5-de6800-amd-epyc-9006",
+      "originalResult": "待定",
+      "originalEvent": "新品与平台方案",
+      "newResult": "入选",
+      "newEvent": "product",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "published",
+      "actor": "Lenovo",
+      "object": "two ThinkSystem V5 servers built on AMD’s 6th Gen EPYC 9006 SP7 processors: the SC755 V5, a Neptune liquid-cooled dual-socket node for HPC clusters, and the SR755 V5, an air-cooled",
+      "evidence": "Lenovo has introduced two ThinkSystem V5 servers built on AMD’s 6th Gen EPYC 9006 SP7 processors: the SC755 V5, a Neptune liquid-cooled dual-socket node for HPC clusters, and the SR755 V5, an air-cooled single-socket 2U rack server.",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "direct_product",
+      "businessProducts": [
+        {
+          "productId": "server_complete_assembly",
+          "relationshipLevel": "direct"
+        },
+        {
+          "productId": "ai_rack_scale_integration",
+          "relationshipLevel": "direct"
+        },
+        {
+          "productId": "cpu_chip",
+          "relationshipLevel": "upstream"
+        }
+      ],
+      "homepageCandidate": true,
+      "dataQuality": "complete",
+      "reason": "事件与直接产品在同段：product",
+      "difference": "screening_decision"
+    },
+    {
+      "sampleNumber": 2,
+      "title": "Cornelis CN5000 Connects 300 Dual-EPYC 9745 Nodes at GWDG as AMD Joint HPC Program Launches",
+      "url": "https://www.storagereview.com/news/cornelis-cn5000-amd-epyc-gwdg-emmy-p4-joint-hpc-program",
+      "originalResult": "排除",
+      "originalEvent": "",
+      "newResult": "待定",
+      "newEvent": "partnership",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "not_applicable",
+      "actor": "Cornelis and AMD",
+      "object": "a joint program to design, validate, and deploy HPC and AI-for-science systems that pair AMD EPYC CPUs and Instinct GPUs with Cornelis networking, sold through the OEMs and system ",
+      "evidence": "Cornelis and AMD have launched a joint program to design, validate, and deploy HPC and AI-for-science systems that pair AMD EPYC CPUs and Instinct GPUs with Cornelis networking, sold through the OEMs and system integrators customers already use.",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "indirect_needs_impact",
+      "businessProducts": [
+        {
+          "productId": "gpu_chip",
+          "relationshipLevel": "upstream"
+        },
+        {
+          "productId": "cpu_chip",
+          "relationshipLevel": "upstream"
+        }
+      ],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，上游/邻接产品对立讯直接产品的影响未证实",
+      "difference": "screening_decision"
+    },
+    {
+      "sampleNumber": 3,
+      "title": "Nexsan Unity NV12000 Puts 15.72PB of NVMe Flash in 10U With 122.88TB QLC SSDs",
+      "url": "https://www.storagereview.com/news/nexsan-unity-nv12000-15pb-nvme-flash-10u",
+      "originalResult": "待定",
+      "originalEvent": "新品与平台方案",
+      "newResult": "待定",
+      "newEvent": "product",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "published",
+      "actor": "Nexsan",
+      "object": "the Unity NV12000, a 2U dual-controller unified storage array that takes 24 122.88TB QLC NVMe SSDs for nearly 3PB of raw flash in the head unit.",
+      "evidence": "Nexsan has introduced the Unity NV12000, a 2U dual-controller unified storage array that takes 24 122.88TB QLC NVMe SSDs for nearly 3PB of raw flash in the head unit.",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "indirect_needs_impact",
+      "businessProducts": [
+        {
+          "productId": "complete_ssd_device",
+          "relationshipLevel": "adjacent"
+        }
+      ],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，上游/邻接产品对立讯直接产品的影响未证实",
+      "difference": "event_taxonomy_or_main_event"
+    },
+    {
+      "sampleNumber": 4,
+      "title": "AMD EPYC Venice SP7 Review: 256 Cores Per Socket and the Bandwidth to Feed Them",
+      "url": "https://www.storagereview.com/review/amd-epyc-venice-sp7-review",
+      "originalResult": "待定",
+      "originalEvent": "技术与制造变化",
+      "newResult": "待定",
+      "newEvent": "technology",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "unknown",
+      "actor": "AMD",
+      "object": "SP7 also carries CXL 3.1 on up to 96 of its PCIe Gen6 lanes per socket, and rates each x16 link at about 128GB/s of raw bandwidth at one NUMA hop of latency, which is the path to m",
+      "evidence": "SP7 also carries CXL 3.1 on up to 96 of its PCIe Gen6 lanes per socket, and AMD rates each x16 link at about 128GB/s of raw bandwidth at one NUMA hop of latency, which is the path to memory beyond the sixteen channels when capacity matters more than speed.",
+      "stageEvidence": "",
+      "paragraphId": 44,
+      "businessRelation": "indirect_needs_impact",
+      "businessProducts": [
+        {
+          "productId": "cpu_chip",
+          "relationshipLevel": "upstream"
+        },
+        {
+          "productId": "dram_memory",
+          "relationshipLevel": "upstream"
+        }
+      ],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，上游/邻接产品对立讯直接产品的影响未证实",
+      "difference": "event_taxonomy_or_main_event"
+    },
+    {
+      "sampleNumber": 5,
+      "title": "Dell PowerEdge R9825 Review: 512 Venice Cores in an Air-Cooled 3U Server",
+      "url": "https://www.storagereview.com/review/dell-poweredge-r9825-review",
+      "originalResult": "排除",
+      "originalEvent": "",
+      "newResult": "入选",
+      "newEvent": "technology",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "unknown",
+      "actor": "未明确",
+      "object": "The R9825 is 3U, and the extra rack unit buys the airflow room needed to cool two 600W processors with fans alone, so that a customer with a conventional data center can deploy 512",
+      "evidence": "The R9825 is 3U, and the extra rack unit buys the airflow room needed to cool two 600W processors with fans alone, so that a customer with a conventional data center can deploy 512-core nodes without a liquid loop.",
+      "stageEvidence": "",
+      "paragraphId": 2,
+      "businessRelation": "direct_product",
+      "businessProducts": [
+        {
+          "productId": "server_complete_assembly",
+          "relationshipLevel": "direct"
+        }
+      ],
+      "homepageCandidate": true,
+      "dataQuality": "complete",
+      "reason": "事件与直接产品在同段：technology",
+      "difference": "screening_decision"
+    },
+    {
+      "sampleNumber": 7,
+      "title": "DapuStor J5101 M.2 Boot SSD Idles at 2W With PLP and Up to 1.92TB",
+      "url": "https://www.storagereview.com/news/dapustor-j5101-enterprise-nvme-m-2-boot-ssd",
+      "originalResult": "待定",
+      "originalEvent": "商业部署与供货",
+      "newResult": "待定",
+      "newEvent": "product",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "scale_use",
+      "actor": "DapuStor",
+      "object": "the J5101, an enterprise NVMe M.2 boot SSD for AI, HPC, virtualization, and cloud servers.",
+      "evidence": "DapuStor announced the J5101, an enterprise NVMe M.2 boot SSD for AI, HPC, virtualization, and cloud servers.",
+      "stageEvidence": "DapuStor announced the J5101, an enterprise NVMe M.2 boot SSD for AI, HPC, virtualization, and cloud servers. The drive uses a PCIe Gen4 interface in the M.2 2280 form factor, comes in 480GB, 960GB, and 1.92TB capacities, and carries power loss protection and a 1 DWPD endurance rating. DapuStor rates it at 2W idle and as little as 4.5W active, and says it is in volume production and running in customer environments.",
+      "paragraphId": 1,
+      "businessRelation": "indirect_needs_impact",
+      "businessProducts": [
+        {
+          "productId": "complete_ssd_device",
+          "relationshipLevel": "adjacent"
+        }
+      ],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，上游/邻接产品对立讯直接产品的影响未证实",
+      "difference": "event_taxonomy_or_main_event"
+    },
+    {
+      "sampleNumber": 8,
+      "title": "AMD EPYC Embedded 9006 Brings 256 Zen 6 Cores and PCIe Gen 6 to Test, Storage, and Firewall Systems",
+      "url": "https://www.storagereview.com/news/amd-epyc-embedded-9006-series-256-cores-pcie-gen-6",
+      "originalResult": "排除",
+      "originalEvent": "",
+      "newResult": "待定",
+      "newEvent": "product",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "published",
+      "actor": "AMD",
+      "object": "the EPYC Embedded 9006 Series today, bringing the Zen 6 cores of its 6th Gen EPYC server processors to the SP7 socket for embedded systems, with up to 256 cores and 512 threads, up",
+      "evidence": "AMD announced the EPYC Embedded 9006 Series today, bringing the Zen 6 cores of its 6th Gen EPYC server processors to the SP7 socket for embedded systems, with up to 256 cores and 512 threads, up to 96 lanes of PCIe Gen 6, CXL 3.1",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "indirect_needs_impact",
+      "businessProducts": [
+        {
+          "productId": "cpu_chip",
+          "relationshipLevel": "upstream"
+        }
+      ],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，上游/邻接产品对立讯直接产品的影响未证实",
+      "difference": "screening_decision"
+    },
+    {
+      "sampleNumber": 9,
+      "title": "NVIDIA Vera CPU Review: 2TB/s of Memory Bandwidth and a Real Challenger to x86",
+      "url": "https://www.storagereview.com/review/nvidia-vera-cpu-review",
+      "originalResult": "待定",
+      "originalEvent": "商业部署与供货",
+      "newResult": "待定",
+      "newEvent": "technology",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "unknown",
+      "actor": "未明确",
+      "object": "Dividing our measured STREAM bandwidth by the number of physical cores gives 11.8GB/s per core on Vera, compared with 3.8GB/s on the 240-core Xeon 6978P system.",
+      "evidence": "Dividing our measured STREAM bandwidth by the number of physical cores gives 11.8GB/s per core on Vera, compared with 3.8GB/s on the 240-core Xeon 6978P system.",
+      "stageEvidence": "",
+      "paragraphId": 27,
+      "businessRelation": "indirect_needs_impact",
+      "businessProducts": [
+        {
+          "productId": "cpu_chip",
+          "relationshipLevel": "upstream"
+        }
+      ],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，上游/邻接产品对立讯直接产品的影响未证实",
+      "difference": "event_taxonomy_or_main_event"
+    },
+    {
+      "sampleNumber": 10,
+      "title": "Supermicro Plans 10,000 SambaNova SN50 RDUs for GPU-Paired Inference Racks, With GPUs on Prefill and RDUs on Decode",
+      "url": "https://www.storagereview.com/news/supermicro-sambanova-sn50-rdu-inference-racks-10000-chips",
+      "originalResult": "待定",
+      "originalEvent": "供应商与技术合作",
+      "newResult": "入选",
+      "newEvent": "partnership",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "not_applicable",
+      "actor": "SambaNova and Supermicro",
+      "object": "disaggregated inference systems that pair NVIDIA GPUs with SambaNova’s SN50 Reconfigurable Dataflow Units (RDUs), with Supermicro initially planning for 10,000 SN50 chips.",
+      "evidence": "SambaNova and Supermicro will build and sell disaggregated inference systems that pair NVIDIA GPUs with SambaNova’s SN50 Reconfigurable Dataflow Units (RDUs), with Supermicro initially planning for 10,000 SN50 chips.",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "direct_product",
+      "businessProducts": [
+        {
+          "productId": "ai_rack_scale_integration",
+          "relationshipLevel": "direct"
+        },
+        {
+          "productId": "gpu_chip",
+          "relationshipLevel": "upstream"
+        }
+      ],
+      "homepageCandidate": true,
+      "dataQuality": "complete",
+      "reason": "事件与直接产品在同段：partnership",
+      "difference": "screening_decision"
+    },
+    {
+      "sampleNumber": 11,
+      "title": "Simplyblock Earns Red Hat Certification for OpenShift Virtualization Storage, With Zero-RPO DR Built In",
+      "url": "https://www.storagereview.com/news/simplyblock-red-hat-certified-openshift-virtualization-storage",
+      "originalResult": "排除",
+      "originalEvent": "",
+      "newResult": "排除",
+      "newEvent": "",
+      "newDomain": [],
+      "newStage": "unknown",
+      "actor": "",
+      "object": "",
+      "evidence": "",
+      "stageEvidence": "",
+      "paragraphId": null,
+      "businessRelation": "not_checked",
+      "businessProducts": [],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "行业范围内，尚未抽到可核对的七类新增事件或工程结论",
+      "difference": "none"
+    },
+    {
+      "sampleNumber": 12,
+      "title": "AMD Instinct MI350P First Look: 144GB of HBM3E in a 600W PCIe Card",
+      "url": "https://www.storagereview.com/review/amd-instinct-mi350p-first-look",
+      "originalResult": "待定",
+      "originalEvent": "新品与平台方案",
+      "newResult": "待定",
+      "newEvent": "technology",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "unknown",
+      "actor": "AMD",
+      "object": "AMD Instinct MI350P",
+      "evidence": "The AMD Instinct MI350P is AMD’s first new PCIe Instinct GPU in four years, following the MI210 in 2022. It brings the company’s CDNA 4 architecture to a conventional add-in card, with up to 4.6 PFLOPS of MXFP4 performance, 144GB of HBM3E, and 4TB/s of memory bandwidth. All of that fits into a dual-slot, 600W air-cooled card, giving customers another way to deploy Instinct GPUs without moving to the larger 8 GPU OAM MI350/5X platform.",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "indirect_needs_impact",
+      "businessProducts": [
+        {
+          "productId": "gpu_chip",
+          "relationshipLevel": "upstream"
+        }
+      ],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，上游/邻接产品对立讯直接产品的影响未证实",
+      "difference": "event_taxonomy_or_main_event"
+    },
+    {
+      "sampleNumber": 13,
+      "title": "AMD EPYC 9006 Results Are Here and AMD Delivers a Knockout Part Deux",
+      "url": "https://www.servethehome.com/amd-epyc-9006-results-are-here-and-amd-delivers-a-knockout-part-deux",
+      "originalResult": "待定",
+      "originalEvent": "并购与投资",
+      "newResult": "待定",
+      "newEvent": "product",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "unknown",
+      "actor": "AMD",
+      "object": "Amid an unprecedented explosion in demand for server CPUs for AI systems driving both host nodes and agentic workloads, is in a commanding position, bringing to market a new genera",
+      "evidence": "Amid an unprecedented explosion in demand for server CPUs for AI systems driving both host nodes and agentic workloads, AMD is in a commanding position, bringing to market a new generation of even more powerful server hardware right when the industry needs it most.",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "indirect_needs_impact",
+      "businessProducts": [
+        {
+          "productId": "cpu_chip",
+          "relationshipLevel": "upstream"
+        }
+      ],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，上游/邻接产品对立讯直接产品的影响未证实",
+      "difference": "event_taxonomy_or_main_event"
+    },
+    {
+      "sampleNumber": 14,
+      "title": "Supermicro Super AI Station Review: The AI Server That Doubles as a Workstation",
+      "url": "https://www.servethehome.com/supermicro-super-ai-station-review-the-ai-server-that-doubles-as-a-workstation",
+      "originalResult": "待定",
+      "originalEvent": "商业部署与供货",
+      "newResult": "待定",
+      "newEvent": "technology",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "unknown",
+      "actor": "未明确",
+      "object": "At 455mm tall, the Super AI Station is skinny enough to fit between a pair of rack posts.",
+      "evidence": "At 455mm tall, the Super AI Station is skinny enough to fit between a pair of rack posts.",
+      "stageEvidence": "",
+      "paragraphId": 7,
+      "businessRelation": "product_unresolved",
+      "businessProducts": [],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，具体立讯业务对象尚未对应",
+      "difference": "event_taxonomy_or_main_event"
+    },
+    {
+      "sampleNumber": 16,
+      "title": "AMD Helios Racks Are Running at Meta, With a Custom Instinct GPU and a $1 Billion Stake to Follow",
+      "url": "https://www.storagereview.com/news/amd-helios-racks-running-at-meta-custom-instinct-gpu-6th-gen-epyc-muse",
+      "originalResult": "入选",
+      "originalEvent": "供应商与技术合作",
+      "newResult": "入选",
+      "newEvent": "technology",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "validation",
+      "actor": "AMD",
+      "object": "says the first AMD Helios rackscale systems are installed and under test at Meta, with a broader deployment to follow",
+      "evidence": "AMD says the first AMD Helios rackscale systems are installed and under test at Meta, with a broader deployment to follow",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "direct_product",
+      "businessProducts": [
+        {
+          "productId": "ai_rack_scale_integration",
+          "relationshipLevel": "direct"
+        },
+        {
+          "productId": "gpu_chip",
+          "relationshipLevel": "upstream"
+        },
+        {
+          "productId": "cpu_chip",
+          "relationshipLevel": "upstream"
+        }
+      ],
+      "homepageCandidate": true,
+      "dataQuality": "complete",
+      "reason": "事件与直接产品在同段：technology",
+      "difference": "event_taxonomy_or_main_event"
+    },
+    {
+      "sampleNumber": 17,
+      "title": "72-GPU NVIDIA Vera Rubin NVL72 Racks Anchor OCI’s Planned Multi-Gigawatt Expansion",
+      "url": "https://www.storagereview.com/news/nvidia-vera-rubin-nvl72-vera-cpus-generally-available-oci-multi-gigawatt-superclusters",
+      "originalResult": "排除",
+      "originalEvent": "",
+      "newResult": "入选",
+      "newEvent": "product",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "published",
+      "actor": "NVIDIA",
+      "object": "both Vera Rubin NVL72 and Vera CPUs are now generally available on OCI.",
+      "evidence": "both Vera Rubin NVL72 and NVIDIA Vera CPUs are now generally available on OCI.",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "direct_product",
+      "businessProducts": [
+        {
+          "productId": "ai_rack_scale_integration",
+          "relationshipLevel": "direct"
+        },
+        {
+          "productId": "gpu_chip",
+          "relationshipLevel": "upstream"
+        },
+        {
+          "productId": "cpu_chip",
+          "relationshipLevel": "upstream"
+        }
+      ],
+      "homepageCandidate": true,
+      "dataQuality": "complete",
+      "reason": "事件与直接产品在同段：product",
+      "difference": "screening_decision"
+    },
+    {
+      "sampleNumber": 19,
+      "title": "Seagate Exos M HAMR SMR Drives Join Broadcom’s eHBA 9600 Approved Vendor List After Azure Qualification",
+      "url": "https://www.storagereview.com/news/seagate-exos-m-hamr-smr-broadcom-ehba-9600-approved-vendor-list-azure",
+      "originalResult": "排除",
+      "originalEvent": "",
+      "newResult": "排除",
+      "newEvent": "",
+      "newDomain": [],
+      "newStage": "unknown",
+      "actor": "",
+      "object": "",
+      "evidence": "",
+      "stageEvidence": "",
+      "paragraphId": null,
+      "businessRelation": "not_checked",
+      "businessProducts": [],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "行业领域未证实属于通信与数据中心或汽车",
+      "difference": "none"
+    },
+    {
+      "sampleNumber": 20,
+      "title": "Vertiv SmartIT Ships Factory-Validated MGX and ORV3 Racks for GB300 and Rubin: 120 to 142kW per Rack, 242kW N+1 Liquid Cooling",
+      "url": "https://www.storagereview.com/news/vertiv-smartit-mgx-orv3-ai-rack-gb300-vera-rubin-nvl72-120-142kw-242kw-liquid-cooling",
+      "originalResult": "入选",
+      "originalEvent": "技术与制造变化",
+      "newResult": "入选",
+      "newEvent": "product",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "published",
+      "actor": "Vertiv",
+      "object": "SmartIT, a pre-engineered rack architecture that packages the rack, DC power conversion and distribution, direct-to-chip liquid cooling, in-rack coolant distribution",
+      "evidence": "Vertiv announced SmartIT, a pre-engineered rack architecture that packages the rack, DC power conversion and distribution, direct-to-chip liquid cooling, in-rack coolant distribution",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "direct_product",
+      "businessProducts": [
+        {
+          "productId": "ai_rack_scale_integration",
+          "relationshipLevel": "direct"
+        },
+        {
+          "productId": "cold_plate",
+          "relationshipLevel": "direct"
+        }
+      ],
+      "homepageCandidate": true,
+      "dataQuality": "complete",
+      "reason": "事件与直接产品在同段：product",
+      "difference": "event_taxonomy_or_main_event"
+    },
+    {
+      "sampleNumber": 21,
+      "title": "Oracle Acceleron Adds Front-End RDMA, an NCCL and RCCL Plugin for Multiplanar Failover, and 3x NVMe Block Storage Performance on OCI",
+      "url": "https://www.storagereview.com/news/oracle-acceleron-front-end-rdma-occl-plugin-multiplanar-failover-3x-nvme-block-storage",
+      "originalResult": "排除",
+      "originalEvent": "",
+      "newResult": "待定",
+      "newEvent": "product",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "published",
+      "actor": "Oracle",
+      "object": "a second round of Oracle Acceleron capabilities at Oracle AI World in Las Vegas, a year after the networking suite first bundled dedicated fabrics, multiplanar networking, SmartNIC",
+      "evidence": "Oracle announced a second round of Oracle Acceleron capabilities at Oracle AI World in Las Vegas, a year after the networking suite first bundled dedicated fabrics, multiplanar networking, SmartNICs",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "product_unresolved",
+      "businessProducts": [],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，具体立讯业务对象尚未对应",
+      "difference": "screening_decision"
+    },
+    {
+      "sampleNumber": 23,
+      "title": "Dell Ships Quantum-Safe Fibre Channel Encryption on PowerStore in November, Adds Identity Recovery and AI Factory Hardening to PowerProtect",
+      "url": "https://www.storagereview.com/news/dell-powerstore-quantum-safe-fibre-channel-encryption-november-powerprotect-identity-recovery-ai-factory",
+      "originalResult": "排除",
+      "originalEvent": "",
+      "newResult": "待定",
+      "newEvent": "product",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "planned",
+      "actor": "Dell",
+      "object": "The piece that matters most for storage buyers is now a date: the next PowerStore software release, due in November, adds quantum-safe encryption of data in flight over Fibre Chann",
+      "evidence": "The piece that matters most for storage buyers is now a date: the next Dell PowerStore software release, due in November, adds quantum-safe encryption of data in flight over Fibre Channel when paired with supported PowerEdge servers.",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "product_unresolved",
+      "businessProducts": [],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，具体立讯业务对象尚未对应",
+      "difference": "screening_decision"
+    },
+    {
+      "sampleNumber": 24,
+      "title": "Dedicated Smartbird AI Clusters Integrate WEKA NeuralMesh for Managed Enterprise AI",
+      "url": "https://www.storagereview.com/news/smartbird-dedicated-ai-clusters-weka-neuralmesh-managed-enterprise-ai",
+      "originalResult": "待定",
+      "originalEvent": "供应商与技术合作",
+      "newResult": "待定",
+      "newEvent": "partnership",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "not_applicable",
+      "actor": "Smartbird and WEKA",
+      "object": "a partnership that puts WEKA NeuralMesh inside Smartbird’s dedicated AI clusters, sold as a managed service for enterprise AI workloads.",
+      "evidence": "Smartbird and WEKA have announced a partnership that puts WEKA NeuralMesh inside Smartbird’s dedicated AI clusters, sold as a managed service for enterprise AI workloads.",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "product_unresolved",
+      "businessProducts": [],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，具体立讯业务对象尚未对应",
+      "difference": "event_taxonomy_or_main_event"
+    },
+    {
+      "sampleNumber": 25,
+      "title": "NVIDIA Minerva Brings AIOps to AI Factories Through Dell, Lenovo, and Supermicro",
+      "url": "https://www.storagereview.com/news/nvidia-minerva-aiops-ai-factory-observability-dell-lenovo-supermicro",
+      "originalResult": "排除",
+      "originalEvent": "",
+      "newResult": "待定",
+      "newEvent": "product",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "published",
+      "actor": "NVIDIA",
+      "object": "Minerva at GTC Berlin, an AIOps platform that pulls telemetry from GPUs, networking, storage, schedulers, and the AI workloads running on them, then applies machine learning to fin",
+      "evidence": "NVIDIA announced Minerva at GTC Berlin, an AIOps platform that pulls telemetry from GPUs, networking, storage, schedulers, and the AI workloads running on them, then applies machine learning to find a degrading component before it slows a training job.",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "indirect_needs_impact",
+      "businessProducts": [
+        {
+          "productId": "gpu_chip",
+          "relationshipLevel": "upstream"
+        }
+      ],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，上游/邻接产品对立讯直接产品的影响未证实",
+      "difference": "screening_decision"
+    },
+    {
+      "sampleNumber": 27,
+      "title": "NVIDIA GTC Berlin: 14-Day DSX POD AI Factories, a 2.5x Substrate Buildout, and the OpenShell Reference Architecture",
+      "url": "https://www.storagereview.com/news/nvidia-gtc-berlin-2026-dsx-pod-14-day-ai-factory-substrate-openshell-ai-ran",
+      "originalResult": "入选",
+      "originalEvent": "订单与产能",
+      "newResult": "入选",
+      "newEvent": "product",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "planned",
+      "actor": "NVIDIA",
+      "object": "The headline number is a deployment target: says its new DSX POD reference design cuts an AI factory’s deployment at a prepared site from six months to as little as 14 days, with p",
+      "evidence": "The headline number is a deployment target: NVIDIA says its new DSX POD reference design cuts an AI factory’s deployment at a prepared site from six months to as little as 14 days, with partner-built systems due in early 2027.",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "direct_product",
+      "businessProducts": [
+        {
+          "productId": "ai_rack_scale_integration",
+          "relationshipLevel": "direct"
+        }
+      ],
+      "homepageCandidate": true,
+      "dataQuality": "complete",
+      "reason": "事件与直接产品在同段：product",
+      "difference": "event_taxonomy_or_main_event"
+    },
+    {
+      "sampleNumber": 28,
+      "title": "DeepL Deploys the VAST AI Operating System for Voice Translation Training, Expecting 3x the Capacity From Its Existing NVMe",
+      "url": "https://www.storagereview.com/news/deepl-vast-ai-operating-system-3x-nvme-capacity-syncengine",
+      "originalResult": "排除",
+      "originalEvent": "",
+      "newResult": "待定",
+      "newEvent": "product",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "published",
+      "actor": "VAST Data",
+      "object": "that DeepL is deploying the VAST AI Operating System as the data foundation for the research environments behind its written and real-time voice translation.",
+      "evidence": "VAST Data announced that DeepL is deploying the VAST AI Operating System as the data foundation for the research environments behind its written and real-time voice translation.",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "product_unresolved",
+      "businessProducts": [],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，具体立讯业务对象尚未对应",
+      "difference": "screening_decision"
+    },
+    {
+      "sampleNumber": 29,
+      "title": "Dell AI Factory with NVIDIA Adds a 256-CPU Vera Rack, a Groq 3 LPU Inference Rack, and a 64GB GB10 Desktop",
+      "url": "https://www.storagereview.com/news/dell-ai-factory-nvidia-poweredge-m9882-vera-cpu-rack-xe9810-groq-3-gtc-berlin",
+      "originalResult": "入选",
+      "originalEvent": "订单与产能",
+      "newResult": "入选",
+      "newEvent": "product",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "published",
+      "actor": "Dell Technologies",
+      "object": "expanded the Dell AI Factory with NVIDIA today at NVIDIA GTC Berlin with a 48U PowerEdge M9882 rack holding 256 NVIDIA Vera CPUs for agentic workload execution, the PowerEdge XE981",
+      "evidence": "Dell Technologies expanded the Dell AI Factory with NVIDIA today at NVIDIA GTC Berlin with a 48U PowerEdge M9882 rack holding 256 NVIDIA Vera CPUs for agentic workload execution, the PowerEdge XE9810 rack-scale inference system built on Groq 3 LPUs, an air-cooled two-socket Vera server, a 64GB Dell Pro Precision with GB10",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "direct_product",
+      "businessProducts": [
+        {
+          "productId": "server_complete_assembly",
+          "relationshipLevel": "direct"
+        },
+        {
+          "productId": "ai_rack_scale_integration",
+          "relationshipLevel": "direct"
+        },
+        {
+          "productId": "cpu_chip",
+          "relationshipLevel": "upstream"
+        }
+      ],
+      "homepageCandidate": true,
+      "dataQuality": "complete",
+      "reason": "事件与直接产品在同段：product",
+      "difference": "event_taxonomy_or_main_event"
+    },
+    {
+      "sampleNumber": 30,
+      "title": "HPE Private Cloud AI Adds MCP Servers, Mixed H200 and RTX PRO 6000 Clusters, and a 256-CPU NVIDIA Vera Rack",
+      "url": "https://www.storagereview.com/news/hpe-private-cloud-ai-mcp-servers-mixed-gpu-clusters-vera-cpu-rack",
+      "originalResult": "待定",
+      "originalEvent": "新品与平台方案",
+      "newResult": "入选",
+      "newEvent": "product",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "published",
+      "actor": "HPE",
+      "object": "introducing the NVIDIA Vera CPU Rack for the agentic workloads that run on CPUs.",
+      "evidence": "HPE is introducing the NVIDIA Vera CPU Rack for the agentic workloads that run on CPUs.",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "direct_product",
+      "businessProducts": [
+        {
+          "productId": "ai_rack_scale_integration",
+          "relationshipLevel": "direct"
+        },
+        {
+          "productId": "gpu_chip",
+          "relationshipLevel": "upstream"
+        },
+        {
+          "productId": "cpu_chip",
+          "relationshipLevel": "upstream"
+        }
+      ],
+      "homepageCandidate": true,
+      "dataQuality": "complete",
+      "reason": "事件与直接产品在同段：product",
+      "difference": "screening_decision"
+    },
+    {
+      "sampleNumber": 33,
+      "title": "Valeo and KE:SAI Launch a Franco-German Open-Source Initiative to Build Generalist Autonomous Driving Systems",
+      "url": "https://www.valeo.com/en/valeo-and-kesai-launch-a-franco-german-open-source-initiative-to-build-generalist-autonomous-driving-systems",
+      "originalResult": "排除",
+      "originalEvent": "供应商与技术合作",
+      "newResult": "待定",
+      "newEvent": "partnership",
+      "newDomain": [
+        "automotive"
+      ],
+      "newStage": "not_applicable",
+      "actor": "Valeo and KE:SAI",
+      "object": "models, code and weights for autonomous driving research.",
+      "evidence": "Valeo and the open science lab KE:SAI will jointly develop and openly release models, code and weights for autonomous driving research.",
+      "stageEvidence": "",
+      "paragraphId": 1,
+      "businessRelation": "product_unresolved",
+      "businessProducts": [],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，具体立讯业务对象尚未对应",
+      "difference": "screening_decision"
+    },
+    {
+      "sampleNumber": 34,
+      "title": "Valeo Presents Breakthrough Aluminum Cooling Technology for Data Centers at OCP Global Summit 2026",
+      "url": "https://www.valeo.com/en/valeo-presents-breakthrough-aluminum-cooling-technology-for-data-centers-at-ocp-global-summit-2026-and-reaches-significant-durability-milestones",
+      "originalResult": "排除",
+      "originalEvent": "",
+      "newResult": "待定",
+      "newEvent": "technology",
+      "newDomain": [
+        "datacom"
+      ],
+      "newStage": "validation",
+      "actor": "Valeo",
+      "object": "Valeo Presents Breakthrough Aluminum Cooling Technology for Data Centers at OCP Global Summit 2026",
+      "evidence": "As artificial intelligence (AI) workloads push rack densities to new heights, aluminum heat exchangers are being evaluated to provide a powerful, lightweight, more efficient, and scalable alternative to traditional copper hardware. Valeo’s aluminum solutions deliver a 38% increase in cooling capacity and 65% in power density versus traditional copper solutions, while simultaneously reducing fan electrical consumption by 25% . These validation results establish a clear technological breakthrough, directly optimizing Carbon Usage Effectiveness (CUE) and Power Usage Effectiveness (PUE), ideal for retrofitting existing or for new racks.",
+      "stageEvidence": "",
+      "paragraphId": 5,
+      "businessRelation": "product_unresolved",
+      "businessProducts": [],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，具体立讯业务对象尚未对应",
+      "difference": "screening_decision"
+    },
+    {
+      "sampleNumber": 37,
+      "title": "Valeo Secures Contract for Next-Generation Radar Technology with North American OEM",
+      "url": "https://www.valeo.com/en/valeo-secures-contract-for-next-generation-radar-technology-with-north-american-oem",
+      "originalResult": "排除",
+      "originalEvent": "技术与制造变化",
+      "newResult": "待定",
+      "newEvent": "order",
+      "newDomain": [
+        "automotive"
+      ],
+      "newStage": "not_applicable",
+      "actor": "Valeo",
+      "object": "a new contract for advanced safety technologies with a North American electric vehicle manufacturer.",
+      "evidence": "June 30, 2026 — Paris, France — Valeo, a global leader in automotive technology, has secured a new contract for advanced safety technologies with a North American electric vehicle manufacturer.",
+      "stageEvidence": "",
+      "paragraphId": 4,
+      "businessRelation": "product_unresolved",
+      "businessProducts": [],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，具体立讯业务对象尚未对应",
+      "difference": "screening_decision"
+    },
+    {
+      "sampleNumber": 38,
+      "title": "Valeo selected by Nissan to take electric mobility one step further in Europe with V2G",
+      "url": "https://www.valeo.com/en/valeo-selected-by-nissan-to-take-electric-mobility-one-step-further-in-europe-with-v2g-vehicle-to-grid",
+      "originalResult": "排除",
+      "originalEvent": "新品与平台方案",
+      "newResult": "待定",
+      "newEvent": "order",
+      "newDomain": [
+        "automotive"
+      ],
+      "newStage": "not_applicable",
+      "actor": "Valeo",
+      "object": "Through this contract, provides the electrification technologies for Nissan’s integrated energy ecosystem, expanding both companies’ footprint in the electric vehicle market .",
+      "evidence": "Through this contract, Valeo provides the electrification technologies for Nissan’s integrated energy ecosystem, expanding both companies’ footprint in the electric vehicle market .",
+      "stageEvidence": "",
+      "paragraphId": 2,
+      "businessRelation": "product_unresolved",
+      "businessProducts": [],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，具体立讯业务对象尚未对应",
+      "difference": "screening_decision"
+    },
+    {
+      "sampleNumber": 39,
+      "title": "Valeo Accelerates the Energy Transition with First 48V 2-Speed eAxle for Dacia Duster, Bigster & Striker",
+      "url": "https://www.valeo.com/en/valeo-accelerates-the-energy-transition-with-first-48v-2-speed-eaxle-for-dacia-duster-bigster-striker",
+      "originalResult": "待定",
+      "originalEvent": "供应商与技术合作",
+      "newResult": "待定",
+      "newEvent": "product",
+      "newDomain": [
+        "automotive"
+      ],
+      "newStage": "initial_use",
+      "actor": "Valeo",
+      "object": "the commercial launch of its 48V 2-Speed eAxle with Smart Dog-Clutch.",
+      "evidence": "17 June 2026 — Paris, France — Valeo, a global leader in automotive technology, announces the commercial launch of its 48V 2-Speed eAxle with Smart Dog-Clutch.",
+      "stageEvidence": "The 48V 2-Speed eAxle has been selected by Dacia for its new “Hybrid-G 150” powertrain launched on the Dacia Duster, Bigster and in the months to come on the Striker.",
+      "paragraphId": 1,
+      "businessRelation": "indirect_needs_impact",
+      "businessProducts": [
+        {
+          "productId": "electric_drive_system",
+          "relationshipLevel": "adjacent"
+        }
+      ],
+      "homepageCandidate": false,
+      "dataQuality": "complete",
+      "reason": "事件成立，上游/邻接产品对立讯直接产品的影响未证实",
+      "difference": "event_taxonomy_or_main_event"
+    }
+  ]
+}

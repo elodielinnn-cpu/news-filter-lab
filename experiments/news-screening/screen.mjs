@@ -143,12 +143,12 @@ export function screenLegacy(article, profile) {
 export function screen(article, profile) {
   const unified = tagArticle(article, { scope: ['datacom', 'automotive'] });
   const main = unified.mainEvent;
-  const domains = articleDomains(article);
+  const domains = unified.articleDomains;
   let result = '排除';
   let reason = '没有范围内且可核对的新增事件';
   let businessGate = 'not_checked';
   let products = [];
-  if (!domains.length) reason = '不属于通信与数据中心或汽车范围';
+  if (!domains.length) reason = '行业领域未证实属于通信与数据中心或汽车';
   else if (!['ok', 'rss_evidence'].includes(article.bodyStatus)) {
     result = '待定';
     reason = '正文不足，事件及业务关系待核对';
@@ -168,11 +168,11 @@ export function screen(article, profile) {
       businessGate = 'product_unresolved';
       reason = '事件成立，具体立讯业务对象尚未对应';
     }
-  }
+  } else reason = '行业范围内，尚未抽到可核对的七类新增事件或工程结论';
   return { result, reason, rule: 'unified-v1', scopeVersion, inScope: domains.length > 0,
     business: domains.map(domain => domainNames[domain]).join('、'), businessGate,
     eventGate: main ? 'passed' : 'not_found', event: main?.eventType || '', stage: main?.stage || 'unknown',
-    eventEvidence: main?.evidence || '', affectedObject: products.map(product => product.productName).join('、'),
+    eventEvidence: [main?.evidence, main?.stageEvidence].filter(Boolean).join('\n'), affectedObject: products.map(product => product.productName).join('、'),
     businessEvidence: main?.evidence || '', relationship: businessGate, impactEvidence: '',
     changes: unified.facts, affectedProducts: products, unifiedTagging: unified,
     homepageCandidate: result === '入选' && Boolean(main),
